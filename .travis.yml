@@ -1,0 +1,20 @@
+sudo: required
+
+language: node_js
+node_js:
+  - '9'
+
+cache:
+  yarn: true
+  directories:
+  - node_modules
+
+install:
+  - npx yarn install
+
+script:
+  - npx yarn dev:lint
+  - npx yarn test
+
+notifications:
+  slack: ambrosus:ybmTQyso2XmAp6SM9NQPhdl2
