@@ -16,6 +16,11 @@ class Crypto {
     const account = this.web3.eth.accounts.create();
     return account.privateKey;
   }
+
+  async isValidPrivateKey(candidate) {
+    const addressRegex = /^0x[0-9a-f]{64}$/i;
+    return addressRegex.exec(candidate) !== null;
+  }
 }
 
 export default Crypto;
