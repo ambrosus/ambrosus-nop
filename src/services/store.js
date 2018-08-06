@@ -28,6 +28,11 @@ export default class Store {
     return contents[key];
   }
 
+  async has(key) {
+    const contents = await this.readFile();
+    return contents[key] !== undefined;
+  }
+
   async readFile() {
     if (await checkFileExists(this.storeFilePath)) {
       return JSON.parse(await readFile(this.storeFilePath));

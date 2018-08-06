@@ -49,6 +49,16 @@ describe('Store', () => {
       expect(fileContents[testKey]).to.be.equal(testValue2);
     });
 
+    it('providing undefined as value for a key removes it from the store', async () => {
+      const testKey = 'abc';
+      const testValue = '12345';
+
+      await expect(store.write(testKey, testValue)).to.be.eventually.fulfilled;
+      await expect(store.write(testKey, undefined)).to.be.eventually.fulfilled;
+      const fileContents = JSON.parse(await readFile(testFile));
+      expect(fileContents[testKey]).to.be.undefined;
+    });
+
     it(`doesn't change other values`, async () => {
       const testKey1 = 'abc';
       const testKey2 = 'xyz';
@@ -79,6 +89,23 @@ describe('Store', () => {
 
     it('throws if requested key is not found in the file', async () => {
       await expect(store.read(`otherKey`)).to.eventually.be.rejected;
+    });
+  });
+
+  describe('checking for key', () => {
+    const existingKey = 'abc';
+    const nonExistingKey = 'xyz';
+
+    beforeEach(async () => {
+      await store.write(existingKey, 'abc');
+    });
+
+    it('returns true if there is a value for the key', async () => {
+      await expect(store.has(existingKey)).to.eventually.be.true;
+    });
+
+    it('returns false if there is no value for the key', async () => {
+      await expect(store.has(nonExistingKey)).to.eventually.be.false;
     });
   });
 });
