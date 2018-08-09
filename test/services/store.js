@@ -75,12 +75,13 @@ describe('Store', () => {
 
   describe('reading', () => {
     beforeEach(async () => {
-      await writeFile(testFile,
-        JSON.stringify({
-          oneTwoThree: 'test'
-        }),
-        null,
-        2);
+      const example = {
+        oneTwoThree: 'test'
+      };
+      await writeFile(
+        testFile,
+        JSON.stringify(example), null, 2
+      );
     });
 
     it('returns the value stored under key in the file', async () => {

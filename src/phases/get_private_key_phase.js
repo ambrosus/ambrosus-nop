@@ -14,17 +14,20 @@ const getPrivateKeyPhase = (store, crypto, askForPrivateKeyDialog) => async () =
 
   const answers = await askForPrivateKeyDialog();
   const {source} = answers;
-  if (source === 'manual') {
-    const {privateKey} = answers;
-    await store.write('privateKey', privateKey);
-    return privateKey;
-  } else if (source === 'generate') {
-    const privateKey = await crypto.generatePrivateKey();
-    await store.write('privateKey', privateKey);
-    return privateKey;
+  switch (source) {
+    case 'manual': {
+      const {privateKey} = answers;
+      await store.write('privateKey', privateKey);
+      return privateKey;
+    }
+    case 'generate': {
+      const privateKey = await crypto.generatePrivateKey();
+      await store.write('privateKey', privateKey);
+      return privateKey;
+    }
+    default:
+      throw new Error('Unexpected source');
   }
-
-  throw new Error('Unexpected source');
 };
 
 export default getPrivateKeyPhase;

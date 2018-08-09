@@ -14,14 +14,14 @@ const askForPrivateKeyDialog = (crypto) => async () => inquirer.prompt(
     {
       type: 'list',
       name: 'source',
-      message: `You don't have a private key setup yet. What do you want to do?`,
+      message: `No private key setup yet. What do you want to do?`,
       choices: [
         {
-          name: 'provide manually',
+          name: 'Input existing key manually',
           value: 'manual'
         },
         {
-          name: 'generate',
+          name: 'Generate new key automatically',
           value: 'generate'
         }
       ]
@@ -31,12 +31,7 @@ const askForPrivateKeyDialog = (crypto) => async () => inquirer.prompt(
       name: 'privateKey',
       message: `Please provide your private key in hex form:`,
       when: (state) => state.source === 'manual',
-      validate: async (answer) => {
-        if (await crypto.isValidPrivateKey(answer)) {
-          return true;
-        }
-        return 'The provided value is not a valid address';
-      }
+      validate: async (answer) => await crypto.isValidPrivateKey(answer) || 'The provided value is not a valid address'
     }
   ]);
 
