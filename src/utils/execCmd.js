@@ -7,22 +7,16 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-import Builder from './builder';
-import config from '../config/config';
+import {exec} from 'child_process';
 
-const start = async () => {
-  const builder = new Builder();
-  const {getPrivateKeyPhase, checkDockerAvailablePhase} = await builder.build(config);
-
-  await getPrivateKeyPhase();
-  if (!await checkDockerAvailablePhase()) {
-    return;
-  }
-};
-
-start()
-  .catch((err) => {
-    console.error(err);
-    process.exit(1);
+const execCmd = async (cmd) => new Promise((resolve, reject) => {
+  exec(cmd, (err, stdout, stderr) => {
+    if (err === null) {
+      resolve({stdout, stderr});
+    } else {
+      reject(err);
+    }
   });
+});
 
+export default execCmd;
