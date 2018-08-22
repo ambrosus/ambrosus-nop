@@ -7,7 +7,7 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-const getPrivateKeyPhase = (store, crypto, askForPrivateKeyDialog) => async () => {
+const getPrivateKey = async (store, crypto, askForPrivateKeyDialog) => {
   if (await store.has('privateKey')) {
     return await store.read('privateKey');
   }
@@ -28,6 +28,12 @@ const getPrivateKeyPhase = (store, crypto, askForPrivateKeyDialog) => async () =
     default:
       throw new Error('Unexpected source');
   }
+};
+
+const getPrivateKeyPhase = (store, crypto, privateKeyDetectedDialog, askForPrivateKeyDialog) => async () => {
+  const privateKey = await getPrivateKey(store, crypto, askForPrivateKeyDialog);
+  await privateKeyDetectedDialog(privateKey);
+  return privateKey;
 };
 
 export default getPrivateKeyPhase;
