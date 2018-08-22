@@ -21,10 +21,11 @@ const {expect} = chai;
 describe('Get Private Key Phase', () => {
   const examplePrivateKey = '0x0123456701234567012345670123456701234567012345670123456701234567';
   let storeStub;
+  let privateKeyDetectedDialogStub;
   let askForPrivateKeyDialogStub;
   let cryptoStub;
 
-  const call = async () => getPrivateKeyPhase(storeStub, cryptoStub, askForPrivateKeyDialogStub)();
+  const call = async () => getPrivateKeyPhase(storeStub, cryptoStub, privateKeyDetectedDialogStub, askForPrivateKeyDialogStub)();
 
   beforeEach(async () => {
     storeStub = {
@@ -32,6 +33,7 @@ describe('Get Private Key Phase', () => {
       read: sinon.stub(),
       write: sinon.stub()
     };
+    privateKeyDetectedDialogStub = sinon.stub().resolves();
     askForPrivateKeyDialogStub = sinon.stub();
     cryptoStub = {
       generatePrivateKey: sinon.stub()
@@ -47,6 +49,7 @@ describe('Get Private Key Phase', () => {
     expect(storeStub.has).to.have.been.calledOnceWith('privateKey');
     expect(storeStub.read).to.have.been.calledOnceWith('privateKey');
     expect(askForPrivateKeyDialogStub).to.not.have.been.called;
+    expect(privateKeyDetectedDialogStub).to.have.been.calledOnceWith(examplePrivateKey);
     expect(ret).to.equal(examplePrivateKey);
   });
 
@@ -65,6 +68,7 @@ describe('Get Private Key Phase', () => {
     expect(askForPrivateKeyDialogStub).to.have.been.calledOnce;
     expect(cryptoStub.generatePrivateKey).to.have.been.calledOnce;
     expect(storeStub.write).to.have.been.calledOnceWith('privateKey', examplePrivateKey);
+    expect(privateKeyDetectedDialogStub).to.have.been.calledOnceWith(examplePrivateKey);
     expect(ret).to.equal(examplePrivateKey);
   });
 
@@ -83,6 +87,7 @@ describe('Get Private Key Phase', () => {
     expect(askForPrivateKeyDialogStub).to.have.been.calledOnce;
     expect(cryptoStub.generatePrivateKey).to.not.have.been.called;
     expect(storeStub.write).to.have.been.calledOnceWith('privateKey', examplePrivateKey);
+    expect(privateKeyDetectedDialogStub).to.have.been.calledOnceWith(examplePrivateKey);
     expect(ret).to.equal(examplePrivateKey);
   });
 });

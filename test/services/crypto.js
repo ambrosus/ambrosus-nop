@@ -29,7 +29,8 @@ describe('Crypto', () => {
     web3Stub = {
       eth: {
         accounts: {
-          create: sinon.stub()
+          create: sinon.stub(),
+          privateKeyToAccount: sinon.stub()
         }
       }
     };
@@ -76,6 +77,16 @@ describe('Crypto', () => {
 
     it('returns false if private key is not a hex value', async () => {
       await expect(crypto.isValidPrivateKey(inputs.notHex)).to.eventually.be.false;
+    });
+  });
+
+  describe('addressForPrivateKey', () => {
+    it('delegates the job to web3', async () => {
+      web3Stub.eth.accounts.privateKeyToAccount.returns({
+        address: '0x9876'
+      });
+      await expect(crypto.addressForPrivateKey('0x1234')).to.eventually.be.equal('0x9876');
+      expect(web3Stub.eth.accounts.privateKeyToAccount).to.have.been.calledOnceWith('0x1234');
     });
   });
 });

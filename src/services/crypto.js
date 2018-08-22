@@ -21,6 +21,11 @@ class Crypto {
     const addressRegex = /^0x[0-9a-f]{64}$/i;
     return addressRegex.exec(candidate) !== null;
   }
+
+  async addressForPrivateKey(privateKey) {
+    const account = this.web3.eth.accounts.privateKeyToAccount(privateKey);
+    return account.address;
+  }
 }
 
 export default Crypto;
