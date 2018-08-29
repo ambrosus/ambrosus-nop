@@ -7,7 +7,7 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-class Crypto {
+export default class Crypto {
   constructor(web3) {
     this.web3 = web3;
   }
@@ -27,6 +27,3 @@ class Crypto {
     return account.address;
   }
 }
-
-export default Crypto;
-

@@ -19,14 +19,14 @@ chai.use(sinonChai);
 const {expect} = chai;
 
 describe('Check docker available', () => {
-  let systemStub;
+  let systemModelStub;
   let dockerDetectedDialogStub;
   let dockerMissingDialogStub;
 
-  const call = async () => checkDockerAvailablePhase(systemStub, dockerDetectedDialogStub, dockerMissingDialogStub)();
+  const call = async () => checkDockerAvailablePhase(systemModelStub, dockerDetectedDialogStub, dockerMissingDialogStub)();
 
   beforeEach(async () => {
-    systemStub = {
+    systemModelStub = {
       isDockerAvailable: sinon.stub()
     };
     dockerDetectedDialogStub = sinon.stub().resolves();
@@ -34,22 +34,22 @@ describe('Check docker available', () => {
   });
 
   it('displays confirmation dialog if docker available', async () => {
-    systemStub.isDockerAvailable.resolves(true);
+    systemModelStub.isDockerAvailable.resolves(true);
 
     const ret = await call();
 
-    expect(systemStub.isDockerAvailable).to.have.been.calledOnce;
+    expect(systemModelStub.isDockerAvailable).to.have.been.calledOnce;
     expect(dockerDetectedDialogStub).to.have.been.called;
     expect(dockerMissingDialogStub).to.not.have.been.called;
     expect(ret).to.equal(true);
   });
 
   it('displays error dialog if not docker available', async () => {
-    systemStub.isDockerAvailable.resolves(false);
+    systemModelStub.isDockerAvailable.resolves(false);
 
     const ret = await call();
 
-    expect(systemStub.isDockerAvailable).to.have.been.calledOnce;
+    expect(systemModelStub.isDockerAvailable).to.have.been.calledOnce;
     expect(dockerDetectedDialogStub).to.not.have.been.called;
     expect(dockerMissingDialogStub).to.have.been.called;
     expect(ret).to.equal(false);
