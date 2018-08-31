@@ -10,6 +10,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 import Crypto from './services/crypto';
 import Store from './services/store';
 import System from './services/system';
+import Validations from './services/validations';
 import StateModel from './models/state_model';
 import SystemModel from './models/system_model';
 import execCmd from './utils/execCmd';
@@ -34,11 +35,12 @@ class Builder {
     objects.store = new Store(config.storePath);
     objects.crypto = new Crypto(objects.web3);
     objects.system = new System(execCmd);
+    objects.validations = new Validations();
     objects.stateModel = new StateModel(objects.store, objects.crypto);
     objects.systemModel = new SystemModel(objects.system);
 
     objects.privateKeyDetectedDialog = privateKeyDetectedDialog(objects.crypto, messages);
-    objects.askForPrivateKeyDialog = askForPrivateKeyDialog(objects.crypto, messages);
+    objects.askForPrivateKeyDialog = askForPrivateKeyDialog(objects.validations, messages);
     objects.dockerDetectedDialog = dockerDetectedDialog(messages);
     objects.dockerMissingDialog = dockerMissingDialog(messages);
     objects.askForNodeTypeDialog = askForNodeTypeDialog(messages);

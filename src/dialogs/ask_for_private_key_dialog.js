@@ -9,7 +9,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 
 import inquirer from 'inquirer';
 
-const askForPrivateKeyDialog = (crypto, messages) => async () => inquirer.prompt(
+const askForPrivateKeyDialog = (validations, messages) => async () => inquirer.prompt(
   [
     {
       type: 'list',
@@ -31,7 +31,7 @@ const askForPrivateKeyDialog = (crypto, messages) => async () => inquirer.prompt
       name: 'privateKey',
       message: messages.privateKeyInputInstruction,
       when: (state) => state.source === 'manual',
-      validate: async (answer) => await crypto.isValidPrivateKey(answer) || messages.privateKeyInputError
+      validate: async (answer) => await validations.isValidPrivateKey(answer) || messages.privateKeyInputError
     }
   ]);
 
