@@ -29,4 +29,8 @@ export default class StateModel {
     await this.storePrivateKey(privateKey);
     return privateKey;
   }
+
+  async storeRole(role) {
+    await this.store.write('role', role);
+  }
 }

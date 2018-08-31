@@ -12,12 +12,13 @@ import config from '../config/config';
 
 const start = async () => {
   const builder = new Builder();
-  const {getPrivateKeyPhase, checkDockerAvailablePhase} = await builder.build(config);
+  const {getPrivateKeyPhase, checkDockerAvailablePhase, chooseNodeTypePhase} = await builder.build(config);
 
   await getPrivateKeyPhase();
   if (!await checkDockerAvailablePhase()) {
     return;
   }
+  await chooseNodeTypePhase();
 };
 
 start()

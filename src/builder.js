@@ -15,10 +15,12 @@ import SystemModel from './models/system_model';
 import execCmd from './utils/execCmd';
 import getPrivateKeyPhase from './phases/get_private_key_phase';
 import checkDockerAvailablePhase from './phases/check_docker_available_phase';
+import chooseNodeTypePhase from './phases/choose_node_type_phase';
 import askForPrivateKeyDialog from './dialogs/ask_for_private_key_dialog';
 import dockerDetectedDialog from './dialogs/docker_detected_dialog';
 import dockerMissingDialog from './dialogs/docker_missing_dialog';
 import privateKeyDetectedDialog from './dialogs/private_key_detected_dialog';
+import askForNodeTypeDialog from './dialogs/ask_for_node_type_dialog';
 
 import Web3 from 'web3';
 
@@ -38,7 +40,9 @@ class Builder {
     objects.getPrivateKeyPhase = getPrivateKeyPhase(objects.stateModel, objects.privateKeyDetectedDialog, objects.askForPrivateKeyDialog);
     objects.dockerDetectedDialog = dockerDetectedDialog();
     objects.dockerMissingDialog = dockerMissingDialog();
+    objects.askForNodeTypeDialog = askForNodeTypeDialog();
     objects.checkDockerAvailablePhase = checkDockerAvailablePhase(objects.systemModel, objects.dockerDetectedDialog, objects.dockerMissingDialog);
+    objects.chooseNodeTypePhase = chooseNodeTypePhase(objects.stateModel, objects.askForNodeTypeDialog);
 
     this.objects = objects;
     return objects;

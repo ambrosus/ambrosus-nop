@@ -24,6 +24,7 @@ describe('State Model', () => {
   let stateModel;
 
   const examplePrivateKey = '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709';
+  const exampleRole = 'apollo';
 
   beforeEach(async () => {
     storeStub = {
@@ -57,6 +58,13 @@ describe('State Model', () => {
     it('stores private key', async () => {
       await expect(stateModel.storePrivateKey(examplePrivateKey)).to.be.eventually.fulfilled;
       await expect(storeStub.write).to.have.been.calledOnceWith('privateKey', examplePrivateKey);
+    });
+  });
+
+  describe('storeRole', () => {
+    it('stores role', async () => {
+      await expect(stateModel.storeRole(exampleRole)).to.be.eventually.fulfilled;
+      await expect(storeStub.write).to.have.been.calledOnceWith('role', exampleRole);
     });
   });
 
