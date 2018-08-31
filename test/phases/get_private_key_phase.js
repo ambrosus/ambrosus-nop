@@ -20,73 +20,62 @@ const {expect} = chai;
 
 describe('Get Private Key Phase', () => {
   const examplePrivateKey = '0x0123456701234567012345670123456701234567012345670123456701234567';
-  let storeStub;
+  let stateModelStub;
   let privateKeyDetectedDialogStub;
   let askForPrivateKeyDialogStub;
-  let cryptoStub;
 
-  const call = async () => getPrivateKeyPhase(storeStub, cryptoStub, privateKeyDetectedDialogStub, askForPrivateKeyDialogStub)();
+  const call = async () => getPrivateKeyPhase(stateModelStub, privateKeyDetectedDialogStub, askForPrivateKeyDialogStub)();
 
   beforeEach(async () => {
-    storeStub = {
-      has: sinon.stub(),
-      read: sinon.stub(),
-      write: sinon.stub()
+    stateModelStub = {
+      getExistingPrivateKey: sinon.stub(),
+      storePrivateKey: sinon.stub(),
+      generateAndStoreNewPrivateKey: sinon.stub()
     };
     privateKeyDetectedDialogStub = sinon.stub().resolves();
     askForPrivateKeyDialogStub = sinon.stub();
-    cryptoStub = {
-      generatePrivateKey: sinon.stub()
-    };
   });
 
   it('ends if a private key is already in the store', async () => {
-    storeStub.has.withArgs('privateKey').resolves(true);
-    storeStub.read.withArgs('privateKey').resolves(examplePrivateKey);
+    stateModelStub.getExistingPrivateKey.resolves(examplePrivateKey);
 
     const ret = await call();
 
-    expect(storeStub.has).to.have.been.calledOnceWith('privateKey');
-    expect(storeStub.read).to.have.been.calledOnceWith('privateKey');
+    expect(stateModelStub.getExistingPrivateKey).to.have.been.calledOnce;
     expect(askForPrivateKeyDialogStub).to.not.have.been.called;
     expect(privateKeyDetectedDialogStub).to.have.been.calledOnceWith(examplePrivateKey);
     expect(ret).to.equal(examplePrivateKey);
   });
 
   it('generates and stores a new private key (generate option)', async () => {
-    storeStub.has.withArgs('privateKey').resolves(false);
+    stateModelStub.getExistingPrivateKey.resolves(null);
     askForPrivateKeyDialogStub.resolves({
       source: 'generate'
     });
-    cryptoStub.generatePrivateKey.resolves(examplePrivateKey);
-    storeStub.write.resolves();
+    stateModelStub.generateAndStoreNewPrivateKey.resolves(examplePrivateKey);
 
     const ret = await call();
 
-    expect(storeStub.has).to.have.been.calledOnceWith('privateKey');
-    expect(storeStub.read).to.not.have.been.called;
+    expect(stateModelStub.getExistingPrivateKey).to.have.been.calledOnce;
     expect(askForPrivateKeyDialogStub).to.have.been.calledOnce;
-    expect(cryptoStub.generatePrivateKey).to.have.been.calledOnce;
-    expect(storeStub.write).to.have.been.calledOnceWith('privateKey', examplePrivateKey);
+    expect(stateModelStub.generateAndStoreNewPrivateKey).to.have.been.calledOnce;
     expect(privateKeyDetectedDialogStub).to.have.been.calledOnceWith(examplePrivateKey);
     expect(ret).to.equal(examplePrivateKey);
   });
 
   it('stores the provided private key (manual option)', async () => {
-    storeStub.has.withArgs('privateKey').resolves(false);
+    stateModelStub.getExistingPrivateKey.resolves(null);
     askForPrivateKeyDialogStub.resolves({
       source: 'manual',
       privateKey: examplePrivateKey
     });
-    storeStub.write.resolves();
+    stateModelStub.storePrivateKey.resolves();
 
     const ret = await call();
 
-    expect(storeStub.has).to.have.been.calledOnceWith('privateKey');
-    expect(storeStub.read).to.not.have.been.called;
+    expect(stateModelStub.getExistingPrivateKey).to.have.been.calledOnce;
     expect(askForPrivateKeyDialogStub).to.have.been.calledOnce;
-    expect(cryptoStub.generatePrivateKey).to.not.have.been.called;
-    expect(storeStub.write).to.have.been.calledOnceWith('privateKey', examplePrivateKey);
+    expect(stateModelStub.storePrivateKey).to.have.been.calledOnceWith(examplePrivateKey);
     expect(privateKeyDetectedDialogStub).to.have.been.calledOnceWith(examplePrivateKey);
     expect(ret).to.equal(examplePrivateKey);
   });

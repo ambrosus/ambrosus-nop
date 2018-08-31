@@ -7,13 +7,12 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-const checkDockerAvailablePhase = (systemModel, dockerDetectedDialog, dockerMissingDialog) => async () => {
-  if (!await systemModel.isDockerAvailable()) {
-    await dockerMissingDialog();
-    return false;
+export default class SystemModel {
+  constructor(system) {
+    this.system = system;
   }
-  await dockerDetectedDialog();
-  return true;
-};
 
-export default checkDockerAvailablePhase;
+  async isDockerAvailable() {
+    return this.system.isDockerAvailable();
+  }
+}

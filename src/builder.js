@@ -10,6 +10,8 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 import Crypto from './services/crypto';
 import Store from './services/store';
 import System from './services/system';
+import StateModel from './models/state_model';
+import SystemModel from './models/system_model';
 import execCmd from './utils/execCmd';
 import getPrivateKeyPhase from './phases/get_private_key_phase';
 import checkDockerAvailablePhase from './phases/check_docker_available_phase';
@@ -28,13 +30,15 @@ class Builder {
     objects.store = new Store(config.storePath);
     objects.crypto = new Crypto(objects.web3);
     objects.system = new System(execCmd);
+    objects.stateModel = new StateModel(objects.store, objects.crypto);
+    objects.systemModel = new SystemModel(objects.system);
 
     objects.privateKeyDetectedDialog = privateKeyDetectedDialog(objects.crypto);
     objects.askForPrivateKeyDialog = askForPrivateKeyDialog(objects.crypto);
-    objects.getPrivateKeyPhase = getPrivateKeyPhase(objects.store, objects.crypto, objects.privateKeyDetectedDialog, objects.askForPrivateKeyDialog);
+    objects.getPrivateKeyPhase = getPrivateKeyPhase(objects.stateModel, objects.privateKeyDetectedDialog, objects.askForPrivateKeyDialog);
     objects.dockerDetectedDialog = dockerDetectedDialog();
     objects.dockerMissingDialog = dockerMissingDialog();
-    objects.checkDockerAvailablePhase = checkDockerAvailablePhase(objects.system, objects.dockerDetectedDialog, objects.dockerMissingDialog);
+    objects.checkDockerAvailablePhase = checkDockerAvailablePhase(objects.systemModel, objects.dockerDetectedDialog, objects.dockerMissingDialog);
 
     this.objects = objects;
     return objects;
