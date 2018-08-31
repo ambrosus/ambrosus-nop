@@ -44,7 +44,7 @@ describe('Choose Node Type Phase', () => {
 
     expect(stateModelStub.getExistingRole).to.have.been.calledOnce;
     expect(askForNodeTypeDialogStub).to.not.have.been.called;
-    expect(roleChosenDialogStub).to.have.been.calledOnce;
+    expect(roleChosenDialogStub).to.have.been.calledOnceWith(exampleRole);
     expect(ret).to.equal(exampleRole);
   });
 
@@ -59,7 +59,7 @@ describe('Choose Node Type Phase', () => {
     expect(stateModelStub.getExistingRole).to.have.been.calledOnce;
     expect(askForNodeTypeDialogStub).to.have.been.calledOnce;
     expect(stateModelStub.storeRole).to.have.been.calledOnceWith(exampleRole);
-    expect(roleChosenDialogStub).to.have.been.calledOnce;
+    expect(roleChosenDialogStub).to.have.been.calledOnceWith(exampleRole);
     expect(ret).to.equal(exampleRole);
   });
 });

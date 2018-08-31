@@ -21,7 +21,7 @@ const chooseRole = async (stateModel, askForNodeTypeDialog) => {
 
 const chooseNodeTypePhase = (stateModel, askForNodeTypeDialog, roleChosenDialog) => async () => {
   const chosenRole = await chooseRole(stateModel, askForNodeTypeDialog);
-  await roleChosenDialog();
+  await roleChosenDialog(chosenRole);
   return chosenRole;
 };
 
