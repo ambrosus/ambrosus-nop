@@ -13,6 +13,7 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
 import StateModel from '../../src/models/state_model';
+import {APOLLO} from '../../src/consts';
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
@@ -24,11 +25,12 @@ describe('State Model', () => {
   let stateModel;
 
   const examplePrivateKey = '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709';
+  const exampleRole = APOLLO;
 
   beforeEach(async () => {
     storeStub = {
       has: sinon.stub(),
-      read: sinon.stub().resolves(examplePrivateKey),
+      read: sinon.stub(),
       write: sinon.stub()
     };
     cryptoStub = {
@@ -37,7 +39,23 @@ describe('State Model', () => {
     stateModel = new StateModel(storeStub, cryptoStub);
   });
 
+  describe('generateAndStoreNewPrivateKey', () => {
+    it('generates new private key', async () => {
+      await expect(stateModel.generateAndStoreNewPrivateKey()).to.be.eventually.fulfilled;
+      await expect(cryptoStub.generatePrivateKey).to.have.been.calledOnce;
+    });
+
+    it('stores newly generated private key', async () => {
+      await expect(stateModel.generateAndStoreNewPrivateKey()).to.be.eventually.fulfilled;
+      await expect(storeStub.write).to.have.been.calledOnceWith('privateKey', examplePrivateKey);
+    });
+  });
+
   describe('getExistingPrivateKey', () => {
+    beforeEach(async () => {
+      storeStub.read.resolves(examplePrivateKey);
+    });
+
     it('returns private key if one exists', async () => {
       storeStub.has.resolves(true);
       expect(await stateModel.getExistingPrivateKey()).to.equal(examplePrivateKey);
@@ -60,15 +78,30 @@ describe('State Model', () => {
     });
   });
 
-  describe('generateAndStoreNewPrivateKey', () => {
-    it('generates new private key', async () => {
-      await expect(stateModel.generateAndStoreNewPrivateKey()).to.be.eventually.fulfilled;
-      await expect(cryptoStub.generatePrivateKey).to.have.been.calledOnce;
+  describe('getExistingRole', () => {
+    beforeEach(async () => {
+      storeStub.read.resolves(exampleRole);
     });
 
-    it('stores newly generated private key', async () => {
-      await expect(stateModel.generateAndStoreNewPrivateKey()).to.be.eventually.fulfilled;
-      await expect(storeStub.write).to.have.been.calledOnceWith('privateKey', examplePrivateKey);
+    it('returns role if one exists', async () => {
+      storeStub.has.resolves(true);
+      expect(await stateModel.getExistingRole()).to.equal(exampleRole);
+      await expect(storeStub.has).to.have.been.calledOnceWith('role');
+      await expect(storeStub.read).to.have.been.calledOnceWith('role');
+    });
+
+    it('returns null if role does not exist yet', async () => {
+      storeStub.has.resolves(false);
+      expect(await stateModel.getExistingRole()).to.equal(null);
+      await expect(storeStub.has).to.have.been.calledOnceWith('role');
+      await expect(storeStub.read).to.have.been.not.been.calledOnceWith('role');
+    });
+  });
+
+  describe('storeRole', () => {
+    it('stores role', async () => {
+      await expect(stateModel.storeRole(exampleRole)).to.be.eventually.fulfilled;
+      await expect(storeStub.write).to.have.been.calledOnceWith('role', exampleRole);
     });
   });
 });
