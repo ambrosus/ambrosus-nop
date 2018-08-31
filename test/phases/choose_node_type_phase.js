@@ -12,21 +12,21 @@ import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
-import chooseNodeTypePhase from '../../src/phases/choose_node_type_phase';
+import selectNodeTypePhase from '../../src/phases/select_node_type_phase';
 import {ATLAS_1} from '../../src/consts';
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
 const {expect} = chai;
 
-describe('Choose Node Type Phase', () => {
+describe('Select Node Type Phase', () => {
   let stateModelStub;
   let askForNodeTypeDialogStub;
-  let roleChosenDialogStub;
+  let roleSelectedDialogStub;
 
   const exampleRole = ATLAS_1;
 
-  const call = async () => chooseNodeTypePhase(stateModelStub, askForNodeTypeDialogStub, roleChosenDialogStub)();
+  const call = async () => selectNodeTypePhase(stateModelStub, askForNodeTypeDialogStub, roleSelectedDialogStub)();
 
   beforeEach(async () => {
     stateModelStub = {
@@ -34,7 +34,7 @@ describe('Choose Node Type Phase', () => {
       getExistingRole: sinon.stub()
     };
     askForNodeTypeDialogStub = sinon.stub();
-    roleChosenDialogStub = sinon.stub();
+    roleSelectedDialogStub = sinon.stub();
   });
 
   it('ends if a role is already in the store', async () => {
@@ -44,11 +44,11 @@ describe('Choose Node Type Phase', () => {
 
     expect(stateModelStub.getExistingRole).to.have.been.calledOnce;
     expect(askForNodeTypeDialogStub).to.not.have.been.called;
-    expect(roleChosenDialogStub).to.have.been.calledOnceWith(exampleRole);
+    expect(roleSelectedDialogStub).to.have.been.calledOnceWith(exampleRole);
     expect(ret).to.equal(exampleRole);
   });
 
-  it('stores correctly chosen role', async () => {
+  it('stores correctly selected role', async () => {
     stateModelStub.getExistingRole.resolves(null);
     askForNodeTypeDialogStub.resolves({
       nodeType: exampleRole
@@ -59,7 +59,7 @@ describe('Choose Node Type Phase', () => {
     expect(stateModelStub.getExistingRole).to.have.been.calledOnce;
     expect(askForNodeTypeDialogStub).to.have.been.calledOnce;
     expect(stateModelStub.storeRole).to.have.been.calledOnceWith(exampleRole);
-    expect(roleChosenDialogStub).to.have.been.calledOnceWith(exampleRole);
+    expect(roleSelectedDialogStub).to.have.been.calledOnceWith(exampleRole);
     expect(ret).to.equal(exampleRole);
   });
 });

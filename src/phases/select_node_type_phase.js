@@ -7,7 +7,7 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-const chooseRole = async (stateModel, askForNodeTypeDialog) => {
+const selectRole = async (stateModel, askForNodeTypeDialog) => {
   const existingRole = await stateModel.getExistingRole();
   if (existingRole !== null) {
     return existingRole;
@@ -19,10 +19,10 @@ const chooseRole = async (stateModel, askForNodeTypeDialog) => {
   return nodeType;
 };
 
-const chooseNodeTypePhase = (stateModel, askForNodeTypeDialog, roleChosenDialog) => async () => {
-  const chosenRole = await chooseRole(stateModel, askForNodeTypeDialog);
-  await roleChosenDialog(chosenRole);
-  return chosenRole;
+const selectNodeTypePhase = (stateModel, askForNodeTypeDialog, roleSelectedDialog) => async () => {
+  const selectedRole = await selectRole(stateModel, askForNodeTypeDialog);
+  await roleSelectedDialog(selectedRole);
+  return selectedRole;
 };
 
-export default chooseNodeTypePhase;
+export default selectNodeTypePhase;
