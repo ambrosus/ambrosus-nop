@@ -13,6 +13,6 @@ export default class SystemModel {
   }
 
   async isDockerAvailable() {
-    return await this.system.isDockerAvailable();
+    return this.system.isDockerAvailable();
   }
 }

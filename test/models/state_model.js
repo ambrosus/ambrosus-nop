@@ -41,15 +41,15 @@ describe('State Model', () => {
     it('returns private key if one exists', async () => {
       storeStub.has.resolves(true);
       expect(await stateModel.getExistingPrivateKey()).to.equal(examplePrivateKey);
-      await expect(storeStub.has).to.have.been.calledOnce;
-      await expect(storeStub.read).to.have.been.calledOnce;
+      await expect(storeStub.has).to.have.been.calledOnceWith('privateKey');
+      await expect(storeStub.read).to.have.been.calledOnceWith('privateKey');
     });
 
     it('returns null if private key does not exist yet', async () => {
       storeStub.has.resolves(false);
       expect(await stateModel.getExistingPrivateKey()).to.equal(null);
-      await expect(storeStub.has).to.have.been.calledOnce;
-      await expect(storeStub.read).to.have.been.not.been.called;
+      await expect(storeStub.has).to.have.been.calledOnceWith('privateKey');
+      await expect(storeStub.read).to.have.been.not.been.calledOnceWith('privateKey');
     });
   });
 
