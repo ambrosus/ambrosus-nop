@@ -9,8 +9,8 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 
 import chalk from 'chalk';
 
-const dockerDetectedDialog = () => async () => {
-  console.log(chalk.green('Docker is installed.'));
+const dockerDetectedDialog = (messages) => async () => {
+  console.log(chalk.green(messages.dockerInstalledInfo));
 };
 
 export default dockerDetectedDialog;

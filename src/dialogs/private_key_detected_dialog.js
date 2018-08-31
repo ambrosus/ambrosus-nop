@@ -9,9 +9,9 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 
 import chalk from 'chalk';
 
-const privateKeyDetectedDialog = (crypto) => async (privateKey) => {
+const privateKeyDetectedDialog = (crypto, messages) => async (privateKey) => {
   const address = await crypto.addressForPrivateKey(privateKey);
-  console.log(chalk.green(`Private key verified. Your address is: `) + chalk.yellow(address));
+  console.log(chalk.green(messages.privateKeyInfo) + chalk.yellow(address));
 };
 
 export default privateKeyDetectedDialog;

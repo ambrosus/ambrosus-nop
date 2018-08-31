@@ -9,19 +9,19 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 
 import inquirer from 'inquirer';
 
-const askForPrivateKeyDialog = (crypto) => async () => inquirer.prompt(
+const askForPrivateKeyDialog = (crypto, messages) => async () => inquirer.prompt(
   [
     {
       type: 'list',
       name: 'source',
-      message: `No private key setup yet. What do you want to do?`,
+      message: messages.noPrivateKeyQuestion,
       choices: [
         {
-          name: 'Input existing key manually',
+          name: messages.privateKeyManualInputAnswer,
           value: 'manual'
         },
         {
-          name: 'Generate new key automatically',
+          name: messages.privateKeyAutoGenerationAnswer,
           value: 'generate'
         }
       ]
@@ -29,9 +29,9 @@ const askForPrivateKeyDialog = (crypto) => async () => inquirer.prompt(
     {
       type: 'input',
       name: 'privateKey',
-      message: `Please provide your private key in hex form:`,
+      message: messages.privateKeyInputInstruction,
       when: (state) => state.source === 'manual',
-      validate: async (answer) => await crypto.isValidPrivateKey(answer) || 'The provided value is not a valid address'
+      validate: async (answer) => await crypto.isValidPrivateKey(answer) || messages.privateKeyInputError
     }
   ]);
 

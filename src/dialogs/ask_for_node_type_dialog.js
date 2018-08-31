@@ -10,43 +10,43 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 import {APOLLO, HERMES, ATLAS_1, ATLAS_2, ATLAS_3} from '../consts';
 import inquirer from 'inquirer';
 
-const askForNodeTypeDialog = () => async () => inquirer.prompt(
+const askForNodeTypeDialog = (messages) => async () => inquirer.prompt(
   [
     {
       type: 'list',
       name: 'nodeType',
-      message: `Which node do you want to run?`,
+      message: messages.nodeTypeQuestion,
       choices: [
         {
-          name: 'Apollo',
+          name: messages.apolloName,
           value: APOLLO
         },
         {
-          name: 'Hermes',
+          name: messages.hermesName,
           value: HERMES
         },
         {
-          name: 'Atlas',
-          value: 'Atlas'
+          name: messages.atlasName,
+          value: 'atlasSelection'
         }
       ]
     },
     {
-      when: (state) => state.nodeType === 'Atlas',
+      when: (state) => state.nodeType === 'atlasSelection',
       type: 'list',
       name: 'nodeType',
-      message: `Which Atlas version do you want to run?`,
+      message: messages.atlasVersionQuestion,
       choices: [
         {
-          name: 'Omega',
+          name: messages.atlas3Name,
           value: ATLAS_3
         },
         {
-          name: 'Sigma',
+          name: messages.atlas2Name,
           value: ATLAS_2
         },
         {
-          name: 'Zeta',
+          name: messages.atlas1Name,
           value: ATLAS_1
         }
       ]

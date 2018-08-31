@@ -23,7 +23,7 @@ export default class Store {
   async read(key) {
     const contents = await this.readFile();
     if (contents[key] === undefined) {
-      throw new Error(`There value for ${key} is missing in the store at ${this.storeFilePath}`);
+      throw new Error(`The value for ${key} is missing in the store at ${this.storeFilePath}`);
     }
     return contents[key];
   }
