@@ -11,7 +11,7 @@ import chalk from 'chalk';
 
 
 const roleChosenDialog = () => async (role) => {
-  console.log(chalk.green('Role has been correctly chosen. Selected role: ') + chalk.yellow(role));
+  console.log(chalk.yellow(role) + chalk.green(' has been selected.'));
 };
 
 export default roleChosenDialog;
