@@ -13,6 +13,7 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
 import chooseNodeTypePhase from '../../src/phases/choose_node_type_phase';
+import {ATLAS_1} from '../../src/consts';
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
@@ -21,38 +22,44 @@ const {expect} = chai;
 describe('Choose Node Type Phase', () => {
   let stateModelStub;
   let askForNodeTypeDialogStub;
+  let roleChosenDialogStub;
 
-  const call = async () => chooseNodeTypePhase(stateModelStub, askForNodeTypeDialogStub)();
+  const exampleRole = ATLAS_1;
+
+  const call = async () => chooseNodeTypePhase(stateModelStub, askForNodeTypeDialogStub, roleChosenDialogStub)();
 
   beforeEach(async () => {
     stateModelStub = {
-      storeRole: sinon.stub()
+      storeRole: sinon.stub(),
+      getExistingRole: sinon.stub()
     };
     askForNodeTypeDialogStub = sinon.stub();
+    roleChosenDialogStub = sinon.stub();
   });
 
-  it('stores correctly if user has chosen Apollo or Hermes (non-Atlas)', async () => {
+  it('ends if a role is already in the store', async () => {
+    stateModelStub.getExistingRole.resolves(exampleRole);
+
+    const ret = await call();
+
+    expect(stateModelStub.getExistingRole).to.have.been.calledOnce;
+    expect(askForNodeTypeDialogStub).to.not.have.been.called;
+    expect(roleChosenDialogStub).to.have.been.calledOnce;
+    expect(ret).to.equal(exampleRole);
+  });
+
+  it('stores correctly chosen role', async () => {
+    stateModelStub.getExistingRole.resolves(null);
     askForNodeTypeDialogStub.resolves({
-      nodeType: 'hermes'
+      nodeType: exampleRole
     });
 
     const ret = await call();
 
+    expect(stateModelStub.getExistingRole).to.have.been.calledOnce;
     expect(askForNodeTypeDialogStub).to.have.been.calledOnce;
-    expect(stateModelStub.storeRole).to.have.been.calledOnceWith('hermes');
-    expect(ret).to.equal('hermes');
-  });
-
-  it('stores correctly if user has chosen Atlas', async () => {
-    askForNodeTypeDialogStub.resolves({
-      nodeType: 'atlas',
-      atlasType: 'atlas1'
-    });
-
-    const ret = await call();
-
-    expect(askForNodeTypeDialogStub).to.have.been.calledOnce;
-    expect(stateModelStub.storeRole).to.have.been.calledOnceWith('atlas1');
-    expect(ret).to.equal('atlas1');
+    expect(stateModelStub.storeRole).to.have.been.calledOnceWith(exampleRole);
+    expect(roleChosenDialogStub).to.have.been.calledOnce;
+    expect(ret).to.equal(exampleRole);
   });
 });

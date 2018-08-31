@@ -7,6 +7,7 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
+import {APOLLO, HERMES, ATLAS_1, ATLAS_2, ATLAS_3} from '../consts';
 import inquirer from 'inquirer';
 
 const askForNodeTypeDialog = () => async () => inquirer.prompt(
@@ -18,35 +19,35 @@ const askForNodeTypeDialog = () => async () => inquirer.prompt(
       choices: [
         {
           name: 'Apollo',
-          value: 'apollo'
+          value: APOLLO
         },
         {
           name: 'Hermes',
-          value: 'hermes'
+          value: HERMES
         },
         {
           name: 'Atlas',
-          value: 'atlas'
+          value: 'Atlas'
         }
       ]
     },
     {
-      when: (state) => state.nodeType === 'atlas',
+      when: (state) => state.nodeType === 'Atlas',
       type: 'list',
-      name: 'atlasType',
+      name: 'nodeType',
       message: `Which Atlas version do you want to run?`,
       choices: [
         {
           name: 'Omega',
-          value: 'atlas3'
+          value: ATLAS_3
         },
         {
           name: 'Sigma',
-          value: 'atlas2'
+          value: ATLAS_2
         },
         {
           name: 'Zeta',
-          value: 'atlas1'
+          value: ATLAS_1
         }
       ]
     }

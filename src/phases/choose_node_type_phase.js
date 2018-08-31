@@ -7,17 +7,22 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-const chooseNodeTypePhase = (stateModel, askForNodeTypeDialog) => async () => {
+const chooseRole = async (stateModel, askForNodeTypeDialog) => {
+  const existingRole = await stateModel.getExistingRole();
+  if (existingRole !== null) {
+    return existingRole;
+  }
+
   const answers = await askForNodeTypeDialog();
   const {nodeType} = answers;
-
-  if (nodeType === 'atlas') {
-    const {atlasType} = answers;
-    await stateModel.storeRole(atlasType);
-    return atlasType;
-  }
   await stateModel.storeRole(nodeType);
   return nodeType;
+};
+
+const chooseNodeTypePhase = (stateModel, askForNodeTypeDialog, roleChosenDialog) => async () => {
+  const chosenRole = await chooseRole(stateModel, askForNodeTypeDialog);
+  await roleChosenDialog();
+  return chosenRole;
 };
 
 export default chooseNodeTypePhase;

@@ -21,6 +21,7 @@ import dockerDetectedDialog from './dialogs/docker_detected_dialog';
 import dockerMissingDialog from './dialogs/docker_missing_dialog';
 import privateKeyDetectedDialog from './dialogs/private_key_detected_dialog';
 import askForNodeTypeDialog from './dialogs/ask_for_node_type_dialog';
+import roleChosenDialog from './dialogs/role_chosen_dialog';
 
 import Web3 from 'web3';
 
@@ -41,8 +42,9 @@ class Builder {
     objects.dockerDetectedDialog = dockerDetectedDialog();
     objects.dockerMissingDialog = dockerMissingDialog();
     objects.askForNodeTypeDialog = askForNodeTypeDialog();
+    objects.roleChosenDialog = roleChosenDialog();
     objects.checkDockerAvailablePhase = checkDockerAvailablePhase(objects.systemModel, objects.dockerDetectedDialog, objects.dockerMissingDialog);
-    objects.chooseNodeTypePhase = chooseNodeTypePhase(objects.stateModel, objects.askForNodeTypeDialog);
+    objects.chooseNodeTypePhase = chooseNodeTypePhase(objects.stateModel, objects.askForNodeTypeDialog, objects.roleChosenDialog);
 
     this.objects = objects;
     return objects;

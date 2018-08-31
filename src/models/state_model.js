@@ -13,6 +13,12 @@ export default class StateModel {
     this.crypto = crypto;
   }
 
+  async generateAndStoreNewPrivateKey() {
+    const privateKey = await this.crypto.generatePrivateKey();
+    await this.storePrivateKey(privateKey);
+    return privateKey;
+  }
+
   async getExistingPrivateKey() {
     if (await this.store.has('privateKey')) {
       return await this.store.read('privateKey');
@@ -24,10 +30,11 @@ export default class StateModel {
     await this.store.write('privateKey', privateKey);
   }
 
-  async generateAndStoreNewPrivateKey() {
-    const privateKey = await this.crypto.generatePrivateKey();
-    await this.storePrivateKey(privateKey);
-    return privateKey;
+  async getExistingRole() {
+    if (await this.store.has('role')) {
+      return await this.store.read('role');
+    }
+    return null;
   }
 
   async storeRole(role) {
