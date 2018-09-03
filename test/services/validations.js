@@ -84,4 +84,45 @@ describe('Validations', () => {
       });
     });
   });
+
+  describe('isValidEmail', () => {
+    const correctInputs = [
+      'amboperator@gmail.com',
+      'amb_operator@mail.com',
+      'amb.operator@poczta.pl',
+      'amb.perator@gmail.subdomain.com',
+      'amb-operator@gmail.com',
+      '123456@gmail.com',
+      '"amboperator"@gmail.com',
+      'amboperator@subdomain.gmail.com',
+      'amboperator@gmail.name'
+    ];
+
+    correctInputs.forEach((email) => {
+      it(`returns true for ${email}`, async () => {
+        await expect(validations.isValidEmail(email)).to.eventually.be.true;
+      });
+    });
+
+    const incorrectInputs = [
+      'amboperator',
+      '#@%^%#$@#$@#.com',
+      '@gmail.com',
+      'amb operator@gmail.com',
+      'amboperator.gmail.com',
+      'amboperator@gmail@gmail.com',
+      '.amboperator@gmail.com',
+      'amboperator.@gmail.com',
+      'amboperator@gmail..com',
+      'amboperator@gmail.com (John Smith)',
+      'amboperator@gmail',
+      'amb..operator@gmail.com'
+    ];
+
+    incorrectInputs.forEach((email) => {
+      it(`returns false for ${email}`, async () => {
+        await expect(validations.isValidEmail(email)).to.eventually.be.false;
+      });
+    });
+  });
 });

@@ -27,6 +27,7 @@ describe('State Model', () => {
   const examplePrivateKey = '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709';
   const exampleRole = APOLLO;
   const exampleUrl = 'https://amb-node.com';
+  const exampleEmail = 'amb_node_operator@mail.com';
 
   beforeEach(async () => {
     storeStub = {
@@ -130,6 +131,33 @@ describe('State Model', () => {
     it('stores url', async () => {
       await expect(stateModel.storeNodeUrl(exampleUrl)).to.be.eventually.fulfilled;
       await expect(storeStub.write).to.have.been.calledOnceWith('url', exampleUrl);
+    });
+  });
+
+  describe('getExistingUserEmail', () => {
+    beforeEach(async () => {
+      storeStub.read.resolves(exampleEmail);
+    });
+
+    it('returns user email if one exists', async () => {
+      storeStub.has.resolves(true);
+      expect(await stateModel.getExistingUserEmail()).to.equal(exampleEmail);
+      await expect(storeStub.has).to.have.been.calledOnceWith('email');
+      await expect(storeStub.read).to.have.been.calledOnceWith('email');
+    });
+
+    it('returns null if user email does not exist yet', async () => {
+      storeStub.has.resolves(false);
+      expect(await stateModel.getExistingUserEmail()).to.equal(null);
+      await expect(storeStub.has).to.have.been.calledOnceWith('email');
+      await expect(storeStub.read).to.have.been.not.been.calledOnceWith('email');
+    });
+  });
+
+  describe('storeUserEmail', () => {
+    it('stores user email', async () => {
+      await expect(stateModel.storeUserEmail(exampleEmail)).to.be.eventually.fulfilled;
+      await expect(storeStub.write).to.have.been.calledOnceWith('email', exampleEmail);
     });
   });
 });
