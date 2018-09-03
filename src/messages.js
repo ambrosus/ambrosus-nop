@@ -23,8 +23,11 @@ const messages = {
   privateKeyInputError: 'The provided value is not a valid address',
   dockerInstalledInfo: 'Docker is installed.',
   dockerMissingInfo: 'Docker is required, and was not found. Please verify your installation.',
-  privateKeyInfo: `Private key verified. Your address is: `,
-  roleSelectionInfo: ' has been selected.'
+  privateKeyInfo: `Private key verified. Your address is `,
+  roleSelectionInfo: ' has been selected.',
+  nodeUrlInputInstruction: 'Please provide URL, which you will be using for your node',
+  nodeUrlInputError: 'The provided value is not a valid URL',
+  nodeUrlInfo: 'Node URL defined as '
 };
 
 export default messages;

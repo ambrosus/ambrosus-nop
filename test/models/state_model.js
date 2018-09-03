@@ -26,6 +26,7 @@ describe('State Model', () => {
 
   const examplePrivateKey = '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709';
   const exampleRole = APOLLO;
+  const exampleUrl = 'https://amb-node.com';
 
   beforeEach(async () => {
     storeStub = {
@@ -102,6 +103,33 @@ describe('State Model', () => {
     it('stores role', async () => {
       await expect(stateModel.storeRole(exampleRole)).to.be.eventually.fulfilled;
       await expect(storeStub.write).to.have.been.calledOnceWith('role', exampleRole);
+    });
+  });
+
+  describe('getExistingNodeUrl', () => {
+    beforeEach(async () => {
+      storeStub.read.resolves(exampleUrl);
+    });
+
+    it('returns node url if one exists', async () => {
+      storeStub.has.resolves(true);
+      expect(await stateModel.getExistingNodeUrl()).to.equal(exampleUrl);
+      await expect(storeStub.has).to.have.been.calledOnceWith('url');
+      await expect(storeStub.read).to.have.been.calledOnceWith('url');
+    });
+
+    it('returns null if node url does not exist yet', async () => {
+      storeStub.has.resolves(false);
+      expect(await stateModel.getExistingNodeUrl()).to.equal(null);
+      await expect(storeStub.has).to.have.been.calledOnceWith('url');
+      await expect(storeStub.read).to.have.been.not.been.calledOnceWith('url');
+    });
+  });
+
+  describe('storeNodeUrl', () => {
+    it('stores url', async () => {
+      await expect(stateModel.storeNodeUrl(exampleUrl)).to.be.eventually.fulfilled;
+      await expect(storeStub.write).to.have.been.calledOnceWith('url', exampleUrl);
     });
   });
 });

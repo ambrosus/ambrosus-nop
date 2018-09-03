@@ -7,18 +7,16 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-export default class Crypto {
-  constructor(web3) {
-    this.web3 = web3;
-  }
+import inquirer from 'inquirer';
 
-  async generatePrivateKey() {
-    const account = this.web3.eth.accounts.create();
-    return account.privateKey;
-  }
+const askForNodeUrlDialog = (validations, messages) => async () => inquirer.prompt(
+  [
+    {
+      type: 'input',
+      name: 'nodeUrl',
+      message: messages.nodeUrlInputInstruction,
+      validate: async (answer) => await validations.isValidUrl(answer) || messages.nodeUrlInputError
+    }
+  ]);
 
-  async addressForPrivateKey(privateKey) {
-    const account = this.web3.eth.accounts.privateKeyToAccount(privateKey);
-    return account.address;
-  }
-}
+export default askForNodeUrlDialog;

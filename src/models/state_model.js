@@ -40,4 +40,15 @@ export default class StateModel {
   async storeRole(role) {
     await this.store.write('role', role);
   }
+
+  async getExistingNodeUrl() {
+    if (await this.store.has('url')) {
+      return await this.store.read('url');
+    }
+    return null;
+  }
+
+  async storeNodeUrl(url) {
+    await this.store.write('url', url);
+  }
 }

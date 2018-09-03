@@ -7,18 +7,10 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-export default class Crypto {
-  constructor(web3) {
-    this.web3 = web3;
-  }
+import chalk from 'chalk';
 
-  async generatePrivateKey() {
-    const account = this.web3.eth.accounts.create();
-    return account.privateKey;
-  }
+const nodeUrlDetectedDialog = (messages) => async (nodeUrl) => {
+  console.log(chalk.green(messages.nodeUrlInfo) + chalk.yellow(nodeUrl));
+};
 
-  async addressForPrivateKey(privateKey) {
-    const account = this.web3.eth.accounts.privateKeyToAccount(privateKey);
-    return account.address;
-  }
-}
+export default nodeUrlDetectedDialog;
