@@ -66,6 +66,7 @@ describe('Get Node Url Phase', () => {
   it('ends if a URL is already in the store', async () => {
     stateModelStub.getExistingRole.resolves(ATLAS_1);
     stateModelStub.getExistingNodeUrl.resolves(exampleUrl);
+
     const ret = await call();
 
     expect(stateModelStub.getExistingRole).to.have.been.calledOnce;
