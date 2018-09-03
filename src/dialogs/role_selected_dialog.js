@@ -10,8 +10,8 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 import chalk from 'chalk';
 
 
-const roleSelectedDialog = () => async (role) => {
-  console.log(chalk.yellow(role) + chalk.green(' has been selected.'));
+const roleSelectedDialog = (messages) => async (role) => {
+  console.log(chalk.yellow(role) + chalk.green(messages.roleSelectionInfo));
 };
 
 export default roleSelectedDialog;

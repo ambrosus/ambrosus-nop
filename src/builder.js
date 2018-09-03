@@ -22,6 +22,7 @@ import dockerMissingDialog from './dialogs/docker_missing_dialog';
 import privateKeyDetectedDialog from './dialogs/private_key_detected_dialog';
 import askForNodeTypeDialog from './dialogs/ask_for_node_type_dialog';
 import roleSelectedDialog from './dialogs/role_selected_dialog';
+import messages from './messages';
 
 import Web3 from 'web3';
 
@@ -36,13 +37,13 @@ class Builder {
     objects.stateModel = new StateModel(objects.store, objects.crypto);
     objects.systemModel = new SystemModel(objects.system);
 
-    objects.privateKeyDetectedDialog = privateKeyDetectedDialog(objects.crypto);
-    objects.askForPrivateKeyDialog = askForPrivateKeyDialog(objects.crypto);
+    objects.privateKeyDetectedDialog = privateKeyDetectedDialog(objects.crypto, messages);
+    objects.askForPrivateKeyDialog = askForPrivateKeyDialog(objects.crypto, messages);
+    objects.dockerDetectedDialog = dockerDetectedDialog(messages);
+    objects.dockerMissingDialog = dockerMissingDialog(messages);
+    objects.askForNodeTypeDialog = askForNodeTypeDialog(messages);
+    objects.roleSelectedDialog = roleSelectedDialog(messages);
     objects.getPrivateKeyPhase = getPrivateKeyPhase(objects.stateModel, objects.privateKeyDetectedDialog, objects.askForPrivateKeyDialog);
-    objects.dockerDetectedDialog = dockerDetectedDialog();
-    objects.dockerMissingDialog = dockerMissingDialog();
-    objects.askForNodeTypeDialog = askForNodeTypeDialog();
-    objects.roleSelectedDialog = roleSelectedDialog();
     objects.checkDockerAvailablePhase = checkDockerAvailablePhase(objects.systemModel, objects.dockerDetectedDialog, objects.dockerMissingDialog);
     objects.selectNodeTypePhase = selectNodeTypePhase(objects.stateModel, objects.askForNodeTypeDialog, objects.roleSelectedDialog);
 

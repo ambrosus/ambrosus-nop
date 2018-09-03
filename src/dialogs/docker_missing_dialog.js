@@ -9,8 +9,8 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 
 import chalk from 'chalk';
 
-const dockerMissingDialog = () => async () => {
-  console.log(chalk.red('Docker is required, and was not found. Please verify your installation.'));
+const dockerMissingDialog = (messages) => async () => {
+  console.log(chalk.red(messages.dockerMissingInfo));
 };
 
 export default dockerMissingDialog;
