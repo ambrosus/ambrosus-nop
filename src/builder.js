@@ -20,6 +20,7 @@ import checkDockerAvailablePhase from './phases/check_docker_available_phase';
 import selectNodeTypePhase from './phases/select_node_type_phase';
 import getNodeUrlPhase from './phases/get_node_url_phase';
 import getUserEmailPhase from './phases/get_user_email_phase';
+import manualSubmissionPhase from './phases/manual_submission_phase';
 
 import askForPrivateKeyDialog from './dialogs/ask_for_private_key_dialog';
 import dockerDetectedDialog from './dialogs/docker_detected_dialog';
@@ -31,6 +32,7 @@ import roleSelectedDialog from './dialogs/role_selected_dialog';
 import nodeUrlDetectedDialog from './dialogs/node_url_detected_dialog';
 import askForUserEmailDialog from './dialogs/ask_for_user_email_dialog';
 import userEmailDetectedDialog from './dialogs/user_email_detected_dialog';
+import displaySubmissionDialog from './dialogs/display_submission_dialog';
 
 import execCmd from './utils/execCmd';
 import messages from './messages';
@@ -59,6 +61,7 @@ class Builder {
     objects.nodeUrlDetectedDialog = nodeUrlDetectedDialog(messages);
     objects.askForUserEmailDialog = askForUserEmailDialog(objects.validations, messages);
     objects.userEmailDetectedDialog = userEmailDetectedDialog(messages);
+    objects.displaySubmissionDialog = displaySubmissionDialog(messages);
 
 
     objects.getPrivateKeyPhase = getPrivateKeyPhase(objects.stateModel, objects.privateKeyDetectedDialog, objects.askForPrivateKeyDialog);
@@ -66,6 +69,7 @@ class Builder {
     objects.selectNodeTypePhase = selectNodeTypePhase(objects.stateModel, objects.askForNodeTypeDialog, objects.roleSelectedDialog);
     objects.getNodeUrlPhase = getNodeUrlPhase(objects.stateModel, objects.nodeUrlDetectedDialog, objects.askForNodeUrlDialog);
     objects.getUserEmailPhase = getUserEmailPhase(objects.stateModel, objects.userEmailDetectedDialog, objects.askForUserEmailDialog);
+    objects.manualSubmissionPhase = manualSubmissionPhase(objects.stateModel, objects.displaySubmissionDialog);
 
     this.objects = objects;
     return objects;

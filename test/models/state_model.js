@@ -25,6 +25,7 @@ describe('State Model', () => {
   let stateModel;
 
   const examplePrivateKey = '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709';
+  const exampleAddress = '0xB1D28124D5771dD347a0BDECbC72CFb2BFf4B2D7';
   const exampleRole = APOLLO;
   const exampleUrl = 'https://amb-node.com';
   const exampleEmail = 'amb_node_operator@mail.com';
@@ -36,7 +37,9 @@ describe('State Model', () => {
       write: sinon.stub()
     };
     cryptoStub = {
-      generatePrivateKey: sinon.stub().resolves(examplePrivateKey)
+      generatePrivateKey: sinon.stub().resolves(examplePrivateKey),
+      addressForPrivateKey: sinon.stub().withArgs(examplePrivateKey)
+        .resolves(exampleAddress)
     };
     stateModel = new StateModel(storeStub, cryptoStub);
   });
@@ -158,6 +161,86 @@ describe('State Model', () => {
     it('stores user email', async () => {
       await expect(stateModel.storeUserEmail(exampleEmail)).to.be.eventually.fulfilled;
       await expect(storeStub.write).to.have.been.calledOnceWith('email', exampleEmail);
+    });
+  });
+
+  describe('assembleSubmission', () => {
+    const assembledSubmission = {
+      address: exampleAddress,
+      role: exampleRole,
+      url: exampleUrl,
+      email: exampleEmail
+    };
+
+    beforeEach(async () => {
+      storeStub.has.withArgs('privateKey').resolves(true);
+      storeStub.has.withArgs('role').resolves(true);
+      storeStub.has.withArgs('url').resolves(true);
+      storeStub.has.withArgs('email').resolves(true);
+      storeStub.read.withArgs('privateKey').resolves(examplePrivateKey);
+      storeStub.read.withArgs('role').resolves(exampleRole);
+      storeStub.read.withArgs('url').resolves(exampleUrl);
+      storeStub.read.withArgs('email').resolves(exampleEmail);
+    });
+    it('assembles submission', async () => {
+      expect(await stateModel.assembleSubmission()).to.deep.equal(assembledSubmission);
+      await expect(storeStub.has).to.have.been.calledWith('privateKey');
+      await expect(storeStub.has).to.have.been.calledWith('role');
+      await expect(storeStub.has).to.have.been.calledWith('url');
+      await expect(storeStub.has).to.have.been.calledWith('email');
+      await expect(storeStub.read).to.have.been.calledWith('privateKey');
+      await expect(storeStub.read).to.have.been.calledWith('role');
+      await expect(storeStub.read).to.have.been.calledWith('url');
+      await expect(storeStub.read).to.have.been.calledWith('email');
+      await expect(cryptoStub.addressForPrivateKey).to.have.been.calledOnceWith(examplePrivateKey);
+    });
+
+    it('returns null when no privateKey in storage', async () => {
+      storeStub.has.withArgs('privateKey').resolves(false);
+
+      expect(await stateModel.assembleSubmission()).to.deep.equal(null);
+      await expect(storeStub.has).to.have.been.calledWith('privateKey');
+      await expect(storeStub.read).to.have.not.been.called;
+      await expect(storeStub.read).to.have.not.been.called;
+      await expect(storeStub.read).to.have.not.been.called;
+      await expect(storeStub.read).to.have.not.been.called;
+      await expect(cryptoStub.addressForPrivateKey).to.have.not.been.called;
+    });
+
+    it('returns null when no role in storage', async () => {
+      storeStub.has.withArgs('role').resolves(false);
+
+      expect(await stateModel.assembleSubmission()).to.deep.equal(null);
+      await expect(storeStub.has).to.have.been.calledWith('role');
+      await expect(storeStub.read).to.have.not.been.called;
+      await expect(storeStub.read).to.have.not.been.called;
+      await expect(storeStub.read).to.have.not.been.called;
+      await expect(storeStub.read).to.have.not.been.called;
+      await expect(cryptoStub.addressForPrivateKey).to.have.not.been.called;
+    });
+
+    it('returns null when no URL in storage', async () => {
+      storeStub.has.withArgs('url').resolves(false);
+
+      expect(await stateModel.assembleSubmission()).to.deep.equal(null);
+      await expect(storeStub.has).to.have.been.calledWith('url');
+      await expect(storeStub.read).to.have.not.been.called;
+      await expect(storeStub.read).to.have.not.been.called;
+      await expect(storeStub.read).to.have.not.been.called;
+      await expect(storeStub.read).to.have.not.been.called;
+      await expect(cryptoStub.addressForPrivateKey).to.have.not.been.called;
+    });
+
+    it('returns null when no email in storage', async () => {
+      storeStub.has.withArgs('email').resolves(false);
+
+      expect(await stateModel.assembleSubmission()).to.deep.equal(null);
+      await expect(storeStub.has).to.have.been.calledWith('email');
+      await expect(storeStub.read).to.have.not.been.called;
+      await expect(storeStub.read).to.have.not.been.called;
+      await expect(storeStub.read).to.have.not.been.called;
+      await expect(storeStub.read).to.have.not.been.called;
+      await expect(cryptoStub.addressForPrivateKey).to.have.not.been.called;
     });
   });
 });
