@@ -36,4 +36,3 @@ const getPrivateKeyPhase = (stateModel, privateKeyDetectedDialog, askForPrivateK
 };
 
 export default getPrivateKeyPhase;
-

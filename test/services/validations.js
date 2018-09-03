@@ -56,7 +56,7 @@ describe('Validations', () => {
     const correctInputs = [
       'http://ambrosusnode.com',
       'http://ambrosus-node.com',
-      'ftp://ambrosus-node.1000.com',
+      'http://ambrosus-node.masternode.com',
       'https://ambrosus-node.com/api',
       'https://ambrosus-node.com/resources/ambnet/app.js'
     ];
@@ -71,6 +71,7 @@ describe('Validations', () => {
       'http://ambrosus-node.123',
       'http://ambrosus-node.',
       'http://ambrosus-node',
+      'ftp://ambrosus-node.com',
       '//ambrosus-node.com/resources/ambnet/accesspoint/app.js',
       'ambrosus-node.com',
       'ambrosus-node'
