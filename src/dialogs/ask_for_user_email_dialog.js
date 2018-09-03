@@ -9,14 +9,14 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 
 import inquirer from 'inquirer';
 
-const askForNodeUrlDialog = (validations, messages) => async () => inquirer.prompt(
+const askForUserEmailDialog = (validations, messages) => async () => inquirer.prompt(
   [
     {
       type: 'input',
-      name: 'nodeUrl',
-      message: messages.nodeUrlInputInstruction,
-      validate: (answer) => validations.isValidUrl(answer) || messages.nodeUrlInputError
+      name: 'userEmail',
+      message: messages.userEmailInputInstruction,
+      validate: (answer) => validations.isValidEmail(answer) || messages.userEmailInputError
     }
   ]);
 
-export default askForNodeUrlDialog;
+export default askForUserEmailDialog;

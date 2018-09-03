@@ -7,16 +7,10 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-import inquirer from 'inquirer';
+import chalk from 'chalk';
 
-const askForNodeUrlDialog = (validations, messages) => async () => inquirer.prompt(
-  [
-    {
-      type: 'input',
-      name: 'nodeUrl',
-      message: messages.nodeUrlInputInstruction,
-      validate: (answer) => validations.isValidUrl(answer) || messages.nodeUrlInputError
-    }
-  ]);
+const userEmailDetectedDialog = (messages) => async (userEmail) => {
+  console.log(chalk.green(messages.userEmailInfo) + chalk.yellow(userEmail));
+};
 
-export default askForNodeUrlDialog;
+export default userEmailDetectedDialog;

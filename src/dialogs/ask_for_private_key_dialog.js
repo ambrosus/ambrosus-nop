@@ -31,7 +31,7 @@ const askForPrivateKeyDialog = (validations, messages) => async () => inquirer.p
       name: 'privateKey',
       message: messages.privateKeyInputInstruction,
       when: (state) => state.source === 'manual',
-      validate: async (answer) => await validations.isValidPrivateKey(answer) || messages.privateKeyInputError
+      validate: (answer) => validations.isValidPrivateKey(answer) || messages.privateKeyInputError
     }
   ]);
 

@@ -35,20 +35,20 @@ describe('Validations', () => {
     };
 
     it('returns true for valid private key', async () => {
-      await expect(validations.isValidPrivateKey(inputs.correct)).to.eventually.be.true;
+      expect(validations.isValidPrivateKey(inputs.correct)).to.be.true;
     });
 
     it('returns false if private key has wrong length', async () => {
-      await expect(validations.isValidPrivateKey(inputs.tooShort)).to.eventually.be.false;
-      await expect(validations.isValidPrivateKey(inputs.tooLong)).to.eventually.be.false;
+      expect(validations.isValidPrivateKey(inputs.tooShort)).to.be.false;
+      expect(validations.isValidPrivateKey(inputs.tooLong)).to.be.false;
     });
 
     it('returns false if private key has no 0x prefix', async () => {
-      await expect(validations.isValidPrivateKey(inputs.noPrefix)).to.eventually.be.false;
+      expect(validations.isValidPrivateKey(inputs.noPrefix)).to.be.false;
     });
 
     it('returns false if private key is not a hex value', async () => {
-      await expect(validations.isValidPrivateKey(inputs.notHex)).to.eventually.be.false;
+      expect(validations.isValidPrivateKey(inputs.notHex)).to.be.false;
     });
   });
 
@@ -64,7 +64,7 @@ describe('Validations', () => {
 
     correctInputs.forEach((url) => {
       it(`returns true for ${url}`, async () => {
-        await expect(validations.isValidUrl(url)).to.eventually.be.true;
+        expect(validations.isValidUrl(url)).to.be.true;
       });
     });
 
@@ -80,7 +80,48 @@ describe('Validations', () => {
 
     incorrectInputs.forEach((url) => {
       it(`returns false for ${url}`, async () => {
-        await expect(validations.isValidUrl(url)).to.eventually.be.false;
+        expect(validations.isValidUrl(url)).to.be.false;
+      });
+    });
+  });
+
+  describe('isValidEmail', () => {
+    const correctInputs = [
+      'amboperator@gmail.com',
+      'amb_operator@mail.com',
+      'amb.operator@poczta.pl',
+      'amb.perator@gmail.subdomain.com',
+      'amb-operator@gmail.com',
+      '123456@gmail.com',
+      '"amboperator"@gmail.com',
+      'amboperator@subdomain.gmail.com',
+      'amboperator@gmail.name'
+    ];
+
+    correctInputs.forEach((email) => {
+      it(`returns true for ${email}`, async () => {
+        expect(validations.isValidEmail(email)).to.be.true;
+      });
+    });
+
+    const incorrectInputs = [
+      'amboperator',
+      '#@%^%#$@#$@#.com',
+      '@gmail.com',
+      'amb operator@gmail.com',
+      'amboperator.gmail.com',
+      'amboperator@gmail@gmail.com',
+      '.amboperator@gmail.com',
+      'amboperator.@gmail.com',
+      'amboperator@gmail..com',
+      'amboperator@gmail.com (John Smith)',
+      'amboperator@gmail',
+      'amb..operator@gmail.com'
+    ];
+
+    incorrectInputs.forEach((email) => {
+      it(`returns false for ${email}`, async () => {
+        expect(validations.isValidEmail(email)).to.be.false;
       });
     });
   });

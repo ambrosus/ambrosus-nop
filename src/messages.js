@@ -25,9 +25,12 @@ const messages = {
   dockerMissingInfo: 'Docker is required, and was not found. Please verify your installation.',
   privateKeyInfo: `Private key verified. Your address is `,
   roleSelectionInfo: ' has been selected.',
-  nodeUrlInputInstruction: 'Please provide URL, which you will be using for your node',
+  nodeUrlInputInstruction: 'Please provide URL, which you will be using for your node:',
   nodeUrlInputError: 'The provided value is not a valid URL',
-  nodeUrlInfo: 'Node URL defined as '
+  nodeUrlInfo: 'Node URL defined as ',
+  userEmailInputInstruction: 'Please provide your email address:',
+  userEmailInputError: 'The provided value is not a valid email address',
+  userEmailInfo: 'Your email address is '
 };
 
 export default messages;

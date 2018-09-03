@@ -51,4 +51,15 @@ export default class StateModel {
   async storeNodeUrl(url) {
     await this.store.write('url', url);
   }
+
+  async getExistingUserEmail() {
+    if (await this.store.has('email')) {
+      return await this.store.read('email');
+    }
+    return null;
+  }
+
+  async storeUserEmail(email) {
+    await this.store.write('email', email);
+  }
 }

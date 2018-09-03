@@ -12,7 +12,7 @@ import config from '../config/config';
 
 const start = async () => {
   const builder = new Builder();
-  const {getPrivateKeyPhase, checkDockerAvailablePhase, selectNodeTypePhase, getNodeUrlPhase} = await builder.build(config);
+  const {getPrivateKeyPhase, checkDockerAvailablePhase, selectNodeTypePhase, getNodeUrlPhase, getUserEmailPhase} = await builder.build(config);
 
   await getPrivateKeyPhase();
   if (!await checkDockerAvailablePhase()) {
@@ -20,6 +20,7 @@ const start = async () => {
   }
   await selectNodeTypePhase();
   await getNodeUrlPhase();
+  await getUserEmailPhase();
 };
 
 start()
