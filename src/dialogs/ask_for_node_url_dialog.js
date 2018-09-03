@@ -15,7 +15,7 @@ const askForNodeUrlDialog = (validations, messages) => async () => inquirer.prom
       type: 'input',
       name: 'nodeUrl',
       message: messages.nodeUrlInputInstruction,
-      validate: async (answer) => await validations.isValidUrl(answer) || messages.nodeUrlInputError
+      validate: (answer) => validations.isValidUrl(answer) || messages.nodeUrlInputError
     }
   ]);
 

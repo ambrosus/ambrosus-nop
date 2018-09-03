@@ -15,7 +15,7 @@ const askForUserEmailDialog = (validations, messages) => async () => inquirer.pr
       type: 'input',
       name: 'userEmail',
       message: messages.userEmailInputInstruction,
-      validate: async (answer) => await validations.isValidEmail(answer) || messages.userEmailInputError
+      validate: (answer) => validations.isValidEmail(answer) || messages.userEmailInputError
     }
   ]);
 
