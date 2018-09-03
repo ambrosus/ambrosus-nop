@@ -57,6 +57,7 @@ describe('Validations', () => {
       'http://ambrosusnode.com',
       'http://ambrosus-node.com',
       'http://ambrosus-node.masternode.com',
+      'http://ambrosus-node.com:8080',
       'https://ambrosus-node.com/api',
       'https://ambrosus-node.com/resources/ambnet/app.js'
     ];
