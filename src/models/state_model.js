@@ -64,15 +64,12 @@ export default class StateModel {
   }
 
   async assembleSubmission() {
-    if (!await this.store.has('privateKey') || !await this.store.has('role') || !await this.store.has('url') || !await this.store.has('email')) {
-      return null;
-    }
-    const privateKey = await this.store.read('privateKey');
+    const privateKey = await this.getExistingPrivateKey();
     return {
       address: await this.crypto.addressForPrivateKey(privateKey),
-      role: await this.store.read('role'),
-      url: await this.store.read('url'),
-      email: await this.store.read('email')
+      role: await this.getExistingRole(),
+      url: await this.getExistingNodeUrl(),
+      email: await this.getExistingUserEmail()
     };
   }
 }

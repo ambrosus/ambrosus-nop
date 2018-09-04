@@ -194,53 +194,5 @@ describe('State Model', () => {
       await expect(storeStub.read).to.have.been.calledWith('email');
       await expect(cryptoStub.addressForPrivateKey).to.have.been.calledOnceWith(examplePrivateKey);
     });
-
-    it('returns null when no privateKey in storage', async () => {
-      storeStub.has.withArgs('privateKey').resolves(false);
-
-      expect(await stateModel.assembleSubmission()).to.deep.equal(null);
-      await expect(storeStub.has).to.have.been.calledWith('privateKey');
-      await expect(storeStub.read).to.have.not.been.called;
-      await expect(storeStub.read).to.have.not.been.called;
-      await expect(storeStub.read).to.have.not.been.called;
-      await expect(storeStub.read).to.have.not.been.called;
-      await expect(cryptoStub.addressForPrivateKey).to.have.not.been.called;
-    });
-
-    it('returns null when no role in storage', async () => {
-      storeStub.has.withArgs('role').resolves(false);
-
-      expect(await stateModel.assembleSubmission()).to.deep.equal(null);
-      await expect(storeStub.has).to.have.been.calledWith('role');
-      await expect(storeStub.read).to.have.not.been.called;
-      await expect(storeStub.read).to.have.not.been.called;
-      await expect(storeStub.read).to.have.not.been.called;
-      await expect(storeStub.read).to.have.not.been.called;
-      await expect(cryptoStub.addressForPrivateKey).to.have.not.been.called;
-    });
-
-    it('returns null when no URL in storage', async () => {
-      storeStub.has.withArgs('url').resolves(false);
-
-      expect(await stateModel.assembleSubmission()).to.deep.equal(null);
-      await expect(storeStub.has).to.have.been.calledWith('url');
-      await expect(storeStub.read).to.have.not.been.called;
-      await expect(storeStub.read).to.have.not.been.called;
-      await expect(storeStub.read).to.have.not.been.called;
-      await expect(storeStub.read).to.have.not.been.called;
-      await expect(cryptoStub.addressForPrivateKey).to.have.not.been.called;
-    });
-
-    it('returns null when no email in storage', async () => {
-      storeStub.has.withArgs('email').resolves(false);
-
-      expect(await stateModel.assembleSubmission()).to.deep.equal(null);
-      await expect(storeStub.has).to.have.been.calledWith('email');
-      await expect(storeStub.read).to.have.not.been.called;
-      await expect(storeStub.read).to.have.not.been.called;
-      await expect(storeStub.read).to.have.not.been.called;
-      await expect(storeStub.read).to.have.not.been.called;
-      await expect(cryptoStub.addressForPrivateKey).to.have.not.been.called;
-    });
   });
 });
