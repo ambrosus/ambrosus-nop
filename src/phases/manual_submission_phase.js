@@ -10,9 +10,6 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 
 const manualSubmissionPhase = (stateModel, displaySubmissionDialog) => async () => {
   const submission = await stateModel.assembleSubmission();
-  if (submission === null) {
-    throw new Error('Not enough data to complete submission');
-  }
   await displaySubmissionDialog(submission);
   return submission;
 };

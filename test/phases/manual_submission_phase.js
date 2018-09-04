@@ -44,13 +44,4 @@ describe('Manual Submission Phase', () => {
     expect(displaySubmissionDialogStub).to.have.been.calledWith(exampleSubmission);
     expect(ret).to.deep.equal(exampleSubmission);
   });
-
-  it('throws if any data missing', async () => {
-    stateModelStub.assembleSubmission.resolves(null);
-
-    await expect(call()).to.have.been.eventually.rejected;
-
-    expect(stateModelStub.assembleSubmission).to.have.been.calledOnce;
-    expect(displaySubmissionDialogStub).to.not.have.been.called;
-  });
 });
