@@ -30,7 +30,9 @@ const messages = {
   nodeUrlInfo: 'Node URL defined as ',
   userEmailInputInstruction: 'Please provide your email address:',
   userEmailInputError: 'The provided value is not a valid email address',
-  userEmailInfo: 'Your email address is '
+  userEmailInfo: 'Your email address is ',
+  submissionInfo: 'To finish requesting process copy following form and send it to ',
+  submissionMail: 'tech@ambrosus.com'
 };
 
 export default messages;

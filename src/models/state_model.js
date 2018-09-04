@@ -62,4 +62,14 @@ export default class StateModel {
   async storeUserEmail(email) {
     await this.store.write('email', email);
   }
+
+  async assembleSubmission() {
+    const privateKey = await this.getExistingPrivateKey();
+    return {
+      address: await this.crypto.addressForPrivateKey(privateKey),
+      role: await this.getExistingRole(),
+      url: await this.getExistingNodeUrl(),
+      email: await this.getExistingUserEmail()
+    };
+  }
 }
