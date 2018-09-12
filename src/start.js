@@ -12,17 +12,29 @@ import config from '../config/config';
 
 const start = async () => {
   const builder = new Builder();
-  const {getPrivateKeyPhase, checkDockerAvailablePhase, selectNodeTypePhase, getNodeUrlPhase, getUserEmailPhase, manualSubmissionPhase} = await builder.build(config);
+  const buildObjects = await builder.build(config);
+  const {getPrivateKeyPhase, checkDockerAvailablePhase, selectNodeTypePhase, getNodeUrlPhase, getUserEmailPhase, manualSubmissionPhase, checkAddressWhitelistingStatusPhase} = buildObjects;
 
-  await getPrivateKeyPhase();
   if (!await checkDockerAvailablePhase()) {
     return;
   }
-  await selectNodeTypePhase();
-  await getNodeUrlPhase();
-  await getUserEmailPhase();
-  await manualSubmissionPhase();
+  const privateKey = await getPrivateKeyPhase();
+
+  await builder.augmentBuildWithPrivateKey(buildObjects, privateKey);
+
+  const whitelistingStatus = await checkAddressWhitelistingStatusPhase();
+
+  if (whitelistingStatus === null) {
+    await selectNodeTypePhase();
+    await getNodeUrlPhase();
+    await getUserEmailPhase();
+    await manualSubmissionPhase();
+    return;
+  }
+
+  // TODO check onboarding status and proceed onboarding flow or skip to installation flow
 };
+
 
 start()
   .catch((err) => {
