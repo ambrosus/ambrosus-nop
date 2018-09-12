@@ -15,13 +15,14 @@ export default class SmartContractsModel {
     this.rolesWrapper = rolesWrapper;
   }
 
-  async isAddressWhitelisted(address) {
-    return await this.kycWhitelistWrapper.isWhitelisted(address);
+  async isAddressWhitelisted() {
+    const userAddress = this.kycWhitelistWrapper.defaultAddress;
+    return await this.kycWhitelistWrapper.isWhitelisted(userAddress);
   }
 
-  async getAddressWhitelistingData(address) {
-    const requiredDeposit = await this.kycWhitelistWrapper.getRequiredDeposit(address);
-    const roleAssigned = this.roleCodeToRole(await this.kycWhitelistWrapper.getRoleAssigned(address), requiredDeposit);
+  async getAddressWhitelistingData() {
+    const requiredDeposit = await this.kycWhitelistWrapper.selfGetRequiredDeposit();
+    const roleAssigned = this.roleCodeToRole(await this.kycWhitelistWrapper.selfGetRoleAssigned(), requiredDeposit);
 
     return {requiredDeposit, roleAssigned};
   }
