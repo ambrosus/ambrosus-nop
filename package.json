@@ -12,7 +12,7 @@
     "test": "mocha",
     "dev:start": "source ./dev.env && babel-node --inspect src/start.js",
     "dev:lint": "eslint src test config",
-    "postinstall": "cd ./node_modules/ambrosus-contracts && yarn && yarn build" 
+    "postinstall": "cd ./node_modules/ambrosus-contracts && yarn && yarn build"
 
   },
   "engines": {
@@ -23,7 +23,7 @@
     "chalk": "^2.4.1",
     "inquirer": "^6.0.0",
     "web3": "^1.0.0-beta.35",
-    "ambrosus-contracts": "git+https://74718188856b0adf34dbc454f44c7ec44c4a723e:x-oauth-basic@github.com/ambrosus/ambrosus-node-contracts.git#6c31faec0e25360aae7faa7a563e5d7eabf78d76"
+    "ambrosus-contracts": "git+https://74718188856b0adf34dbc454f44c7ec44c4a723e:x-oauth-basic@github.com/ambrosus/ambrosus-node-contracts.git#c02286abd8c7f2db9c438a558c972cce96ff7014"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

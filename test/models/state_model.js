@@ -47,12 +47,12 @@ describe('State Model', () => {
   describe('generateAndStoreNewPrivateKey', () => {
     it('generates new private key', async () => {
       await expect(stateModel.generateAndStoreNewPrivateKey()).to.be.eventually.fulfilled;
-      await expect(cryptoStub.generatePrivateKey).to.have.been.calledOnce;
+      expect(cryptoStub.generatePrivateKey).to.have.been.calledOnceWith();
     });
 
     it('stores newly generated private key', async () => {
       await expect(stateModel.generateAndStoreNewPrivateKey()).to.be.eventually.fulfilled;
-      await expect(storeStub.write).to.have.been.calledOnceWith('privateKey', examplePrivateKey);
+      expect(storeStub.write).to.have.been.calledOnceWith('privateKey', examplePrivateKey);
     });
   });
 
@@ -64,22 +64,43 @@ describe('State Model', () => {
     it('returns private key if one exists', async () => {
       storeStub.has.resolves(true);
       expect(await stateModel.getExistingPrivateKey()).to.equal(examplePrivateKey);
-      await expect(storeStub.has).to.have.been.calledOnceWith('privateKey');
-      await expect(storeStub.read).to.have.been.calledOnceWith('privateKey');
+      expect(storeStub.has).to.have.been.calledOnceWith('privateKey');
+      expect(storeStub.read).to.have.been.calledOnceWith('privateKey');
     });
 
     it('returns null if private key does not exist yet', async () => {
       storeStub.has.resolves(false);
       expect(await stateModel.getExistingPrivateKey()).to.equal(null);
-      await expect(storeStub.has).to.have.been.calledOnceWith('privateKey');
-      await expect(storeStub.read).to.have.been.not.been.calledOnceWith('privateKey');
+      expect(storeStub.has).to.have.been.calledOnceWith('privateKey');
+      expect(storeStub.read).to.have.not.been.called;
     });
   });
 
   describe('storePrivateKey', () => {
     it('stores private key', async () => {
       await expect(stateModel.storePrivateKey(examplePrivateKey)).to.be.eventually.fulfilled;
-      await expect(storeStub.write).to.have.been.calledOnceWith('privateKey', examplePrivateKey);
+      expect(storeStub.write).to.have.been.calledOnceWith('privateKey', examplePrivateKey);
+    });
+  });
+
+  describe('getExistingAddress', () => {
+    beforeEach(async () => {
+      storeStub.read.resolves(examplePrivateKey);
+    });
+
+    it('converts private key to address if one exists', async () => {
+      storeStub.has.resolves(true);
+      expect(await stateModel.getExistingAddress()).to.equal(exampleAddress);
+      expect(storeStub.has).to.have.been.calledOnceWith('privateKey');
+      expect(storeStub.read).to.have.been.calledOnceWith('privateKey');
+      expect(cryptoStub.addressForPrivateKey).to.have.been.calledOnceWith(examplePrivateKey);
+    });
+
+    it('returns null if private key does not exist yet', async () => {
+      storeStub.has.resolves(false);
+      expect(await stateModel.getExistingAddress()).to.equal(null);
+      expect(storeStub.has).to.have.been.calledOnceWith('privateKey');
+      expect(storeStub.read).to.have.not.been.called;
     });
   });
 
@@ -91,22 +112,22 @@ describe('State Model', () => {
     it('returns role if one exists', async () => {
       storeStub.has.resolves(true);
       expect(await stateModel.getExistingRole()).to.equal(exampleRole);
-      await expect(storeStub.has).to.have.been.calledOnceWith('role');
-      await expect(storeStub.read).to.have.been.calledOnceWith('role');
+      expect(storeStub.has).to.have.been.calledOnceWith('role');
+      expect(storeStub.read).to.have.been.calledOnceWith('role');
     });
 
     it('returns null if role does not exist yet', async () => {
       storeStub.has.resolves(false);
       expect(await stateModel.getExistingRole()).to.equal(null);
-      await expect(storeStub.has).to.have.been.calledOnceWith('role');
-      await expect(storeStub.read).to.have.been.not.been.calledOnceWith('role');
+      expect(storeStub.has).to.have.been.calledOnceWith('role');
+      expect(storeStub.read).to.have.not.been.called;
     });
   });
 
   describe('storeRole', () => {
     it('stores role', async () => {
       await expect(stateModel.storeRole(exampleRole)).to.be.eventually.fulfilled;
-      await expect(storeStub.write).to.have.been.calledOnceWith('role', exampleRole);
+      expect(storeStub.write).to.have.been.calledOnceWith('role', exampleRole);
     });
   });
 
@@ -118,22 +139,22 @@ describe('State Model', () => {
     it('returns node url if one exists', async () => {
       storeStub.has.resolves(true);
       expect(await stateModel.getExistingNodeUrl()).to.equal(exampleUrl);
-      await expect(storeStub.has).to.have.been.calledOnceWith('url');
-      await expect(storeStub.read).to.have.been.calledOnceWith('url');
+      expect(storeStub.has).to.have.been.calledOnceWith('url');
+      expect(storeStub.read).to.have.been.calledOnceWith('url');
     });
 
     it('returns null if node url does not exist yet', async () => {
       storeStub.has.resolves(false);
       expect(await stateModel.getExistingNodeUrl()).to.equal(null);
-      await expect(storeStub.has).to.have.been.calledOnceWith('url');
-      await expect(storeStub.read).to.have.been.not.been.calledOnceWith('url');
+      expect(storeStub.has).to.have.been.calledOnceWith('url');
+      expect(storeStub.read).to.have.not.been.called;
     });
   });
 
   describe('storeNodeUrl', () => {
     it('stores url', async () => {
       await expect(stateModel.storeNodeUrl(exampleUrl)).to.be.eventually.fulfilled;
-      await expect(storeStub.write).to.have.been.calledOnceWith('url', exampleUrl);
+      expect(storeStub.write).to.have.been.calledOnceWith('url', exampleUrl);
     });
   });
 
@@ -145,22 +166,22 @@ describe('State Model', () => {
     it('returns user email if one exists', async () => {
       storeStub.has.resolves(true);
       expect(await stateModel.getExistingUserEmail()).to.equal(exampleEmail);
-      await expect(storeStub.has).to.have.been.calledOnceWith('email');
-      await expect(storeStub.read).to.have.been.calledOnceWith('email');
+      expect(storeStub.has).to.have.been.calledOnceWith('email');
+      expect(storeStub.read).to.have.been.calledOnceWith('email');
     });
 
     it('returns null if user email does not exist yet', async () => {
       storeStub.has.resolves(false);
       expect(await stateModel.getExistingUserEmail()).to.equal(null);
-      await expect(storeStub.has).to.have.been.calledOnceWith('email');
-      await expect(storeStub.read).to.have.been.not.been.calledOnceWith('email');
+      expect(storeStub.has).to.have.been.calledOnceWith('email');
+      expect(storeStub.read).to.have.not.been.called;
     });
   });
 
   describe('storeUserEmail', () => {
     it('stores user email', async () => {
       await expect(stateModel.storeUserEmail(exampleEmail)).to.be.eventually.fulfilled;
-      await expect(storeStub.write).to.have.been.calledOnceWith('email', exampleEmail);
+      expect(storeStub.write).to.have.been.calledOnceWith('email', exampleEmail);
     });
   });
 
@@ -184,15 +205,17 @@ describe('State Model', () => {
     });
     it('assembles submission', async () => {
       expect(await stateModel.assembleSubmission()).to.deep.equal(assembledSubmission);
-      await expect(storeStub.has).to.have.been.calledWith('privateKey');
-      await expect(storeStub.has).to.have.been.calledWith('role');
-      await expect(storeStub.has).to.have.been.calledWith('url');
-      await expect(storeStub.has).to.have.been.calledWith('email');
-      await expect(storeStub.read).to.have.been.calledWith('privateKey');
-      await expect(storeStub.read).to.have.been.calledWith('role');
-      await expect(storeStub.read).to.have.been.calledWith('url');
-      await expect(storeStub.read).to.have.been.calledWith('email');
-      await expect(cryptoStub.addressForPrivateKey).to.have.been.calledOnceWith(examplePrivateKey);
+      expect(storeStub.has).to.have.callCount(4);
+      expect(storeStub.read).to.have.callCount(4);
+      expect(storeStub.has).to.have.been.calledWith('privateKey');
+      expect(storeStub.has).to.have.been.calledWith('role');
+      expect(storeStub.has).to.have.been.calledWith('url');
+      expect(storeStub.has).to.have.been.calledWith('email');
+      expect(storeStub.read).to.have.been.calledWith('privateKey');
+      expect(storeStub.read).to.have.been.calledWith('role');
+      expect(storeStub.read).to.have.been.calledWith('url');
+      expect(storeStub.read).to.have.been.calledWith('email');
+      expect(cryptoStub.addressForPrivateKey).to.have.been.calledOnceWith(examplePrivateKey);
     });
   });
 });

@@ -30,6 +30,14 @@ export default class StateModel {
     await this.store.write('privateKey', privateKey);
   }
 
+  async getExistingAddress() {
+    const privateKey = await this.getExistingPrivateKey();
+    if (privateKey) {
+      return this.crypto.addressForPrivateKey(privateKey);
+    }
+    return null;
+  }
+
   async getExistingRole() {
     if (await this.store.has('role')) {
       return await this.store.read('role');

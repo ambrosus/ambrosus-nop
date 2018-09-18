@@ -134,9 +134,9 @@ ajv@^5.1.0, ajv@^5.2.3, ajv@^5.3.0:
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.3.0"
 
-"ambrosus-contracts@git+https://74718188856b0adf34dbc454f44c7ec44c4a723e:x-oauth-basic@github.com/ambrosus/ambrosus-node-contracts.git#6c31faec0e25360aae7faa7a563e5d7eabf78d76":
+"ambrosus-contracts@git+https://74718188856b0adf34dbc454f44c7ec44c4a723e:x-oauth-basic@github.com/ambrosus/ambrosus-node-contracts.git#c02286abd8c7f2db9c438a558c972cce96ff7014":
   version "0.0.1"
-  resolved "git+https://74718188856b0adf34dbc454f44c7ec44c4a723e:x-oauth-basic@github.com/ambrosus/ambrosus-node-contracts.git#6c31faec0e25360aae7faa7a563e5d7eabf78d76"
+  resolved "git+https://74718188856b0adf34dbc454f44c7ec44c4a723e:x-oauth-basic@github.com/ambrosus/ambrosus-node-contracts.git#c02286abd8c7f2db9c438a558c972cce96ff7014"
   dependencies:
     command-line-args "^5.0.2"
     openzeppelin-solidity "^1.10.0"

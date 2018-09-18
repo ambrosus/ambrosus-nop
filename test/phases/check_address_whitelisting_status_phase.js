@@ -20,6 +20,7 @@ chai.use(sinonChai);
 const {expect} = chai;
 
 describe('Check Address Whitelisting Status Phase', () => {
+  const exampleAddress = '0x123';
   let stateModelStub;
   let smartContractsModelStub;
   let addressIsNotWhitelistedDialog;
@@ -36,7 +37,8 @@ describe('Check Address Whitelisting Status Phase', () => {
   beforeEach(async () => {
     stateModelStub = {
       getExistingRole: sinon.stub(),
-      storeRole: sinon.stub()
+      storeRole: sinon.stub(),
+      getExistingAddress: sinon.stub().resolves(exampleAddress)
     };
     smartContractsModelStub = {
       isAddressWhitelisted: sinon.stub(),
@@ -51,7 +53,7 @@ describe('Check Address Whitelisting Status Phase', () => {
 
     const ret = await call();
 
-    expect(smartContractsModelStub.isAddressWhitelisted).to.have.been.calledOnce;
+    expect(smartContractsModelStub.isAddressWhitelisted).to.have.been.calledOnceWith(exampleAddress);
     expect(addressIsNotWhitelistedDialog).to.have.been.called;
     expect(smartContractsModelStub.getAddressWhitelistingData).to.have.not.been.called;
     expect(addressIsWhitelistedDialog).to.have.not.been.called;
@@ -68,9 +70,9 @@ describe('Check Address Whitelisting Status Phase', () => {
 
     expect(smartContractsModelStub.isAddressWhitelisted).to.have.been.calledOnce;
     expect(addressIsNotWhitelistedDialog).to.have.not.been.called;
-    expect(smartContractsModelStub.getAddressWhitelistingData).to.have.been.called;
-    expect(addressIsWhitelistedDialog).to.have.been.calledWith(exampleStatus.requiredDeposit, exampleStatus.roleAssigned);
-    expect(stateModelStub.getExistingRole).to.have.been.called;
+    expect(smartContractsModelStub.getAddressWhitelistingData).to.have.been.calledOnceWith(exampleAddress);
+    expect(addressIsWhitelistedDialog).to.have.been.calledOnceWith(exampleStatus.requiredDeposit, exampleStatus.roleAssigned);
+    expect(stateModelStub.getExistingRole).to.have.been.calledOnceWith();
     expect(ret).to.deep.equal(exampleStatus);
   });
 
@@ -81,7 +83,7 @@ describe('Check Address Whitelisting Status Phase', () => {
 
     await call();
 
-    expect(stateModelStub.storeRole).to.have.been.calledWith(exampleStatus.roleAssigned);
+    expect(stateModelStub.storeRole).to.have.been.calledOnceWith(exampleStatus.roleAssigned);
   });
 
   it('throws if fetched role does not match already kept in the store', async () => {
