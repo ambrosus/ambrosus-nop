@@ -28,74 +28,72 @@ describe('Smart Contract Model', () => {
 
   beforeEach(async () => {
     kycWhitelistWrapperStub = {
-      defaultAddress: exampleAddress,
       isWhitelisted: sinon.stub().resolves(exampleBoolean),
-      selfGetRequiredDeposit: sinon.stub().resolves(ATLAS_1_STAKE),
-      selfGetRoleAssigned: sinon.stub()
+      getRequiredDeposit: sinon.stub().resolves(ATLAS_1_STAKE),
+      getRoleAssigned: sinon.stub()
     };
     smartContractsModel = new SmartContractsModel(kycWhitelistWrapperStub, {});
   });
 
   describe('isAddressWhitelisted', async () => {
     it('asks wrapper if the address is whitelisted', async () => {
-      await smartContractsModel.isAddressWhitelisted();
+      await smartContractsModel.isAddressWhitelisted(exampleAddress);
       expect(kycWhitelistWrapperStub.isWhitelisted).to.have.been.calledOnceWith(exampleAddress);
     });
 
     it('returns smart contract answer', async () => {
-      kycWhitelistWrapperStub.isWhitelisted;
-      expect(await smartContractsModel.isAddressWhitelisted()).to.equal(exampleBoolean);
+      expect(await smartContractsModel.isAddressWhitelisted(exampleAddress)).to.equal(exampleBoolean);
     });
   });
 
   describe('getAddressWhitelistingData', async () => {
     it('asks wrapper for required deposit', async () => {
-      await smartContractsModel.getAddressWhitelistingData();
-      expect(kycWhitelistWrapperStub.selfGetRequiredDeposit).to.have.been.calledOnce;
+      await smartContractsModel.getAddressWhitelistingData(exampleAddress);
+      expect(kycWhitelistWrapperStub.getRequiredDeposit).to.have.been.calledOnceWith(exampleAddress);
     });
 
     it('asks wrapper for assigned role code', async () => {
-      await smartContractsModel.getAddressWhitelistingData();
-      expect(kycWhitelistWrapperStub.selfGetRoleAssigned).to.have.been.calledOnce;
+      await smartContractsModel.getAddressWhitelistingData(exampleAddress);
+      expect(kycWhitelistWrapperStub.getRoleAssigned).to.have.been.calledOnceWith(exampleAddress);
     });
 
     it('returns required deposit', async () => {
-      expect((await smartContractsModel.getAddressWhitelistingData()).requiredDeposit).to.equal(ATLAS_1_STAKE);
+      expect((await smartContractsModel.getAddressWhitelistingData(exampleAddress)).requiredDeposit).to.equal(ATLAS_1_STAKE);
     });
 
     describe('returns correct role, according to role code and required deposit', async () => {
       it('Apollo', async () => {
-        kycWhitelistWrapperStub.selfGetRoleAssigned.resolves(APOLLO_CODE);
-        expect((await smartContractsModel.getAddressWhitelistingData()).roleAssigned).to.equal(APOLLO);
+        kycWhitelistWrapperStub.getRoleAssigned.resolves(APOLLO_CODE);
+        expect((await smartContractsModel.getAddressWhitelistingData(exampleAddress)).roleAssigned).to.equal(APOLLO);
       });
 
       it('Hermes', async () => {
-        kycWhitelistWrapperStub.selfGetRoleAssigned.resolves(HERMES_CODE);
-        expect((await smartContractsModel.getAddressWhitelistingData()).roleAssigned).to.equal(HERMES);
+        kycWhitelistWrapperStub.getRoleAssigned.resolves(HERMES_CODE);
+        expect((await smartContractsModel.getAddressWhitelistingData(exampleAddress)).roleAssigned).to.equal(HERMES);
       });
 
       it('Atlas Zeta', async () => {
-        kycWhitelistWrapperStub.selfGetRoleAssigned.resolves(ATLAS_CODE);
-        kycWhitelistWrapperStub.selfGetRequiredDeposit.resolves(ATLAS_1_STAKE);
-        expect((await smartContractsModel.getAddressWhitelistingData()).roleAssigned).to.equal(ATLAS_1);
+        kycWhitelistWrapperStub.getRoleAssigned.resolves(ATLAS_CODE);
+        kycWhitelistWrapperStub.getRequiredDeposit.resolves(ATLAS_1_STAKE);
+        expect((await smartContractsModel.getAddressWhitelistingData(exampleAddress)).roleAssigned).to.equal(ATLAS_1);
       });
 
       it('Atlas Sigma', async () => {
-        kycWhitelistWrapperStub.selfGetRoleAssigned.resolves(ATLAS_CODE);
-        kycWhitelistWrapperStub.selfGetRequiredDeposit.resolves(ATLAS_2_STAKE);
-        expect((await smartContractsModel.getAddressWhitelistingData()).roleAssigned).to.equal(ATLAS_2);
+        kycWhitelistWrapperStub.getRoleAssigned.resolves(ATLAS_CODE);
+        kycWhitelistWrapperStub.getRequiredDeposit.resolves(ATLAS_2_STAKE);
+        expect((await smartContractsModel.getAddressWhitelistingData(exampleAddress)).roleAssigned).to.equal(ATLAS_2);
       });
 
       it('Atlas Omega', async () => {
-        kycWhitelistWrapperStub.selfGetRoleAssigned.resolves(ATLAS_CODE);
-        kycWhitelistWrapperStub.selfGetRequiredDeposit.resolves(ATLAS_3_STAKE);
-        expect((await smartContractsModel.getAddressWhitelistingData()).roleAssigned).to.equal(ATLAS_3);
+        kycWhitelistWrapperStub.getRoleAssigned.resolves(ATLAS_CODE);
+        kycWhitelistWrapperStub.getRequiredDeposit.resolves(ATLAS_3_STAKE);
+        expect((await smartContractsModel.getAddressWhitelistingData(exampleAddress)).roleAssigned).to.equal(ATLAS_3);
       });
 
       it('null (in case of invalid data)', async () => {
-        kycWhitelistWrapperStub.selfGetRoleAssigned.resolves(ATLAS_CODE);
-        kycWhitelistWrapperStub.selfGetRequiredDeposit.resolves('0');
-        expect((await smartContractsModel.getAddressWhitelistingData()).roleAssigned).to.equal(null);
+        kycWhitelistWrapperStub.getRoleAssigned.resolves(ATLAS_CODE);
+        kycWhitelistWrapperStub.getRequiredDeposit.resolves('0');
+        expect((await smartContractsModel.getAddressWhitelistingData(exampleAddress)).roleAssigned).to.equal(null);
       });
     });
   });

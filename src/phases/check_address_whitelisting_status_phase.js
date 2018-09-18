@@ -8,12 +8,13 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 */
 
 const checkAddressWhitelistingStatusPhase = (smartContractsModel, stateModel, addressIsNotWhitelistedDialog, addressIsWhitelistedDialog) => async () => {
-  if (await smartContractsModel.isAddressWhitelisted() === false) {
+  const userAddress = await stateModel.getExistingAddress();
+  if (await smartContractsModel.isAddressWhitelisted(userAddress) === false) {
     await addressIsNotWhitelistedDialog();
     return null;
   }
 
-  const {requiredDeposit, roleAssigned} = await smartContractsModel.getAddressWhitelistingData();
+  const {requiredDeposit, roleAssigned} = await smartContractsModel.getAddressWhitelistingData(userAddress);
   await addressIsWhitelistedDialog(requiredDeposit, roleAssigned);
 
   const existingRole = await stateModel.getExistingRole();
