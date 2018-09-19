@@ -34,9 +34,13 @@ const messages = {
   submissionInfo: 'To finish requesting process copy following form and send it to ',
   submissionMail: 'tech@ambrosus.com',
   addressNotWhitelisted: 'Address is not whitelisted yet.',
-  addressWhitelisted: 'Address is whitelisted as ',
-  depositInfo: ' Required deposit is: ',
-  unit: ' Wei'
+  addressWhitelisted: (roleAssigned, requiredDeposit) => `Address is whitelisted as ${roleAssigned}. Required deposit is: ${requiredDeposit}`,
+  unitAmb: 'AMB',
+  notEnoughBalance: (amount) => `Not enough balance. You need at least ${amount} in order to perform onboarding.`,
+  onboardingWarning: (address, nodeType, amount) => `You will now onboard ${address} as the ${nodeType} node.\nWarning: this operations will cost ${amount}.`,
+  continueConfirmation: 'Do you wish to continue?',
+  onboardingSuccessful: 'You are now successfully onboarded!',
+  alreadyOnboarded: (role) => `Onboarded as ${role}.`
 };
 
 export default messages;

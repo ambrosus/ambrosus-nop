@@ -134,11 +134,12 @@ ajv@^5.1.0, ajv@^5.2.3, ajv@^5.3.0:
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.3.0"
 
-"ambrosus-contracts@git+https://74718188856b0adf34dbc454f44c7ec44c4a723e:x-oauth-basic@github.com/ambrosus/ambrosus-node-contracts.git#c02286abd8c7f2db9c438a558c972cce96ff7014":
+"ambrosus-contracts@git+https://74718188856b0adf34dbc454f44c7ec44c4a723e:x-oauth-basic@github.com/ambrosus/ambrosus-node-contracts.git#67e21a52b1ddef1563bda8d52913b07f6f40a971":
   version "0.0.1"
-  resolved "git+https://74718188856b0adf34dbc454f44c7ec44c4a723e:x-oauth-basic@github.com/ambrosus/ambrosus-node-contracts.git#c02286abd8c7f2db9c438a558c972cce96ff7014"
+  resolved "git+https://74718188856b0adf34dbc454f44c7ec44c4a723e:x-oauth-basic@github.com/ambrosus/ambrosus-node-contracts.git#67e21a52b1ddef1563bda8d52913b07f6f40a971"
   dependencies:
     command-line-args "^5.0.2"
+    dotenv "^6.0.0"
     openzeppelin-solidity "^1.10.0"
     web3 "^1.0.0-beta.34"
 
@@ -1595,6 +1596,10 @@ doctrine@^2.1.0:
 dom-walk@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/dom-walk/-/dom-walk-0.1.1.tgz#672226dc74c8f799ad35307df936aba11acd6018"
+
+dotenv@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-6.0.0.tgz#24e37c041741c5f4b25324958ebbc34bca965935"
 
 duplexer3@^0.1.4:
   version "0.1.4"

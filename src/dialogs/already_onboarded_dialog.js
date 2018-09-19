@@ -8,11 +8,9 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 */
 
 import chalk from 'chalk';
-import utils from '../utils/web3_utils';
 
-const addressIsWhitelistedDialog = (messages) => async (requiredDeposit, roleAssigned) => {
-  const requiredDepositInAmb = utils.fromWei(requiredDeposit, 'ether');
-  console.log(chalk.green(messages.addressWhitelisted(chalk.yellow(roleAssigned), `${chalk.yellow(requiredDepositInAmb)} ${messages.unitAmb}`)));
+const alreadyOnboardedDialog = (messages) => async (onboardedRole) => {
+  console.log(chalk.green(messages.alreadyOnboarded(chalk.yellow(onboardedRole))));
 };
 
-export default addressIsWhitelistedDialog;
+export default alreadyOnboardedDialog;

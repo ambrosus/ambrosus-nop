@@ -11,7 +11,6 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
-
 import Crypto from '../../src/services/crypto';
 
 chai.use(chaiAsPromised);
@@ -31,7 +30,11 @@ describe('Crypto', () => {
         accounts: {
           create: sinon.stub(),
           privateKeyToAccount: sinon.stub()
-        }
+        },
+        getBalance: sinon.stub()
+      },
+      utils: {
+        toBN: sinon.stub()
       }
     };
     crypto = new Crypto(web3Stub);
@@ -60,6 +63,19 @@ describe('Crypto', () => {
       });
       await expect(crypto.addressForPrivateKey('0x1234')).to.eventually.be.equal('0x9876');
       expect(web3Stub.eth.accounts.privateKeyToAccount).to.have.been.calledOnceWith('0x1234');
+    });
+  });
+
+  describe('getBalance', () => {
+    it('calls getBalance on web3', async () => {
+      const balance = '123';
+      const balanceBN = {value: 123};
+      web3Stub.eth.getBalance.resolves(balance);
+      web3Stub.utils.toBN.returns(balanceBN);
+
+      expect(await crypto.getBalance(exampleAddress)).to.deep.equal(balanceBN);
+      expect(web3Stub.eth.getBalance).to.be.calledOnceWith(exampleAddress);
+      expect(web3Stub.utils.toBN).to.be.calledOnceWith(balance);
     });
   });
 });

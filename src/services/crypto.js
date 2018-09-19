@@ -21,4 +21,8 @@ export default class Crypto {
     const account = this.web3.eth.accounts.privateKeyToAccount(privateKey);
     return account.address;
   }
+
+  async getBalance(address) {
+    return this.web3.utils.toBN(await this.web3.eth.getBalance(address));
+  }
 }
