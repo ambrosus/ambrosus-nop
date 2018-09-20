@@ -25,6 +25,7 @@ import selectNodeTypePhase from './phases/select_node_type_phase';
 import getNodeUrlPhase from './phases/get_node_url_phase';
 import getUserEmailPhase from './phases/get_user_email_phase';
 import manualSubmissionPhase from './phases/manual_submission_phase';
+import performOnboardingPhase from './phases/perform_onboarding_phase';
 
 import askForPrivateKeyDialog from './dialogs/ask_for_private_key_dialog';
 import dockerDetectedDialog from './dialogs/docker_detected_dialog';
@@ -39,6 +40,10 @@ import userEmailDetectedDialog from './dialogs/user_email_detected_dialog';
 import displaySubmissionDialog from './dialogs/display_submission_dialog';
 import addressIsNotWhitelistedDialog from './dialogs/address_is_not_whitelisted_dialog';
 import addressIsWhitelistedDialog from './dialogs/address_is_whitelisted_dialog';
+import notEnoughBalanceDialog from './dialogs/not_enough_balance_dialog';
+import onboardingConfirmationDialog from './dialogs/onboarding_confirmation_dialog';
+import onboardingSuccessfulDialog from './dialogs/onboarding_successful_dialog';
+import alreadyOnboardedDialog from './dialogs/already_onboarded_dialog';
 
 import execCmd from './utils/execCmd';
 import messages from './messages';
@@ -62,7 +67,7 @@ class Builder {
 
     objects.stateModel = new StateModel(objects.store, objects.crypto);
     objects.systemModel = new SystemModel(objects.system);
-    objects.smartContractsModel = new SmartContractsModel(objects.kycWhitelistWrapper, objects.rolesWrapper);
+    objects.smartContractsModel = new SmartContractsModel(objects.crypto, objects.kycWhitelistWrapper, objects.rolesWrapper);
 
     objects.privateKeyDetectedDialog = privateKeyDetectedDialog(objects.crypto, messages);
     objects.askForPrivateKeyDialog = askForPrivateKeyDialog(objects.validations, messages);
@@ -77,6 +82,10 @@ class Builder {
     objects.displaySubmissionDialog = displaySubmissionDialog(messages);
     objects.addressIsNotWhitelistedDialog = addressIsNotWhitelistedDialog(messages);
     objects.addressIsWhitelistedDialog = addressIsWhitelistedDialog(messages);
+    objects.notEnoughBalanceDialog = notEnoughBalanceDialog(messages);
+    objects.onboardingConfirmationDialog = onboardingConfirmationDialog(messages);
+    objects.onboardingSuccessfulDialog = onboardingSuccessfulDialog(messages);
+    objects.alreadyOnboardedDialog = alreadyOnboardedDialog(messages);
 
     objects.checkDockerAvailablePhase = checkDockerAvailablePhase(objects.systemModel, objects.dockerDetectedDialog, objects.dockerMissingDialog);
     objects.getPrivateKeyPhase = getPrivateKeyPhase(objects.stateModel, objects.privateKeyDetectedDialog, objects.askForPrivateKeyDialog);
@@ -85,6 +94,9 @@ class Builder {
     objects.getNodeUrlPhase = getNodeUrlPhase(objects.stateModel, objects.nodeUrlDetectedDialog, objects.askForNodeUrlDialog);
     objects.getUserEmailPhase = getUserEmailPhase(objects.stateModel, objects.userEmailDetectedDialog, objects.askForUserEmailDialog);
     objects.manualSubmissionPhase = manualSubmissionPhase(objects.stateModel, objects.displaySubmissionDialog);
+    objects.performOnboardingPhase = performOnboardingPhase(objects.stateModel, objects.smartContractsModel,
+      objects.notEnoughBalanceDialog, objects.alreadyOnboardedDialog, objects.onboardingConfirmationDialog,
+      objects.onboardingSuccessfulDialog);
 
     this.objects = objects;
     return objects;

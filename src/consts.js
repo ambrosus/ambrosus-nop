@@ -12,6 +12,7 @@ import {constants} from 'ambrosus-contracts';
 export const APOLLO_CODE = '3';
 export const HERMES_CODE = '2';
 export const ATLAS_CODE = '1';
+export const NO_ROLE_CODE = '0';
 
 export const APOLLO = 'Apollo';
 export const HERMES = 'Hermes';
