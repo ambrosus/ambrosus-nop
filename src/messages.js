@@ -32,7 +32,11 @@ const messages = {
   userEmailInputError: 'The provided value is not a valid email address',
   userEmailInfo: 'Your email address is ',
   submissionInfo: 'To finish requesting process copy following form and send it to ',
-  submissionMail: 'tech@ambrosus.com'
+  submissionMail: 'tech@ambrosus.com',
+  addressNotWhitelisted: 'Address is not whitelisted yet.',
+  addressWhitelisted: 'Address is whitelisted as ',
+  depositInfo: ' Required deposit is: ',
+  unit: ' Wei'
 };
 
 export default messages;

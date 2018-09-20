@@ -12,11 +12,15 @@ import Store from './services/store';
 import System from './services/system';
 import Validations from './services/validations';
 
+import {HeadWrapper, KycWhitelistWrapper, RolesWrapper} from 'ambrosus-contracts';
+
 import StateModel from './models/state_model';
 import SystemModel from './models/system_model';
+import SmartContractsModel from './models/smart_contracts_model';
 
-import getPrivateKeyPhase from './phases/get_private_key_phase';
 import checkDockerAvailablePhase from './phases/check_docker_available_phase';
+import getPrivateKeyPhase from './phases/get_private_key_phase';
+import checkAddressWhitelistingStatusPhase from './phases/check_address_whitelisting_status_phase';
 import selectNodeTypePhase from './phases/select_node_type_phase';
 import getNodeUrlPhase from './phases/get_node_url_phase';
 import getUserEmailPhase from './phases/get_user_email_phase';
@@ -33,6 +37,8 @@ import nodeUrlDetectedDialog from './dialogs/node_url_detected_dialog';
 import askForUserEmailDialog from './dialogs/ask_for_user_email_dialog';
 import userEmailDetectedDialog from './dialogs/user_email_detected_dialog';
 import displaySubmissionDialog from './dialogs/display_submission_dialog';
+import addressIsNotWhitelistedDialog from './dialogs/address_is_not_whitelisted_dialog';
+import addressIsWhitelistedDialog from './dialogs/address_is_whitelisted_dialog';
 
 import execCmd from './utils/execCmd';
 import messages from './messages';
@@ -43,13 +49,20 @@ class Builder {
   async build(config) {
     const objects = {};
     objects.config = config;
-    objects.web3 = new Web3();
+    objects.web3 = new Web3(config.web3Rpc);
+
+    objects.headWrapper = new HeadWrapper(config.headContractAddress, objects.web3);
+    objects.kycWhitelistWrapper = new KycWhitelistWrapper(objects.headWrapper, objects.web3);
+    objects.rolesWrapper = new RolesWrapper(objects.headWrapper, objects.web3);
+
     objects.store = new Store(config.storePath);
     objects.crypto = new Crypto(objects.web3);
     objects.system = new System(execCmd);
     objects.validations = new Validations();
+
     objects.stateModel = new StateModel(objects.store, objects.crypto);
     objects.systemModel = new SystemModel(objects.system);
+    objects.smartContractsModel = new SmartContractsModel(objects.kycWhitelistWrapper, objects.rolesWrapper);
 
     objects.privateKeyDetectedDialog = privateKeyDetectedDialog(objects.crypto, messages);
     objects.askForPrivateKeyDialog = askForPrivateKeyDialog(objects.validations, messages);
@@ -62,10 +75,12 @@ class Builder {
     objects.askForUserEmailDialog = askForUserEmailDialog(objects.validations, messages);
     objects.userEmailDetectedDialog = userEmailDetectedDialog(messages);
     objects.displaySubmissionDialog = displaySubmissionDialog(messages);
+    objects.addressIsNotWhitelistedDialog = addressIsNotWhitelistedDialog(messages);
+    objects.addressIsWhitelistedDialog = addressIsWhitelistedDialog(messages);
 
-
-    objects.getPrivateKeyPhase = getPrivateKeyPhase(objects.stateModel, objects.privateKeyDetectedDialog, objects.askForPrivateKeyDialog);
     objects.checkDockerAvailablePhase = checkDockerAvailablePhase(objects.systemModel, objects.dockerDetectedDialog, objects.dockerMissingDialog);
+    objects.getPrivateKeyPhase = getPrivateKeyPhase(objects.stateModel, objects.privateKeyDetectedDialog, objects.askForPrivateKeyDialog);
+    objects.checkAddressWhitelistingStatusPhase = checkAddressWhitelistingStatusPhase(objects.smartContractsModel, objects.stateModel, objects.addressIsNotWhitelistedDialog, objects.addressIsWhitelistedDialog);
     objects.selectNodeTypePhase = selectNodeTypePhase(objects.stateModel, objects.askForNodeTypeDialog, objects.roleSelectedDialog);
     objects.getNodeUrlPhase = getNodeUrlPhase(objects.stateModel, objects.nodeUrlDetectedDialog, objects.askForNodeUrlDialog);
     objects.getUserEmailPhase = getUserEmailPhase(objects.stateModel, objects.userEmailDetectedDialog, objects.askForUserEmailDialog);
@@ -73,6 +88,18 @@ class Builder {
 
     this.objects = objects;
     return objects;
+  }
+
+  async augmentBuildWithPrivateKey(objects, privateKey) {
+    const account = objects.web3.eth.accounts.privateKeyToAccount(privateKey);
+    objects.web3.eth.accounts.wallet.add(account);
+
+    const {address} = account;
+    objects.web3.eth.defaultAccount = address;
+
+    objects.headWrapper.setDefaultAddress(address);
+    objects.kycWhitelistWrapper.setDefaultAddress(address);
+    objects.rolesWrapper.setDefaultAddress(address);
   }
 }
 
