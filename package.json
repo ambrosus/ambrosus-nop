@@ -23,7 +23,7 @@
     "chalk": "^2.4.1",
     "inquirer": "^6.0.0",
     "web3": "^1.0.0-beta.35",
-    "ambrosus-contracts": "git+https://74718188856b0adf34dbc454f44c7ec44c4a723e:x-oauth-basic@github.com/ambrosus/ambrosus-node-contracts.git#67e21a52b1ddef1563bda8d52913b07f6f40a971"
+    "ambrosus-contracts": "git+https://74718188856b0adf34dbc454f44c7ec44c4a723e:x-oauth-basic@github.com/ambrosus/ambrosus-node-contracts.git#725f39db12ecac698a54cf8f07d1c86a16a3363a"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

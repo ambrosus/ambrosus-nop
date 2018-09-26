@@ -13,7 +13,7 @@ import utils from '../utils/web3_utils';
 
 const onboardingConfirmationDialog = (messages) => async (address, role, deposit) => {
   const depositInAmb = utils.fromWei(deposit, 'ether');
-  console.log(chalk.yellow(messages.onboardingWarning(chalk.black(address), chalk.black(role), chalk.black(`${depositInAmb} ${messages.unitAmb}`))));
+  console.log(chalk.green(messages.onboardingWarning(chalk.yellow(address), chalk.yellow(role), chalk.yellow(`${depositInAmb} ${messages.unitAmb}`))));
   return inquirer.prompt([
     {
       type: 'confirm',
