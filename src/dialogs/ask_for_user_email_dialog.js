@@ -8,6 +8,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 */
 
 import inquirer from 'inquirer';
+import chalk from 'chalk';
 
 const askForUserEmailDialog = (validations, messages) => async () => inquirer.prompt(
   [
@@ -15,7 +16,7 @@ const askForUserEmailDialog = (validations, messages) => async () => inquirer.pr
       type: 'input',
       name: 'userEmail',
       message: messages.userEmailInputInstruction,
-      validate: (answer) => validations.isValidEmail(answer) || messages.userEmailInputError
+      validate: (answer) => validations.isValidEmail(answer) || chalk.red(messages.userEmailInputError(chalk.yellow(answer)))
     }
   ]);
 

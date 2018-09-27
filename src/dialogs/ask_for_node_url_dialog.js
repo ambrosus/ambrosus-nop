@@ -8,6 +8,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 */
 
 import inquirer from 'inquirer';
+import chalk from 'chalk';
 
 const askForNodeUrlDialog = (validations, messages) => async () => inquirer.prompt(
   [
@@ -15,7 +16,7 @@ const askForNodeUrlDialog = (validations, messages) => async () => inquirer.prom
       type: 'input',
       name: 'nodeUrl',
       message: messages.nodeUrlInputInstruction,
-      validate: (answer) => validations.isValidUrl(answer) || messages.nodeUrlInputError
+      validate: (answer) => validations.isValidUrl(answer) || chalk.red(messages.nodeUrlInputError(chalk.yellow(answer)))
     }
   ]);
 

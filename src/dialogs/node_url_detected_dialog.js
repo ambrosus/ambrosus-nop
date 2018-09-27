@@ -10,7 +10,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 import chalk from 'chalk';
 
 const nodeUrlDetectedDialog = (messages) => async (nodeUrl) => {
-  console.log(chalk.green(messages.nodeUrlInfo) + chalk.yellow(nodeUrl));
+  console.log(chalk.green(messages.nodeUrlInfo(chalk.yellow(nodeUrl))));
 };
 
 export default nodeUrlDetectedDialog;

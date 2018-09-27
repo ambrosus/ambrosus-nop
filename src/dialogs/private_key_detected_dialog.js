@@ -11,7 +11,7 @@ import chalk from 'chalk';
 
 const privateKeyDetectedDialog = (crypto, messages) => async (privateKey) => {
   const address = await crypto.addressForPrivateKey(privateKey);
-  console.log(chalk.green(messages.privateKeyInfo) + chalk.yellow(address));
+  console.log(chalk.green(messages.privateKeyInfo(chalk.yellow(address))));
 };
 
 export default privateKeyDetectedDialog;
