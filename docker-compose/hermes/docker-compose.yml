@@ -1,0 +1,41 @@
+---
+version: '2.4'
+services:
+  mongodb:
+    image: mongo:4.1
+    restart: unless-stopped
+
+  parity:
+    image: parity/parity:v2.1.1
+    container_name: parity
+    command: --config /app/parity_config.toml
+    working_dir: /app
+    restart: unless-stopped
+    entrypoint: /entrypoint.sh
+    ports:
+      - '30303:30303/tcp'
+      - '30303:30303/udp'
+    volumes:
+      - ./chain.json:/app/chain.json
+      - ./parity_config.toml:/app/parity_config.toml
+
+  server:
+    image: ambrosus/ambrosus-node:latest
+    command: 'yarn start:server'
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+      - parity
+    ports:
+      - 9876:9876
+    environment:
+      - NODE_ENV=production
+      - WEB3_NODEPRIVATEKEY
+      - WEB3_RPC=http://parity:8545
+      - AUTHORIZATION_WITH_SECRET_KEY_ENABLED=false
+      - HEAD_CONTRACT_ADDRESS=0x0000000000000000000000000000000000000f10
+      - MONGO_HOSTS=mongodb
+      - MONGO_DB_NAME=ambrosus
+      - SENTRY_DSN
+
+  # worker:
