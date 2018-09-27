@@ -7,10 +7,16 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-import chalk from 'chalk';
+import inquirer from 'inquirer';
 
-const privateKeyDetectedDialog = (messages) => async (address) => {
-  console.log(chalk.green(messages.privateKeyInfo(chalk.yellow(address))));
-};
+const askForNetworkDialog = (messages) => async (networks) => inquirer.prompt(
+  [
+    {
+      type: 'list',
+      name: 'network',
+      message: messages.networkQuestion,
+      choices: networks
+    }
+  ]);
 
-export default privateKeyDetectedDialog;
+export default askForNetworkDialog;

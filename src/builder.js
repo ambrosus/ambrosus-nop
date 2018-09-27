@@ -26,6 +26,7 @@ import getNodeUrlPhase from './phases/get_node_url_phase';
 import getUserEmailPhase from './phases/get_user_email_phase';
 import manualSubmissionPhase from './phases/manual_submission_phase';
 import performOnboardingPhase from './phases/perform_onboarding_phase';
+import selectNetworkPhase from './phases/select_network_phase';
 
 import askForPrivateKeyDialog from './dialogs/ask_for_private_key_dialog';
 import dockerDetectedDialog from './dialogs/docker_detected_dialog';
@@ -44,32 +45,30 @@ import notEnoughBalanceDialog from './dialogs/not_enough_balance_dialog';
 import onboardingConfirmationDialog from './dialogs/onboarding_confirmation_dialog';
 import onboardingSuccessfulDialog from './dialogs/onboarding_successful_dialog';
 import alreadyOnboardedDialog from './dialogs/already_onboarded_dialog';
+import askForNetworkDialog from './dialogs/ask_for_network_dialog';
+import networkSelectedDialog from './dialogs/network_selected_dialog';
 
 import execCmd from './utils/execCmd';
 import messages from './messages';
+import networks from '../networks';
 
 import Web3 from 'web3';
 
 class Builder {
-  async build(config) {
+  buildStage1(storePath) {
     const objects = {};
-    objects.config = config;
-    objects.web3 = new Web3(config.web3Rpc);
 
-    objects.headWrapper = new HeadWrapper(config.headContractAddress, objects.web3);
-    objects.kycWhitelistWrapper = new KycWhitelistWrapper(objects.headWrapper, objects.web3);
-    objects.rolesWrapper = new RolesWrapper(objects.headWrapper, objects.web3);
+    objects.web3 = new Web3();
 
-    objects.store = new Store(config.storePath);
-    objects.crypto = new Crypto(objects.web3);
+    objects.store = new Store(storePath);
     objects.system = new System(execCmd);
     objects.validations = new Validations();
+    objects.crypto = new Crypto(objects.web3);
 
-    objects.stateModel = new StateModel(objects.store, objects.crypto);
     objects.systemModel = new SystemModel(objects.system);
-    objects.smartContractsModel = new SmartContractsModel(objects.crypto, objects.kycWhitelistWrapper, objects.rolesWrapper);
+    objects.stateModel = new StateModel(objects.store, objects.crypto);
 
-    objects.privateKeyDetectedDialog = privateKeyDetectedDialog(objects.crypto, messages);
+    objects.privateKeyDetectedDialog = privateKeyDetectedDialog(messages);
     objects.askForPrivateKeyDialog = askForPrivateKeyDialog(objects.validations, messages);
     objects.dockerDetectedDialog = dockerDetectedDialog(messages);
     objects.dockerMissingDialog = dockerMissingDialog(messages);
@@ -86,32 +85,47 @@ class Builder {
     objects.onboardingConfirmationDialog = onboardingConfirmationDialog(messages);
     objects.onboardingSuccessfulDialog = onboardingSuccessfulDialog(messages);
     objects.alreadyOnboardedDialog = alreadyOnboardedDialog(messages);
+    objects.askForNetworkDialog = askForNetworkDialog(messages);
+    objects.networkSelectedDialog = networkSelectedDialog(messages);
 
+    objects.selectNetworkPhase = selectNetworkPhase(networks, objects.stateModel, objects.askForNetworkDialog, objects.networkSelectedDialog);
     objects.checkDockerAvailablePhase = checkDockerAvailablePhase(objects.systemModel, objects.dockerDetectedDialog, objects.dockerMissingDialog);
-    objects.getPrivateKeyPhase = getPrivateKeyPhase(objects.stateModel, objects.privateKeyDetectedDialog, objects.askForPrivateKeyDialog);
-    objects.checkAddressWhitelistingStatusPhase = checkAddressWhitelistingStatusPhase(objects.smartContractsModel, objects.stateModel, objects.addressIsNotWhitelistedDialog, objects.addressIsWhitelistedDialog);
-    objects.selectNodeTypePhase = selectNodeTypePhase(objects.stateModel, objects.askForNodeTypeDialog, objects.roleSelectedDialog);
-    objects.getNodeUrlPhase = getNodeUrlPhase(objects.stateModel, objects.nodeUrlDetectedDialog, objects.askForNodeUrlDialog);
-    objects.getUserEmailPhase = getUserEmailPhase(objects.stateModel, objects.userEmailDetectedDialog, objects.askForUserEmailDialog);
-    objects.manualSubmissionPhase = manualSubmissionPhase(objects.stateModel, objects.displaySubmissionDialog);
-    objects.performOnboardingPhase = performOnboardingPhase(objects.stateModel, objects.smartContractsModel,
-      objects.notEnoughBalanceDialog, objects.alreadyOnboardedDialog, objects.onboardingConfirmationDialog,
-      objects.onboardingSuccessfulDialog);
+    objects.getPrivateKeyPhase = getPrivateKeyPhase(objects.stateModel, objects.crypto, objects.privateKeyDetectedDialog, objects.askForPrivateKeyDialog);
 
     this.objects = objects;
     return objects;
   }
 
-  async augmentBuildWithPrivateKey(objects, privateKey) {
+  buildStage2(network, privateKey) {
+    const objects = {};
+
+    objects.web3 = new Web3(network.rpc);
     const account = objects.web3.eth.accounts.privateKeyToAccount(privateKey);
     objects.web3.eth.accounts.wallet.add(account);
 
     const {address} = account;
     objects.web3.eth.defaultAccount = address;
 
-    objects.headWrapper.setDefaultAddress(address);
-    objects.kycWhitelistWrapper.setDefaultAddress(address);
-    objects.rolesWrapper.setDefaultAddress(address);
+    objects.headWrapper = new HeadWrapper(network.headContractAddress, objects.web3, address);
+    objects.kycWhitelistWrapper = new KycWhitelistWrapper(objects.headWrapper, objects.web3, address);
+    objects.rolesWrapper = new RolesWrapper(objects.headWrapper, objects.web3, address);
+
+    objects.crypto = new Crypto(objects.web3);
+
+    objects.stateModel = new StateModel(this.objects.store, objects.crypto);
+    objects.smartContractsModel = new SmartContractsModel(objects.crypto, objects.kycWhitelistWrapper, objects.rolesWrapper);
+
+    objects.selectNodeTypePhase = selectNodeTypePhase(objects.stateModel, this.objects.askForNodeTypeDialog, this.objects.roleSelectedDialog);
+    objects.getNodeUrlPhase = getNodeUrlPhase(objects.stateModel, this.objects.nodeUrlDetectedDialog, this.objects.askForNodeUrlDialog);
+    objects.getUserEmailPhase = getUserEmailPhase(objects.stateModel, this.objects.userEmailDetectedDialog, this.objects.askForUserEmailDialog);
+    objects.manualSubmissionPhase = manualSubmissionPhase(objects.stateModel, this.objects.displaySubmissionDialog);
+    objects.checkAddressWhitelistingStatusPhase = checkAddressWhitelistingStatusPhase(objects.smartContractsModel, objects.stateModel, this.objects.addressIsNotWhitelistedDialog, this.objects.addressIsWhitelistedDialog);
+    objects.performOnboardingPhase = performOnboardingPhase(objects.stateModel, objects.smartContractsModel,
+      this.objects.notEnoughBalanceDialog, this.objects.alreadyOnboardedDialog, this.objects.onboardingConfirmationDialog,
+      this.objects.onboardingSuccessfulDialog);
+
+    this.objects = {...this.objects, ...objects};
+    return this.objects;
   }
 }
 

@@ -12,15 +12,17 @@ import config from '../config/config';
 
 const start = async () => {
   const builder = new Builder();
-  const buildObjects = await builder.build(config);
-  const {getPrivateKeyPhase, checkDockerAvailablePhase, selectNodeTypePhase, getNodeUrlPhase, getUserEmailPhase, manualSubmissionPhase, checkAddressWhitelistingStatusPhase, performOnboardingPhase} = buildObjects;
+  builder.buildStage1(config.storePath);
+  const {checkDockerAvailablePhase, selectNetworkPhase, getPrivateKeyPhase} = builder.objects;
 
   if (!await checkDockerAvailablePhase()) {
     return;
   }
+  const network = await selectNetworkPhase();
   const privateKey = await getPrivateKeyPhase();
 
-  await builder.augmentBuildWithPrivateKey(buildObjects, privateKey);
+  builder.buildStage2(network, privateKey);
+  const {checkAddressWhitelistingStatusPhase, selectNodeTypePhase, getNodeUrlPhase, getUserEmailPhase, manualSubmissionPhase, performOnboardingPhase} = builder.objects;
 
   const whitelistingStatus = await checkAddressWhitelistingStatusPhase();
 

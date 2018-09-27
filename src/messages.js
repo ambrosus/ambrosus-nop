@@ -8,6 +8,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 */
 
 const messages = {
+  networkQuestion: 'Which network do you want to be onboarded to?',
   nodeTypeQuestion: `Which node do you want to run?`,
   atlasVersionQuestion: `Which Atlas version do you want to run?`,
   apolloName: 'Apollo',
@@ -40,7 +41,8 @@ const messages = {
   onboardingWarning: (address, nodeType, amount) => `You will now onboard ${address} as the ${nodeType} node.\nWarning: this operations will cost ${amount}.`,
   continueConfirmation: 'Do you wish to continue?',
   onboardingSuccessful: 'You are now successfully onboarded!',
-  alreadyOnboarded: (role) => `Onboarded as ${role}.`
+  alreadyOnboarded: (role) => `Onboarded as ${role}.`,
+  networkSelected: (network) => `Network: ${network}`
 };
 
 export default messages;

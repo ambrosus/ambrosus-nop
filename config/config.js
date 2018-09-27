@@ -8,7 +8,5 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 */
 
 module.exports = Object.freeze({
-  storePath: process.env.STORE_PATH || 'state.json',
-  web3Rpc: process.env.WEB3_RPC,
-  headContractAddress: process.env.HEAD_CONTRACT_ADDRESS || '0x0000000000000000000000000000000000000f10'
+  storePath: process.env.STORE_PATH || 'state.json'
 });

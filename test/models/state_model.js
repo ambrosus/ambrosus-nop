@@ -25,6 +25,7 @@ describe('State Model', () => {
   let stateModel;
 
   const examplePrivateKey = '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709';
+  const exampleNetwork = 'amb-net';
   const exampleAddress = '0xB1D28124D5771dD347a0BDECbC72CFb2BFf4B2D7';
   const exampleRole = APOLLO;
   const exampleUrl = 'https://amb-node.com';
@@ -42,6 +43,33 @@ describe('State Model', () => {
         .resolves(exampleAddress)
     };
     stateModel = new StateModel(storeStub, cryptoStub);
+  });
+
+  describe('getExistingNetwork', () => {
+    beforeEach(async () => {
+      storeStub.read.resolves(exampleNetwork);
+    });
+
+    it('returns network if one exists', async () => {
+      storeStub.has.resolves(true);
+      expect(await stateModel.getExistingNetwork()).to.equal(exampleNetwork);
+      expect(storeStub.has).to.have.been.calledOnceWith('network');
+      expect(storeStub.read).to.have.been.calledOnceWith('network');
+    });
+
+    it('returns null if network is not stored', async () => {
+      storeStub.has.resolves(false);
+      expect(await stateModel.getExistingNetwork()).to.equal(null);
+      expect(storeStub.has).to.have.been.calledOnceWith('network');
+      expect(storeStub.read).to.have.not.been.called;
+    });
+  });
+
+  describe('storeNetwork', () => {
+    it('stores the network', async () => {
+      await expect(stateModel.storeNetwork(exampleNetwork)).to.be.eventually.fulfilled;
+      expect(storeStub.write).to.have.been.calledOnceWith('network', exampleNetwork);
+    });
   });
 
   describe('generateAndStoreNewPrivateKey', () => {

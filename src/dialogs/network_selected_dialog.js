@@ -9,8 +9,8 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 
 import chalk from 'chalk';
 
-const privateKeyDetectedDialog = (messages) => async (address) => {
-  console.log(chalk.green(messages.privateKeyInfo(chalk.yellow(address))));
+const networkSelectedDialog = (messages) => (network) => {
+  console.log(chalk.green(messages.networkSelected(chalk.yellow(network))));
 };
 
-export default privateKeyDetectedDialog;
+export default networkSelectedDialog;
