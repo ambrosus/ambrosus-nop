@@ -21,7 +21,7 @@ services:
 
   server:
     image: ambrosus/ambrosus-node:latest
-    command: 'yarn start:server'
+    command: bash -c 'yarn migrate && yarn start:server'
     restart: unless-stopped
     depends_on:
       - mongodb
