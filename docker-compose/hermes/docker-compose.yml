@@ -19,7 +19,7 @@ services:
       - ./chain.json:/app/chain.json
       - ./parity_config.toml:/app/parity_config.toml
 
-  server:
+  server: &hermes-props
     image: ambrosus/ambrosus-node:latest
     command: bash -c 'yarn migrate && yarn start:server'
     restart: unless-stopped
@@ -38,4 +38,6 @@ services:
       - MONGO_DB_NAME=ambrosus
       - SENTRY_DSN
 
-  # worker:
+  worker:
+    <<: *hermes-props
+    command: bash -c 'yarn migrate && yarn start:hermes'
