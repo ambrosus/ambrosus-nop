@@ -55,7 +55,7 @@ import networks from '../networks';
 import Web3 from 'web3';
 
 class Builder {
-  buildStage1(storePath) {
+  static buildStage1(storePath) {
     const objects = {};
 
     objects.web3 = new Web3();
@@ -92,12 +92,11 @@ class Builder {
     objects.checkDockerAvailablePhase = checkDockerAvailablePhase(objects.systemModel, objects.dockerDetectedDialog, objects.dockerMissingDialog);
     objects.getPrivateKeyPhase = getPrivateKeyPhase(objects.stateModel, objects.crypto, objects.privateKeyDetectedDialog, objects.askForPrivateKeyDialog);
 
-    this.objects = objects;
     return objects;
   }
 
-  buildStage2(network, privateKey) {
-    const objects = {};
+  static buildStage2(oldObjects, network, privateKey) {
+    const objects = {...oldObjects};
 
     objects.web3 = new Web3(network.rpc);
     const account = objects.web3.eth.accounts.privateKeyToAccount(privateKey);
@@ -112,20 +111,19 @@ class Builder {
 
     objects.crypto = new Crypto(objects.web3);
 
-    objects.stateModel = new StateModel(this.objects.store, objects.crypto);
+    objects.stateModel = new StateModel(objects.store, objects.crypto);
     objects.smartContractsModel = new SmartContractsModel(objects.crypto, objects.kycWhitelistWrapper, objects.rolesWrapper);
 
-    objects.selectNodeTypePhase = selectNodeTypePhase(objects.stateModel, this.objects.askForNodeTypeDialog, this.objects.roleSelectedDialog);
-    objects.getNodeUrlPhase = getNodeUrlPhase(objects.stateModel, this.objects.nodeUrlDetectedDialog, this.objects.askForNodeUrlDialog);
-    objects.getUserEmailPhase = getUserEmailPhase(objects.stateModel, this.objects.userEmailDetectedDialog, this.objects.askForUserEmailDialog);
-    objects.manualSubmissionPhase = manualSubmissionPhase(objects.stateModel, this.objects.displaySubmissionDialog);
-    objects.checkAddressWhitelistingStatusPhase = checkAddressWhitelistingStatusPhase(objects.smartContractsModel, objects.stateModel, this.objects.addressIsNotWhitelistedDialog, this.objects.addressIsWhitelistedDialog);
+    objects.selectNodeTypePhase = selectNodeTypePhase(objects.stateModel, objects.askForNodeTypeDialog, objects.roleSelectedDialog);
+    objects.getNodeUrlPhase = getNodeUrlPhase(objects.stateModel, objects.nodeUrlDetectedDialog, objects.askForNodeUrlDialog);
+    objects.getUserEmailPhase = getUserEmailPhase(objects.stateModel, objects.userEmailDetectedDialog, objects.askForUserEmailDialog);
+    objects.manualSubmissionPhase = manualSubmissionPhase(objects.stateModel, objects.displaySubmissionDialog);
+    objects.checkAddressWhitelistingStatusPhase = checkAddressWhitelistingStatusPhase(objects.smartContractsModel, objects.stateModel, objects.addressIsNotWhitelistedDialog, objects.addressIsWhitelistedDialog);
     objects.performOnboardingPhase = performOnboardingPhase(objects.stateModel, objects.smartContractsModel,
-      this.objects.notEnoughBalanceDialog, this.objects.alreadyOnboardedDialog, this.objects.onboardingConfirmationDialog,
-      this.objects.onboardingSuccessfulDialog);
+      objects.notEnoughBalanceDialog, objects.alreadyOnboardedDialog, objects.onboardingConfirmationDialog,
+      objects.onboardingSuccessfulDialog);
 
-    this.objects = {...this.objects, ...objects};
-    return this.objects;
+    return objects;
   }
 }
 

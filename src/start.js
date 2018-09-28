@@ -11,9 +11,8 @@ import Builder from './builder';
 import config from '../config/config';
 
 const start = async () => {
-  const builder = new Builder();
-  builder.buildStage1(config.storePath);
-  const {checkDockerAvailablePhase, selectNetworkPhase, getPrivateKeyPhase} = builder.objects;
+  let builderObjects = Builder.buildStage1(config.storePath);
+  const {checkDockerAvailablePhase, selectNetworkPhase, getPrivateKeyPhase} = builderObjects;
 
   if (!await checkDockerAvailablePhase()) {
     return;
@@ -21,8 +20,8 @@ const start = async () => {
   const network = await selectNetworkPhase();
   const privateKey = await getPrivateKeyPhase();
 
-  builder.buildStage2(network, privateKey);
-  const {checkAddressWhitelistingStatusPhase, selectNodeTypePhase, getNodeUrlPhase, getUserEmailPhase, manualSubmissionPhase, performOnboardingPhase} = builder.objects;
+  builderObjects = Builder.buildStage2(builderObjects, network, privateKey);
+  const {checkAddressWhitelistingStatusPhase, selectNodeTypePhase, getNodeUrlPhase, getUserEmailPhase, manualSubmissionPhase, performOnboardingPhase} = builderObjects;
 
   const whitelistingStatus = await checkAddressWhitelistingStatusPhase();
 
