@@ -10,7 +10,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 import chalk from 'chalk';
 
 const userEmailDetectedDialog = (messages) => async (userEmail) => {
-  console.log(chalk.green(messages.userEmailInfo) + chalk.yellow(userEmail));
+  console.log(chalk.green(messages.userEmailInfo(chalk.yellow(userEmail))));
 };
 
 export default userEmailDetectedDialog;
