@@ -13,6 +13,17 @@ export default class StateModel {
     this.crypto = crypto;
   }
 
+  async getExistingNetwork() {
+    if (await this.store.has('network')) {
+      return await this.store.read('network');
+    }
+    return null;
+  }
+
+  async storeNetwork(network) {
+    await this.store.write('network', network);
+  }
+
   async generateAndStoreNewPrivateKey() {
     const privateKey = await this.crypto.generatePrivateKey();
     await this.storePrivateKey(privateKey);

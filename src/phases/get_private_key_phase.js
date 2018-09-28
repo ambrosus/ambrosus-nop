@@ -29,9 +29,10 @@ const getPrivateKey = async (stateModel, askForPrivateKeyDialog) => {
   }
 };
 
-const getPrivateKeyPhase = (stateModel, privateKeyDetectedDialog, askForPrivateKeyDialog) => async () => {
+const getPrivateKeyPhase = (stateModel, crypto, privateKeyDetectedDialog, askForPrivateKeyDialog) => async () => {
   const privateKey = await getPrivateKey(stateModel, askForPrivateKeyDialog);
-  await privateKeyDetectedDialog(privateKey);
+  const address = await crypto.addressForPrivateKey(privateKey);
+  await privateKeyDetectedDialog(address);
   return privateKey;
 };
 
