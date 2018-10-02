@@ -1,0 +1,15 @@
+---
+version: '2.4'
+services:
+  parity:
+    image: parity/parity:v2.1.1
+    command: --config /app/parity_config.toml
+    working_dir: /app
+    restart: unless-stopped
+    entrypoint: /entrypoint.sh
+    ports:
+      - '30303:30303/tcp'
+      - '30303:30303/udp'
+    volumes:
+      - ../../chain.json:/app/chain.json
+      - ./parity_config.toml:/app/parity_config.toml
