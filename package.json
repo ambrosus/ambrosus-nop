@@ -11,19 +11,17 @@
     "start": "node dist/start.js",
     "test": "mocha",
     "dev:start": "source ./dev.env && babel-node --inspect src/start.js",
-    "dev:lint": "eslint src test config",
-    "postinstall": "cd ./node_modules/ambrosus-contracts && yarn && yarn build"
-
+    "dev:lint": "eslint src test config"
   },
   "engines": {
     "node": ">=9.0",
     "yarn": ">=1.3.2 <2.0.0"
   },
   "dependencies": {
+    "ambrosus-node-contracts": "^0.0.3",
     "chalk": "^2.4.1",
     "inquirer": "^6.0.0",
-    "web3": "^1.0.0-beta.35",
-    "ambrosus-contracts": "git+https://74718188856b0adf34dbc454f44c7ec44c4a723e:x-oauth-basic@github.com/ambrosus/ambrosus-node-contracts.git#841f80f33d65d8f8b37442e59b75670ad193e02f"
+    "web3": "^1.0.0-beta.35"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
