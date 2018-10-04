@@ -32,7 +32,7 @@ const messages = {
   userEmailInputInstruction: 'Please provide your email address:',
   userEmailInputError: (wrongValue) => `${wrongValue} is not a valid email address.`,
   userEmailInfo: (email) => `Your email address is ${email}`,
-  submissionInfo: (submissionMail) => `To finish requesting process copy following form and send it to ${submissionMail}`,
+  submissionInfo: (submissionMail) => `To finish requesting process, copy following form and send it to ${submissionMail}`,
   submissionMail: 'tech@ambrosus.com',
   addressNotWhitelisted: 'Address is not whitelisted yet.',
   addressWhitelisted: (roleAssigned, requiredDeposit) => `Address is whitelisted as ${roleAssigned}. Required deposit is: ${requiredDeposit}`,

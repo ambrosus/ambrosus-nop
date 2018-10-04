@@ -12,7 +12,7 @@ import Store from './services/store';
 import System from './services/system';
 import Validations from './services/validations';
 
-import {HeadWrapper, KycWhitelistWrapper, RolesWrapper} from 'ambrosus-contracts';
+import {HeadWrapper, KycWhitelistWrapper, RolesWrapper} from 'ambrosus-node-contracts';
 
 import StateModel from './models/state_model';
 import SystemModel from './models/system_model';
