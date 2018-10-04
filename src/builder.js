@@ -27,6 +27,7 @@ import getUserEmailPhase from './phases/get_user_email_phase';
 import manualSubmissionPhase from './phases/manual_submission_phase';
 import performOnboardingPhase from './phases/perform_onboarding_phase';
 import selectNetworkPhase from './phases/select_network_phase';
+import prepareDockerPhase from './phases/prepare_docker_phase';
 
 import askForPrivateKeyDialog from './dialogs/ask_for_private_key_dialog';
 import dockerDetectedDialog from './dialogs/docker_detected_dialog';
@@ -47,6 +48,7 @@ import onboardingSuccessfulDialog from './dialogs/onboarding_successful_dialog';
 import alreadyOnboardedDialog from './dialogs/already_onboarded_dialog';
 import askForNetworkDialog from './dialogs/ask_for_network_dialog';
 import networkSelectedDialog from './dialogs/network_selected_dialog';
+import healthCheckUrlDialog from './dialogs/healthcheck_url_dialog';
 
 import execCmd from './utils/execCmd';
 import messages from './messages';
@@ -87,10 +89,12 @@ class Builder {
     objects.alreadyOnboardedDialog = alreadyOnboardedDialog(messages);
     objects.askForNetworkDialog = askForNetworkDialog(messages);
     objects.networkSelectedDialog = networkSelectedDialog(messages);
+    objects.healthCheckUrlDialog = healthCheckUrlDialog(messages);
 
     objects.selectNetworkPhase = selectNetworkPhase(networks, objects.stateModel, objects.askForNetworkDialog, objects.networkSelectedDialog);
     objects.checkDockerAvailablePhase = checkDockerAvailablePhase(objects.systemModel, objects.dockerDetectedDialog, objects.dockerMissingDialog);
     objects.getPrivateKeyPhase = getPrivateKeyPhase(objects.stateModel, objects.crypto, objects.privateKeyDetectedDialog, objects.askForPrivateKeyDialog);
+    objects.prepareDockerPhase = prepareDockerPhase(objects.stateModel, objects.healthCheckUrlDialog);
 
     return objects;
   }

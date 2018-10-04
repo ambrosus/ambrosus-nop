@@ -42,7 +42,8 @@ const messages = {
   continueConfirmation: 'Do you wish to continue?',
   onboardingSuccessful: 'You are now successfully onboarded!',
   alreadyOnboarded: (role) => `Onboarded as ${role}.`,
-  networkSelected: (network) => `Network: ${network}`
+  networkSelected: (network) => `Network: ${network}`,
+  healthCheckUrl: (url) => `After starting node, you can check its health at: ${url}`
 };
 
 export default messages;
