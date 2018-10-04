@@ -1,0 +1,21 @@
+[parity]
+base_path = "/app/"
+chain = "/app/chain.json"
+
+[rpc]
+apis = ["web3", "eth", "net"]
+interface = "all"
+cors = ["*"]
+
+[websockets]
+apis = ["web3", "eth", "net"]
+interface = "all"
+
+[ui]
+disable = true
+
+[ipc]
+disable = true
+
+[misc]
+logging = "own_tx=trace"
