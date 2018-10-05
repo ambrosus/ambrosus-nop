@@ -3,7 +3,7 @@ version: '2.4'
 services:
   parity:
     image: parity/parity:v2.1.1
-    command: --config /app/parity_config.toml
+    command: --config /app/config.toml
     working_dir: /app
     restart: unless-stopped
     entrypoint: /entrypoint.sh
@@ -12,4 +12,7 @@ services:
       - '30303:30303/udp'
     volumes:
       - ../../chain.json:/app/chain.json
-      - ./parity_config.toml:/app/parity_config.toml
+      - ./password.pwds:/app/password.pwds
+      - ./network_key:/app/network/key
+      - ./parity_config.toml:/app/config.toml
+      - ./keyfile:/app/keys/ambnet-dev/
