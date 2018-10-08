@@ -60,4 +60,11 @@ const listDirectory = (path) =>
     });
   });
 
-export {writeFile, readFile, removeFile, checkFileExists, listDirectory};
+const copyFile = (src, dest) =>
+  new Promise((resolve) => {
+    fs.copyFile(src, dest, (err) => {
+      resolve(!err);
+    });
+  });
+
+export {writeFile, readFile, removeFile, checkFileExists, listDirectory, copyFile};
