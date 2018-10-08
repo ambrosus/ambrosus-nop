@@ -1,0 +1,47 @@
+---
+version: '2.4'
+services:
+  mongodb:
+    image: mongo:4.1
+    restart: unless-stopped
+
+  parity:
+    image: parity/parity:v2.1.1
+    command: --config /app/parity_config.toml
+    working_dir: /app
+    restart: unless-stopped
+    entrypoint: /entrypoint.sh
+    ports:
+      - '30303:30303/tcp'
+      - '30303:30303/udp'
+    volumes:
+      - ../../chain.json:/app/chain.json
+      - ./parity_config.toml:/app/parity_config.toml
+
+  worker: &atlas-props
+    image: ambrosus/ambrosus-node:latest
+    command: bash -c 'yarn migrate && yarn start:atlas'
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+      - parity
+    environment:
+     ######################################################################
+     ######################################################################
+      - WEB3_NODEPRIVATEKEY=<Enter YOUR PRIVATE KEY Here>
+      - WEB3_RPC=<Enter YOUR RPC HERE>
+      - HEAD_CONTRACT_ADDRESS=<ENTER YOUR HEAD_CONTRACT_ADDRESS Here>
+     ######################################################################
+     ######################################################################
+      - MONGO_HOSTS=mongodb:27017
+      - MONGO_DB_NAME=ambrosus
+      - AUTHORIZATION_WITH_SECRET_KEY_ENABLED=false
+      - NODE_ENV=production
+
+  server:
+    <<: *atlas-props
+    command: bash -c 'yarn start:server'
+    depends_on:
+      - worker
+    ports:
+      - 9876:9876
