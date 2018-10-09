@@ -132,6 +132,7 @@ cd ~/ambrosus-nop*
 npm start
 ```
 *this location can vary, it depends on where you cloned the repository.
+
 If you want to reset the process you will have to type the following command.
 ```
 cd ~/ambrosus-nop
@@ -172,8 +173,6 @@ Commands are similar for all three nodes, the directory the commands get execute
 To check statistics and get insights of the node you are running please visit the Ambrosus dashboard.
 
 For further details of what is happening within the docker containers you can use ```docker ps``` to find container IDs and then write ```docker logs <container id>``` to see the logs.
-## Troubleshooting
-If you are having docker issues [DigitalOcean has a indepth guide for installing docker](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04).
 
 ## Running tests and linting
 
@@ -213,6 +212,5 @@ Before you issue pull request:
 * Make sure all tests pass.
 * Make sure you have test coverage for any new features.
 
-## Todos
-
- - Google Cloud Machine Image
+## Troubleshooting
+If you are having docker issues [DigitalOcean has a indepth guide for installing docker](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04).
