@@ -29,12 +29,16 @@ describe('Crypto', () => {
       eth: {
         accounts: {
           create: sinon.stub(),
-          privateKeyToAccount: sinon.stub()
+          privateKeyToAccount: sinon.stub(),
+          wallet: {
+            encrypt: sinon.stub()
+          }
         },
         getBalance: sinon.stub()
       },
       utils: {
-        toBN: sinon.stub()
+        toBN: sinon.stub(),
+        randomHex: sinon.stub()
       }
     };
     crypto = new Crypto(web3Stub);
@@ -76,6 +80,27 @@ describe('Crypto', () => {
       expect(await crypto.getBalance(exampleAddress)).to.deep.equal(balanceBN);
       expect(web3Stub.eth.getBalance).to.be.calledOnceWith(exampleAddress);
       expect(web3Stub.utils.toBN).to.be.calledOnceWith(balance);
+    });
+  });
+
+  describe('getEncryptedWallet', () => {
+    it('calls encrypt on web3', async () => {
+      const password = 'theFunniestPasswordICouldEverImagine';
+      const encryptedWallet = [{value: 123}];
+      web3Stub.eth.accounts.wallet.encrypt.returns([encryptedWallet]);
+
+      expect(await crypto.getEncryptedWallet(password)).to.deep.equal(encryptedWallet);
+      expect(web3Stub.eth.accounts.wallet.encrypt).to.be.calledOnceWith(password);
+    });
+  });
+
+  describe('getRandomPassword', () => {
+    it('calls randomHex on web3', async () => {
+      const randomHex = '0xdeadbeef';
+      web3Stub.utils.randomHex.resolves(randomHex);
+
+      expect(await crypto.getRandomPassword(exampleAddress)).to.deep.equal(randomHex);
+      expect(web3Stub.utils.randomHex).to.be.calledOnceWith(32);
     });
   });
 });

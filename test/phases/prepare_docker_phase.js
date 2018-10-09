@@ -22,19 +22,32 @@ const {expect} = chai;
 describe('Prepare Docker Phase', () => {
   let stateModelStub;
   let healthCheckUrlDialogStub;
+  let dockerComposeCommandDialogStub;
 
   const exampleUrl = 'https://hermes-node.com';
 
-  const call = async () => prepareDockerPhase(stateModelStub, healthCheckUrlDialogStub)();
+  const call = async () => prepareDockerPhase(stateModelStub, healthCheckUrlDialogStub, dockerComposeCommandDialogStub)();
 
   beforeEach(async () => {
     stateModelStub = {
       getExistingNodeUrl: sinon.stub(),
-      getExistingRole: sinon.stub()
+      getExistingRole: sinon.stub(),
+      prepareSetupFiles: sinon.stub()
     };
     stateModelStub.getExistingNodeUrl.resolves(exampleUrl);
     stateModelStub.getExistingRole.resolves(ATLAS_1);
     healthCheckUrlDialogStub = sinon.stub();
+    dockerComposeCommandDialogStub = sinon.stub();
+  });
+
+  it('prepares setup files', async () => {
+    await call();
+    expect(stateModelStub.prepareSetupFiles).to.be.calledOnceWith(ATLAS_1);
+  });
+
+  it('prints command to tun', async () => {
+    await call();
+    expect(dockerComposeCommandDialogStub).to.be.calledOnce;
   });
 
   it('shows node health url after successful installation', async () => {
