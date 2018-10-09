@@ -22,7 +22,7 @@ const writeFile = (path, data) =>
 
 const readFile = (path) =>
   new Promise((resolve, reject) => {
-    fs.readFile(path, (err, data) => {
+    fs.readFile(path, 'utf8', (err, data) => {
       if (err) {
         reject(err);
       } else {

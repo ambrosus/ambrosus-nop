@@ -11,6 +11,7 @@ import Crypto from './services/crypto';
 import Store from './services/store';
 import System from './services/system';
 import Validations from './services/validations';
+import SetupCreator from './services/setup_creator';
 
 import {HeadWrapper, KycWhitelistWrapper, RolesWrapper} from 'ambrosus-node-contracts';
 
@@ -49,6 +50,7 @@ import alreadyOnboardedDialog from './dialogs/already_onboarded_dialog';
 import askForNetworkDialog from './dialogs/ask_for_network_dialog';
 import networkSelectedDialog from './dialogs/network_selected_dialog';
 import healthCheckUrlDialog from './dialogs/healthcheck_url_dialog';
+import dockerComposeCommandDialog from './dialogs/docker_compose_command_dialog';
 
 import execCmd from './utils/execCmd';
 import messages from './messages';
@@ -57,18 +59,19 @@ import networks from '../networks';
 import Web3 from 'web3';
 
 class Builder {
-  static buildStage1(storePath) {
+  static buildStage1(config) {
     const objects = {};
 
     objects.web3 = new Web3();
 
-    objects.store = new Store(storePath);
+    objects.store = new Store(config.storePath);
     objects.system = new System(execCmd);
     objects.validations = new Validations();
     objects.crypto = new Crypto(objects.web3);
+    objects.setupCreator = new SetupCreator(config.templateDirectory, config.outputDirectory);
 
     objects.systemModel = new SystemModel(objects.system);
-    objects.stateModel = new StateModel(objects.store, objects.crypto);
+    objects.stateModel = new StateModel(objects.store, objects.crypto, objects.setupCreator);
 
     objects.privateKeyDetectedDialog = privateKeyDetectedDialog(messages);
     objects.askForPrivateKeyDialog = askForPrivateKeyDialog(objects.validations, messages);
@@ -90,11 +93,11 @@ class Builder {
     objects.askForNetworkDialog = askForNetworkDialog(messages);
     objects.networkSelectedDialog = networkSelectedDialog(messages);
     objects.healthCheckUrlDialog = healthCheckUrlDialog(messages);
+    objects.dockerComposeCommandDialog = dockerComposeCommandDialog(messages);
 
     objects.selectNetworkPhase = selectNetworkPhase(networks, objects.stateModel, objects.askForNetworkDialog, objects.networkSelectedDialog);
     objects.checkDockerAvailablePhase = checkDockerAvailablePhase(objects.systemModel, objects.dockerDetectedDialog, objects.dockerMissingDialog);
     objects.getPrivateKeyPhase = getPrivateKeyPhase(objects.stateModel, objects.crypto, objects.privateKeyDetectedDialog, objects.askForPrivateKeyDialog);
-    objects.prepareDockerPhase = prepareDockerPhase(objects.stateModel, objects.healthCheckUrlDialog);
 
     return objects;
   }
@@ -115,7 +118,7 @@ class Builder {
 
     objects.crypto = new Crypto(objects.web3);
 
-    objects.stateModel = new StateModel(objects.store, objects.crypto);
+    objects.stateModel = new StateModel(objects.store, objects.crypto, objects.setupCreator);
     objects.smartContractsModel = new SmartContractsModel(objects.crypto, objects.kycWhitelistWrapper, objects.rolesWrapper);
 
     objects.selectNodeTypePhase = selectNodeTypePhase(objects.stateModel, objects.askForNodeTypeDialog, objects.roleSelectedDialog);
@@ -126,6 +129,7 @@ class Builder {
     objects.performOnboardingPhase = performOnboardingPhase(objects.stateModel, objects.smartContractsModel,
       objects.notEnoughBalanceDialog, objects.alreadyOnboardedDialog, objects.onboardingConfirmationDialog,
       objects.onboardingSuccessfulDialog);
+    objects.prepareDockerPhase = prepareDockerPhase(objects.stateModel, objects.healthCheckUrlDialog, objects.dockerComposeCommandDialog);
 
     return objects;
   }

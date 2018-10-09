@@ -7,10 +7,13 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
+import {HERMES, APOLLO, ATLAS_1, ATLAS_2, ATLAS_3} from '../consts';
+
 export default class StateModel {
-  constructor(store, crypto) {
+  constructor(store, crypto, setupCreator) {
     this.store = store;
     this.crypto = crypto;
+    this.setupCreator = setupCreator;
   }
 
   async getExistingNetwork() {
@@ -82,6 +85,22 @@ export default class StateModel {
     await this.store.write('email', email);
   }
 
+  async getExistingWeb3RPC() {
+    if (await this.store.has('network')) {
+      const {rpc} = await this.store.read('network');
+      return rpc;
+    }
+    return null;
+  }
+
+  async getExistingHeadContractAddress() {
+    if (await this.store.has('network')) {
+      const {headContractAddress} = await this.store.read('network');
+      return headContractAddress;
+    }
+    return null;
+  }
+
   async assembleSubmission() {
     const privateKey = await this.getExistingPrivateKey();
     return {
@@ -90,5 +109,34 @@ export default class StateModel {
       url: await this.getExistingNodeUrl(),
       email: await this.getExistingUserEmail()
     };
+  }
+
+  async prepareSetupFiles(role) {
+    let nodeTypeName;
+
+    if (role === HERMES) {
+      nodeTypeName = 'hermes';
+    } else if (role === APOLLO) {
+      nodeTypeName = 'apollo';
+    } else if (role === ATLAS_1 || role === ATLAS_2 || role === ATLAS_3) {
+      nodeTypeName = 'atlas';
+    } else {
+      throw new Error('Invalid role');
+    }
+
+
+    this.setupCreator.copyParityConfiguration(nodeTypeName);
+
+    const password = this.crypto.getRandomPassword();
+    await this.setupCreator.createPasswordFile(password);
+
+    const encryptedWallet = this.crypto.getEncryptedWallet(password);
+    await this.setupCreator.createKeyFile(encryptedWallet);
+
+    const privateKey = await this.getExistingPrivateKey();
+    const web3RPC = await this.getExistingWeb3RPC();
+    const headContractAddress = await this.getExistingHeadContractAddress();
+
+    await this.setupCreator.prepareDockerComposeFile(nodeTypeName, privateKey, web3RPC, headContractAddress);
   }
 }

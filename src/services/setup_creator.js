@@ -7,7 +7,7 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-import {readFile, writeFile, checkFileExists} from '../utils/file';
+import {readFile, writeFile, copyFile} from '../utils/file';
 
 export default class SetupCreator {
   constructor(templateDirectory, outputDirectory) {
@@ -15,33 +15,26 @@ export default class SetupCreator {
     this.outputDirectory = outputDirectory;
   }
 
-  async write(key, value) {
-    const contents = await this.readFile();
-    contents[key] = value;
-    await this.writeFile(contents);
+  async createPasswordFile(password) {
+    await writeFile(`${this.outputDirectory}password.pwds`, password);
   }
 
-  async read(key) {
-    const contents = await this.readFile();
-    if (contents[key] === undefined) {
-      throw new Error(`The value for ${key} is missing in the store at ${this.storeFilePath}`);
-    }
-    return contents[key];
+  async createKeyFile(encryptedWallet) {
+    await writeFile(`${this.outputDirectory}keyfile`, JSON.stringify(encryptedWallet, null, 2));
   }
 
-  async has(key) {
-    const contents = await this.readFile();
-    return contents[key] !== undefined;
+  async prepareDockerComposeFile(nodeTypeName, privateKey, web3RPC, headContractAddress) {
+    let dockerFile = await readFile(`${this.templateDirectory}${nodeTypeName}/docker-compose.yml`);
+
+    dockerFile = dockerFile.replace(/<ENTER_YOUR_PRIVATE_KEY_HERE>/gi, privateKey);
+    dockerFile = dockerFile.replace(/<ENTER_YOUR_RPC_HERE>/gi, web3RPC);
+    dockerFile = dockerFile.replace(/<ENTER_YOUR_HEAD_CONTRACT_ADDRESS_HERE>/gi, headContractAddress);
+
+    await writeFile(`${this.outputDirectory}docker-compose.yml`, dockerFile);
   }
 
-  async readFile() {
-    if (await checkFileExists(this.storeFilePath)) {
-      return JSON.parse(await readFile(this.storeFilePath));
-    }
-    return {};
-  }
-
-  async writeFile(contents) {
-    await writeFile(this.storeFilePath, JSON.stringify(contents, null, 2));
+  async copyParityConfiguration(nodeTypeName) {
+    await copyFile(`${this.templateDirectory}${nodeTypeName}/parity_config.toml`, `${this.outputDirectory}parity_config.toml`);
+    await copyFile(`${this.templateDirectory}${nodeTypeName}/chain.json`, `${this.outputDirectory}chain.json`);
   }
 }
