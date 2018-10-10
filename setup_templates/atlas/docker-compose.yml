@@ -15,12 +15,12 @@ services:
       - '30303:30303/tcp'
       - '30303:30303/udp'
     volumes:
-      - ../../chain.json:/app/chain.json
+      - ./chain.json:/app/chain.json
       - ./parity_config.toml:/app/parity_config.toml
 
-  worker: &hermes-props
+  worker: &atlas-props
     image: ambrosus/ambrosus-node:latest
-    command: bash -c 'yarn migrate && yarn start:hermes'
+    command: bash -c 'yarn migrate && yarn start:atlas'
     restart: unless-stopped
     depends_on:
       - mongodb
@@ -28,9 +28,9 @@ services:
     environment:
      ######################################################################
      ######################################################################
-      - WEB3_NODEPRIVATEKEY=<Enter YOUR PRIVATE KEY Here>
-      - WEB3_RPC=<Enter YOUR RPC HERE>
-      - HEAD_CONTRACT_ADDRESS=<ENTER YOUR HEAD_CONTRACT_ADDRESS Here>
+      - WEB3_NODEPRIVATEKEY=<ENTER_YOUR_PRIVATE_KEY_HERE>
+      - WEB3_RPC=<ENTER_YOUR_RPC_HERE>
+      - HEAD_CONTRACT_ADDRESS=<ENTER_YOUR_HEAD_CONTRACT_ADDRESS_HERE>
      ######################################################################
      ######################################################################
       - MONGO_HOSTS=mongodb:27017
@@ -39,7 +39,7 @@ services:
       - NODE_ENV=production
 
   server:
-    <<: *hermes-props
+    <<: *atlas-props
     command: bash -c 'yarn start:server'
     depends_on:
       - worker

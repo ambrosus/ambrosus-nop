@@ -11,7 +11,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 import {APOLLO} from '../consts';
 
 const getNodeUrl = async (stateModel, askForNodeUrlDialog) => {
-  const existingNodeUrl = await stateModel.getExistingNodeUrl();
+  const existingNodeUrl = await stateModel.getNodeUrl();
   if (existingNodeUrl !== null) {
     return existingNodeUrl;
   }
@@ -23,7 +23,7 @@ const getNodeUrl = async (stateModel, askForNodeUrlDialog) => {
 };
 
 const getNodeUrlPhase = (stateModel, nodeUrlDetectedDialog, askForNodeUrlDialog) => async () => {
-  const role = await stateModel.getExistingRole();
+  const role = await stateModel.getRole();
   if (role === null) {
     throw new Error('Role should have been selected at this stage');
   }

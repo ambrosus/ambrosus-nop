@@ -26,7 +26,7 @@ const performOnboardingPhase = (
     }
 
     await smartContractsModel.performOnboarding(userAddress, whitelistingStatus.roleAssigned,
-      whitelistingStatus.requiredDeposit, await stateModel.getExistingNodeUrl());
+      whitelistingStatus.requiredDeposit, await stateModel.getNodeUrl());
 
     onboardingSuccessfulDialog();
   };

@@ -3,3 +3,8 @@ node_modules
 yarn-error.log
 state.json
 .idea/
+chain.json
+docker-compose.yml
+keyfile
+parity_config.toml
+password.pwds

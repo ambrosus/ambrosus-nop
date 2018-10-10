@@ -43,7 +43,9 @@ const messages = {
   onboardingSuccessful: 'You are now successfully onboarded!',
   alreadyOnboarded: (role) => `Onboarded as ${role}.`,
   networkSelected: (network) => `Network: ${network}`,
-  healthCheckUrl: (url) => `After starting node, you can check its health at: ${url}`
+  healthCheckUrl: (url) => `After starting node, you can check its health at: ${url}`,
+  dockerComposeInfo: (command) => `To start your node enter following command: ${command}`,
+  dockerComposeCommand: 'docker-compose up -d'
 };
 
 export default messages;

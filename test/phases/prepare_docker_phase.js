@@ -22,19 +22,32 @@ const {expect} = chai;
 describe('Prepare Docker Phase', () => {
   let stateModelStub;
   let healthCheckUrlDialogStub;
+  let dockerComposeCommandDialogStub;
 
   const exampleUrl = 'https://hermes-node.com';
 
-  const call = async () => prepareDockerPhase(stateModelStub, healthCheckUrlDialogStub)();
+  const call = async () => prepareDockerPhase(stateModelStub, healthCheckUrlDialogStub, dockerComposeCommandDialogStub)();
 
   beforeEach(async () => {
     stateModelStub = {
-      getExistingNodeUrl: sinon.stub(),
-      getExistingRole: sinon.stub()
+      getNodeUrl: sinon.stub(),
+      getRole: sinon.stub(),
+      prepareSetupFiles: sinon.stub()
     };
-    stateModelStub.getExistingNodeUrl.resolves(exampleUrl);
-    stateModelStub.getExistingRole.resolves(ATLAS_1);
+    stateModelStub.getNodeUrl.resolves(exampleUrl);
+    stateModelStub.getRole.resolves(ATLAS_1);
     healthCheckUrlDialogStub = sinon.stub();
+    dockerComposeCommandDialogStub = sinon.stub();
+  });
+
+  it('prepares setup files', async () => {
+    await call();
+    expect(stateModelStub.prepareSetupFiles).to.be.calledOnce;
+  });
+
+  it('prints command to tun', async () => {
+    await call();
+    expect(dockerComposeCommandDialogStub).to.be.calledOnce;
   });
 
   it('shows node health url after successful installation', async () => {
@@ -43,14 +56,14 @@ describe('Prepare Docker Phase', () => {
   });
 
   it('does not show health url if url has not been set', async () => {
-    stateModelStub.getExistingNodeUrl.resolves(null);
+    stateModelStub.getNodeUrl.resolves(null);
 
     await call();
     expect(healthCheckUrlDialogStub).to.be.not.called;
   });
 
   it('does not show health url if role is Apollo', async () => {
-    stateModelStub.getExistingRole.resolves(APOLLO);
+    stateModelStub.getRole.resolves(APOLLO);
 
     await call();
     expect(healthCheckUrlDialogStub).to.be.not.called;

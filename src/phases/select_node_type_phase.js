@@ -8,7 +8,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 */
 
 const selectRole = async (stateModel, askForNodeTypeDialog) => {
-  const existingRole = await stateModel.getExistingRole();
+  const existingRole = await stateModel.getRole();
   if (existingRole !== null) {
     return existingRole;
   }

@@ -25,4 +25,13 @@ export default class Crypto {
   async getBalance(address) {
     return this.web3.utils.toBN(await this.web3.eth.getBalance(address));
   }
+
+  getEncryptedWallet(privateKey, password) {
+    const [encryptedWallet] = this.web3.eth.accounts.encrypt(privateKey, password);
+    return encryptedWallet;
+  }
+
+  getRandomPassword() {
+    return this.web3.utils.randomHex(32);
+  }
 }

@@ -7,13 +7,16 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
+import {HERMES, APOLLO, ATLAS_1, ATLAS_2, ATLAS_3} from '../consts';
+
 export default class StateModel {
-  constructor(store, crypto) {
+  constructor(store, crypto, setupCreator) {
     this.store = store;
     this.crypto = crypto;
+    this.setupCreator = setupCreator;
   }
 
-  async getExistingNetwork() {
+  async getNetwork() {
     if (await this.store.has('network')) {
       return await this.store.read('network');
     }
@@ -49,7 +52,7 @@ export default class StateModel {
     return null;
   }
 
-  async getExistingRole() {
+  async getRole() {
     if (await this.store.has('role')) {
       return await this.store.read('role');
     }
@@ -60,7 +63,7 @@ export default class StateModel {
     await this.store.write('role', role);
   }
 
-  async getExistingNodeUrl() {
+  async getNodeUrl() {
     if (await this.store.has('url')) {
       return await this.store.read('url');
     }
@@ -71,7 +74,7 @@ export default class StateModel {
     await this.store.write('url', url);
   }
 
-  async getExistingUserEmail() {
+  async getUserEmail() {
     if (await this.store.has('email')) {
       return await this.store.read('email');
     }
@@ -82,13 +85,60 @@ export default class StateModel {
     await this.store.write('email', email);
   }
 
+  async web3RPCForNetwork() {
+    if (await this.store.has('network')) {
+      const {rpc} = await this.store.read('network');
+      return rpc;
+    }
+    return null;
+  }
+
+  async headContractAddressForNetwork() {
+    if (await this.store.has('network')) {
+      const {headContractAddress} = await this.store.read('network');
+      return headContractAddress;
+    }
+    return null;
+  }
+
   async assembleSubmission() {
     const privateKey = await this.getExistingPrivateKey();
     return {
       address: await this.crypto.addressForPrivateKey(privateKey),
-      role: await this.getExistingRole(),
-      url: await this.getExistingNodeUrl(),
-      email: await this.getExistingUserEmail()
+      role: await this.getRole(),
+      url: await this.getNodeUrl(),
+      email: await this.getUserEmail()
     };
+  }
+
+  async prepareSetupFiles() {
+    const role = await this.getRole();
+    let nodeTypeName;
+
+    if (role === HERMES) {
+      nodeTypeName = 'hermes';
+    } else if (role === APOLLO) {
+      nodeTypeName = 'apollo';
+    } else if (role === ATLAS_1 || role === ATLAS_2 || role === ATLAS_3) {
+      nodeTypeName = 'atlas';
+    } else {
+      throw new Error('Invalid role');
+    }
+
+    const privateKey = await this.getExistingPrivateKey();
+    if (role === APOLLO) {
+      const password = this.crypto.getRandomPassword();
+      await this.setupCreator.createPasswordFile(password);
+
+      const encryptedWallet = this.crypto.getEncryptedWallet(privateKey, password);
+      await this.setupCreator.createKeyFile(encryptedWallet);
+    }
+
+    this.setupCreator.copyParityConfiguration(nodeTypeName);
+
+    const web3RPC = await this.web3RPCForNetwork();
+    const headContractAddress = await this.headContractAddressForNetwork();
+
+    await this.setupCreator.prepareDockerComposeFile(nodeTypeName, privateKey, web3RPC, headContractAddress);
   }
 }

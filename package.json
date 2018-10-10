@@ -11,7 +11,8 @@
     "start": "node dist/start.js",
     "test": "mocha",
     "dev:start": "source ./dev.env && babel-node --inspect src/start.js",
-    "dev:lint": "eslint src test config"
+    "dev:lint": "eslint src test config",
+    "dev:lint:fix": "eslint src test config --fix"
   },
   "engines": {
     "node": ">=9.0",
