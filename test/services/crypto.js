@@ -84,10 +84,10 @@ describe('Crypto', () => {
   describe('getEncryptedWallet', () => {
     const password = 'theFunniestPasswordICouldEverImagine';
     const privateKey = '0xdeadface';
-    const encryptedWallet = [{value: 123}];
+    const encryptedWallet = {value: 123};
 
     it('calls encrypt on web3', async () => {
-      web3Stub.eth.accounts.encrypt.returns([encryptedWallet]);
+      web3Stub.eth.accounts.encrypt.returns(encryptedWallet);
 
       expect(await crypto.getEncryptedWallet(privateKey, password)).to.deep.equal(encryptedWallet);
       expect(web3Stub.eth.accounts.encrypt).to.be.calledOnceWith(privateKey, password);

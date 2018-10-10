@@ -27,8 +27,7 @@ export default class Crypto {
   }
 
   getEncryptedWallet(privateKey, password) {
-    const [encryptedWallet] = this.web3.eth.accounts.encrypt(privateKey, password);
-    return encryptedWallet;
+    return this.web3.eth.accounts.encrypt(privateKey, password);
   }
 
   getRandomPassword() {
