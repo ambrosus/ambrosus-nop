@@ -67,4 +67,18 @@ const copyFile = (src, dest) =>
     });
   });
 
-export {writeFile, readFile, removeFile, checkFileExists, listDirectory, copyFile};
+const removeDirectory = (path) =>
+  new Promise((resolve) => {
+    fs.rmdir(path, (err) => {
+      resolve(!err);
+    });
+  });
+
+const makeDirectory = (path) =>
+  new Promise((resolve) => {
+    fs.mkdir(path, (err) => {
+      resolve(!err);
+    });
+  });
+
+export {writeFile, readFile, removeFile, checkFileExists, listDirectory, copyFile, removeDirectory, makeDirectory};
