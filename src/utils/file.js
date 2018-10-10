@@ -61,23 +61,35 @@ const listDirectory = (path) =>
   });
 
 const copyFile = (src, dest) =>
-  new Promise((resolve) => {
+  new Promise((resolve, reject) => {
     fs.copyFile(src, dest, (err) => {
-      resolve(!err);
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
     });
   });
 
 const removeDirectory = (path) =>
-  new Promise((resolve) => {
+  new Promise((resolve, reject) => {
     fs.rmdir(path, (err) => {
-      resolve(!err);
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
     });
   });
 
 const makeDirectory = (path) =>
-  new Promise((resolve) => {
+  new Promise((resolve, reject) => {
     fs.mkdir(path, (err) => {
-      resolve(!err);
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
     });
   });
 
