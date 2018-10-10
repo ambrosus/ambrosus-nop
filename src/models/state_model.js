@@ -125,17 +125,17 @@ export default class StateModel {
       throw new Error('Invalid role');
     }
 
+    const privateKey = await this.getExistingPrivateKey();
     if (role === APOLLO) {
       const password = this.crypto.getRandomPassword();
       await this.setupCreator.createPasswordFile(password);
 
-      const encryptedWallet = this.crypto.getEncryptedWallet(password);
+      const encryptedWallet = this.crypto.getEncryptedWallet(password, privateKey);
       await this.setupCreator.createKeyFile(encryptedWallet);
     }
 
     this.setupCreator.copyParityConfiguration(nodeTypeName);
 
-    const privateKey = await this.getExistingPrivateKey();
     const web3RPC = await this.web3RPCForNetwork();
     const headContractAddress = await this.headContractAddressForNetwork();
 

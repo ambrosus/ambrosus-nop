@@ -26,7 +26,9 @@ export default class Crypto {
     return this.web3.utils.toBN(await this.web3.eth.getBalance(address));
   }
 
-  getEncryptedWallet(password) {
+  getEncryptedWallet(password, privateKey) {
+    const account = this.web3.eth.accounts.privateKeyToAccount(privateKey);
+    this.web3.eth.accounts.wallet.add(account);
     const [encryptedWallet] = this.web3.eth.accounts.wallet.encrypt(password);
     return encryptedWallet;
   }

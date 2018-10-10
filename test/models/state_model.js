@@ -48,7 +48,7 @@ describe('State Model', () => {
       addressForPrivateKey: sinon.stub().withArgs(examplePrivateKey)
         .resolves(exampleAddress),
       getRandomPassword: sinon.stub().returns(examplePassword),
-      getEncryptedWallet: sinon.stub().withArgs(examplePassword)
+      getEncryptedWallet: sinon.stub().withArgs(examplePassword, examplePrivateKey)
         .returns(exampleEncryptedWallet)
     };
     setupCreatorStub = {
@@ -305,19 +305,31 @@ describe('State Model', () => {
   describe('prepareSetupFiles', async () => {
     it('creates all needed files for Apollo', async () => {
       storeStub.has.returns(true);
-      storeStub.read.returns(APOLLO);
+      storeStub.read.onCall(0).returns(APOLLO)
+        .onCall(1)
+        .returns(examplePrivateKey)
+        .onCall(2)
+        .returns(exampleNetwork)
+        .onCall(3)
+        .returns(exampleNetwork);
       await stateModel.prepareSetupFiles();
       expect(setupCreatorStub.copyParityConfiguration).to.have.been.calledOnce;
       expect(cryptoStub.getRandomPassword).to.have.been.calledOnce;
       expect(setupCreatorStub.createPasswordFile).to.have.been.calledOnceWith(examplePassword);
-      expect(cryptoStub.getEncryptedWallet).to.have.been.calledOnceWith(examplePassword);
+      expect(cryptoStub.getEncryptedWallet).to.have.been.calledOnceWith(examplePassword, examplePrivateKey);
       expect(setupCreatorStub.createKeyFile).to.have.been.calledOnceWith(exampleEncryptedWallet);
       expect(setupCreatorStub.prepareDockerComposeFile).to.have.been.calledOnce;
     });
 
     it('creates all needed files (but skips some) for non Apollo', async () => {
       storeStub.has.returns(true);
-      storeStub.read.returns(HERMES);
+      storeStub.read.onCall(0).returns(HERMES)
+        .onCall(1)
+        .returns(examplePrivateKey)
+        .onCall(2)
+        .returns(exampleNetwork)
+        .onCall(3)
+        .returns(exampleNetwork);
       await stateModel.prepareSetupFiles();
       expect(setupCreatorStub.copyParityConfiguration).to.have.been.calledOnce;
       expect(cryptoStub.getRandomPassword).to.have.not.been.called;
