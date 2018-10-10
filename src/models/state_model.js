@@ -85,7 +85,7 @@ export default class StateModel {
     await this.store.write('email', email);
   }
 
-  async web3RPCForNetwork() {
+  async getWeb3RPCForNetwork() {
     if (await this.store.has('network')) {
       const {rpc} = await this.store.read('network');
       return rpc;
@@ -93,10 +93,18 @@ export default class StateModel {
     return null;
   }
 
-  async headContractAddressForNetwork() {
+  async getHeadContractAddressForNetwork() {
     if (await this.store.has('network')) {
       const {headContractAddress} = await this.store.read('network');
       return headContractAddress;
+    }
+    return null;
+  }
+
+  async getNameForNetwork() {
+    if (await this.store.has('network')) {
+      const {name} = await this.store.read('network');
+      return name;
     }
     return null;
   }
@@ -134,10 +142,14 @@ export default class StateModel {
       await this.setupCreator.createKeyFile(encryptedWallet);
     }
 
-    this.setupCreator.copyParityConfiguration(nodeTypeName);
+    const networkName = await this.getNameForNetwork();
+    this.setupCreator.copyChainJson(networkName);
 
-    const web3RPC = await this.web3RPCForNetwork();
-    const headContractAddress = await this.headContractAddressForNetwork();
+    const address = await this.getExistingAddress();
+    this.setupCreator.copyParityConfiguration(nodeTypeName, address);
+
+    const web3RPC = await this.getWeb3RPCForNetwork();
+    const headContractAddress = await this.getHeadContractAddressForNetwork();
 
     await this.setupCreator.prepareDockerComposeFile(nodeTypeName, privateKey, web3RPC, headContractAddress);
   }

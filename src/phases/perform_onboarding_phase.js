@@ -14,21 +14,22 @@ const performOnboardingPhase = (
     const onboardedRole = await smartContractsModel.getOnboardedRole(userAddress);
     if (onboardedRole) {
       alreadyOnboardedDialog(onboardedRole);
-      return;
+      return true;
     }
     if (!await smartContractsModel.hasEnoughBalance(userAddress, whitelistingStatus.requiredDeposit)) {
       notEnoughBalanceDialog(whitelistingStatus.requiredDeposit);
-      return;
+      return false;
     }
     const dialogResult = await onboardingConfirmationDialog(userAddress, whitelistingStatus.roleAssigned, whitelistingStatus.requiredDeposit);
     if (!dialogResult.onboardingConfirmation) {
-      return;
+      return false;
     }
 
     await smartContractsModel.performOnboarding(userAddress, whitelistingStatus.roleAssigned,
       whitelistingStatus.requiredDeposit, await stateModel.getNodeUrl());
 
     onboardingSuccessfulDialog();
+    return true;
   };
 
 export default performOnboardingPhase;

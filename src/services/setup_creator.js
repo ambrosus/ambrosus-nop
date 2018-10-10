@@ -7,7 +7,7 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-import {readFile, writeFile, copyFile} from '../utils/file';
+import {readFile, writeFile} from '../utils/file';
 
 export default class SetupCreator {
   constructor(templateDirectory, outputDirectory) {
@@ -33,8 +33,16 @@ export default class SetupCreator {
     await writeFile(`${this.outputDirectory}docker-compose.yml`, dockerFile);
   }
 
-  async copyParityConfiguration(nodeTypeName) {
-    await copyFile(`${this.templateDirectory}${nodeTypeName}/parity_config.toml`, `${this.outputDirectory}parity_config.toml`);
-    await copyFile(`${this.templateDirectory}${nodeTypeName}/chain.json`, `${this.outputDirectory}chain.json`);
+  async copyParityConfiguration(nodeTypeName, address) {
+    let parityConfigFile = await readFile(`${this.templateDirectory}${nodeTypeName}/parity_config.toml`);
+
+    parityConfigFile = parityConfigFile.replace(/<TYPE_YOUR_ADDRESS_HERE>/gi, address);
+
+    await writeFile(`${this.outputDirectory}parity_config.toml`, parityConfigFile);
+  }
+
+  async copyChainJson(networkName) {
+    const chainFile = await readFile(`${this.templateDirectory}chain_files/${networkName}.json`);
+    await writeFile(`chain.json`, chainFile);
   }
 }

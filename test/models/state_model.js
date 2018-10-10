@@ -221,41 +221,41 @@ describe('State Model', () => {
     });
   });
 
-  describe('web3RPCForNetwork', () => {
+  describe('getWeb3RPCForNetwork', () => {
     beforeEach(async () => {
       storeStub.read.resolves(exampleNetwork);
     });
 
     it('returns network web3 rpc if one exists', async () => {
       storeStub.has.resolves(true);
-      expect(await stateModel.web3RPCForNetwork()).to.equal(exampleNetwork.rpc);
+      expect(await stateModel.getWeb3RPCForNetwork()).to.equal(exampleNetwork.rpc);
       expect(storeStub.has).to.have.been.calledOnceWith('network');
       expect(storeStub.read).to.have.been.calledOnceWith('network');
     });
 
     it('returns null if network does not exist yet', async () => {
       storeStub.has.resolves(false);
-      expect(await stateModel.web3RPCForNetwork()).to.equal(null);
+      expect(await stateModel.getWeb3RPCForNetwork()).to.equal(null);
       expect(storeStub.has).to.have.been.calledOnceWith('network');
       expect(storeStub.read).to.have.not.been.called;
     });
   });
 
-  describe('headContractAddressForNetwork', () => {
+  describe('getHeadContractAddressForNetwork', () => {
     beforeEach(async () => {
       storeStub.read.resolves(exampleNetwork);
     });
 
     it('returns network head contract address if one exists', async () => {
       storeStub.has.resolves(true);
-      expect(await stateModel.headContractAddressForNetwork()).to.equal(exampleNetwork.headContractAddress);
+      expect(await stateModel.getHeadContractAddressForNetwork()).to.equal(exampleNetwork.headContractAddress);
       expect(storeStub.has).to.have.been.calledOnceWith('network');
       expect(storeStub.read).to.have.been.calledOnceWith('network');
     });
 
     it('returns null if network does not exist yet', async () => {
       storeStub.has.resolves(false);
-      expect(await stateModel.headContractAddressForNetwork()).to.equal(null);
+      expect(await stateModel.getHeadContractAddressForNetwork()).to.equal(null);
       expect(storeStub.has).to.have.been.calledOnceWith('network');
       expect(storeStub.read).to.have.not.been.called;
     });
