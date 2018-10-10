@@ -30,33 +30,33 @@ describe('Get Node Url Phase', () => {
 
   beforeEach(async () => {
     stateModelStub = {
-      getExistingNodeUrl: sinon.stub(),
+      getNodeUrl: sinon.stub(),
       storeNodeUrl: sinon.stub(),
-      getExistingRole: sinon.stub()
+      getRole: sinon.stub()
     };
     nodeUrlDetectedDialogStub = sinon.stub();
     askForNodeUrlDialogStub = sinon.stub();
   });
 
   it('throws if role has not been selected yet', async () => {
-    stateModelStub.getExistingRole.resolves(null);
+    stateModelStub.getRole.resolves(null);
 
     await expect(call()).to.eventually.be.rejected;
 
-    expect(stateModelStub.getExistingRole).to.have.been.calledOnce;
-    expect(stateModelStub.getExistingNodeUrl).to.have.not.been.called;
+    expect(stateModelStub.getRole).to.have.been.calledOnce;
+    expect(stateModelStub.getNodeUrl).to.have.not.been.called;
     expect(askForNodeUrlDialogStub).to.have.not.been.called;
     expect(stateModelStub.storeNodeUrl).to.have.not.been.called;
     expect(nodeUrlDetectedDialogStub).to.have.not.been.called;
   });
 
   it('ends if node role is Apollo', async () => {
-    stateModelStub.getExistingRole.resolves(APOLLO);
+    stateModelStub.getRole.resolves(APOLLO);
 
     const ret = await call();
 
-    expect(stateModelStub.getExistingRole).to.have.been.calledOnce;
-    expect(stateModelStub.getExistingNodeUrl).to.have.not.been.called;
+    expect(stateModelStub.getRole).to.have.been.calledOnce;
+    expect(stateModelStub.getNodeUrl).to.have.not.been.called;
     expect(askForNodeUrlDialogStub).to.have.not.been.called;
     expect(stateModelStub.storeNodeUrl).to.have.not.been.called;
     expect(nodeUrlDetectedDialogStub).to.have.not.been.called;
@@ -64,13 +64,13 @@ describe('Get Node Url Phase', () => {
   });
 
   it('ends if a URL is already in the store', async () => {
-    stateModelStub.getExistingRole.resolves(ATLAS_1);
-    stateModelStub.getExistingNodeUrl.resolves(exampleUrl);
+    stateModelStub.getRole.resolves(ATLAS_1);
+    stateModelStub.getNodeUrl.resolves(exampleUrl);
 
     const ret = await call();
 
-    expect(stateModelStub.getExistingRole).to.have.been.calledOnce;
-    expect(stateModelStub.getExistingNodeUrl).to.have.been.calledOnce;
+    expect(stateModelStub.getRole).to.have.been.calledOnce;
+    expect(stateModelStub.getNodeUrl).to.have.been.calledOnce;
     expect(askForNodeUrlDialogStub).to.have.not.been.called;
     expect(stateModelStub.storeNodeUrl).to.have.not.been.called;
     expect(nodeUrlDetectedDialogStub).to.have.been.calledOnceWith(exampleUrl);
@@ -78,16 +78,16 @@ describe('Get Node Url Phase', () => {
   });
 
   it('stores correctly provided URL', async () => {
-    stateModelStub.getExistingRole.resolves(ATLAS_1);
-    stateModelStub.getExistingNodeUrl.resolves(null);
+    stateModelStub.getRole.resolves(ATLAS_1);
+    stateModelStub.getNodeUrl.resolves(null);
     askForNodeUrlDialogStub.resolves({
       nodeUrl: exampleUrl
     });
 
     const ret = await call();
 
-    expect(stateModelStub.getExistingRole).to.have.been.calledOnce;
-    expect(stateModelStub.getExistingNodeUrl).to.have.been.calledOnce;
+    expect(stateModelStub.getRole).to.have.been.calledOnce;
+    expect(stateModelStub.getNodeUrl).to.have.been.calledOnce;
     expect(askForNodeUrlDialogStub).to.have.been.calledOnce;
     expect(stateModelStub.storeNodeUrl).to.have.been.calledOnceWith(exampleUrl);
     expect(nodeUrlDetectedDialogStub).to.have.been.calledOnceWith(exampleUrl);

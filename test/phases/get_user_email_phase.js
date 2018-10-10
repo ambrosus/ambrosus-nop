@@ -29,7 +29,7 @@ describe('Get User Email Phase', () => {
 
   beforeEach(async () => {
     stateModelStub = {
-      getExistingUserEmail: sinon.stub(),
+      getUserEmail: sinon.stub(),
       storeUserEmail: sinon.stub()
     };
     askForUserEmailDialogStub = sinon.stub();
@@ -37,11 +37,11 @@ describe('Get User Email Phase', () => {
   });
 
   it('ends if a email is already in the store', async () => {
-    stateModelStub.getExistingUserEmail.resolves(exampleEmail);
+    stateModelStub.getUserEmail.resolves(exampleEmail);
 
     const ret = await call();
 
-    expect(stateModelStub.getExistingUserEmail).to.have.been.calledOnce;
+    expect(stateModelStub.getUserEmail).to.have.been.calledOnce;
     expect(askForUserEmailDialogStub).to.have.not.been.called;
     expect(stateModelStub.storeUserEmail).to.have.not.been.called;
     expect(userEmailDetectedDialogStub).to.have.been.calledOnceWith(exampleEmail);
@@ -49,14 +49,14 @@ describe('Get User Email Phase', () => {
   });
 
   it('stores correctly provided email', async () => {
-    stateModelStub.getExistingUserEmail.resolves(null);
+    stateModelStub.getUserEmail.resolves(null);
     askForUserEmailDialogStub.resolves({
       userEmail: exampleEmail
     });
 
     const ret = await call();
 
-    expect(stateModelStub.getExistingUserEmail).to.have.been.calledOnce;
+    expect(stateModelStub.getUserEmail).to.have.been.calledOnce;
     expect(askForUserEmailDialogStub).to.have.been.calledOnce;
     expect(stateModelStub.storeUserEmail).to.have.been.calledOnceWith(exampleEmail);
     expect(userEmailDetectedDialogStub).to.have.been.calledOnceWith(exampleEmail);

@@ -16,7 +16,7 @@ export default class StateModel {
     this.setupCreator = setupCreator;
   }
 
-  async getExistingNetwork() {
+  async getNetwork() {
     if (await this.store.has('network')) {
       return await this.store.read('network');
     }
@@ -52,7 +52,7 @@ export default class StateModel {
     return null;
   }
 
-  async getExistingRole() {
+  async getRole() {
     if (await this.store.has('role')) {
       return await this.store.read('role');
     }
@@ -63,7 +63,7 @@ export default class StateModel {
     await this.store.write('role', role);
   }
 
-  async getExistingNodeUrl() {
+  async getNodeUrl() {
     if (await this.store.has('url')) {
       return await this.store.read('url');
     }
@@ -74,7 +74,7 @@ export default class StateModel {
     await this.store.write('url', url);
   }
 
-  async getExistingUserEmail() {
+  async getUserEmail() {
     if (await this.store.has('email')) {
       return await this.store.read('email');
     }
@@ -85,7 +85,7 @@ export default class StateModel {
     await this.store.write('email', email);
   }
 
-  async getExistingWeb3RPC() {
+  async web3RPCForNetwork() {
     if (await this.store.has('network')) {
       const {rpc} = await this.store.read('network');
       return rpc;
@@ -93,7 +93,7 @@ export default class StateModel {
     return null;
   }
 
-  async getExistingHeadContractAddress() {
+  async headContractAddressForNetwork() {
     if (await this.store.has('network')) {
       const {headContractAddress} = await this.store.read('network');
       return headContractAddress;
@@ -105,13 +105,14 @@ export default class StateModel {
     const privateKey = await this.getExistingPrivateKey();
     return {
       address: await this.crypto.addressForPrivateKey(privateKey),
-      role: await this.getExistingRole(),
-      url: await this.getExistingNodeUrl(),
-      email: await this.getExistingUserEmail()
+      role: await this.getRole(),
+      url: await this.getNodeUrl(),
+      email: await this.getUserEmail()
     };
   }
 
-  async prepareSetupFiles(role) {
+  async prepareSetupFiles() {
+    const role = await this.getRole();
     let nodeTypeName;
 
     if (role === HERMES) {
@@ -124,18 +125,19 @@ export default class StateModel {
       throw new Error('Invalid role');
     }
 
+    if (role === APOLLO) {
+      const password = this.crypto.getRandomPassword();
+      await this.setupCreator.createPasswordFile(password);
+
+      const encryptedWallet = this.crypto.getEncryptedWallet(password);
+      await this.setupCreator.createKeyFile(encryptedWallet);
+    }
 
     this.setupCreator.copyParityConfiguration(nodeTypeName);
 
-    const password = this.crypto.getRandomPassword();
-    await this.setupCreator.createPasswordFile(password);
-
-    const encryptedWallet = this.crypto.getEncryptedWallet(password);
-    await this.setupCreator.createKeyFile(encryptedWallet);
-
     const privateKey = await this.getExistingPrivateKey();
-    const web3RPC = await this.getExistingWeb3RPC();
-    const headContractAddress = await this.getExistingHeadContractAddress();
+    const web3RPC = await this.web3RPCForNetwork();
+    const headContractAddress = await this.headContractAddressForNetwork();
 
     await this.setupCreator.prepareDockerComposeFile(nodeTypeName, privateKey, web3RPC, headContractAddress);
   }

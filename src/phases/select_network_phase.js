@@ -8,7 +8,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 */
 
 const selectNetwork = async (availableNetworks, stateModel, askForNetworkDialog) => {
-  const existingNetwork = await stateModel.getExistingNetwork();
+  const existingNetwork = await stateModel.getNetwork();
   if (existingNetwork !== null) {
     return existingNetwork;
   }

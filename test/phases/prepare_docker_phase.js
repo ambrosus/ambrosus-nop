@@ -30,19 +30,19 @@ describe('Prepare Docker Phase', () => {
 
   beforeEach(async () => {
     stateModelStub = {
-      getExistingNodeUrl: sinon.stub(),
-      getExistingRole: sinon.stub(),
+      getNodeUrl: sinon.stub(),
+      getRole: sinon.stub(),
       prepareSetupFiles: sinon.stub()
     };
-    stateModelStub.getExistingNodeUrl.resolves(exampleUrl);
-    stateModelStub.getExistingRole.resolves(ATLAS_1);
+    stateModelStub.getNodeUrl.resolves(exampleUrl);
+    stateModelStub.getRole.resolves(ATLAS_1);
     healthCheckUrlDialogStub = sinon.stub();
     dockerComposeCommandDialogStub = sinon.stub();
   });
 
   it('prepares setup files', async () => {
     await call();
-    expect(stateModelStub.prepareSetupFiles).to.be.calledOnceWith(ATLAS_1);
+    expect(stateModelStub.prepareSetupFiles).to.be.calledOnce;
   });
 
   it('prints command to tun', async () => {
@@ -56,14 +56,14 @@ describe('Prepare Docker Phase', () => {
   });
 
   it('does not show health url if url has not been set', async () => {
-    stateModelStub.getExistingNodeUrl.resolves(null);
+    stateModelStub.getNodeUrl.resolves(null);
 
     await call();
     expect(healthCheckUrlDialogStub).to.be.not.called;
   });
 
   it('does not show health url if role is Apollo', async () => {
-    stateModelStub.getExistingRole.resolves(APOLLO);
+    stateModelStub.getRole.resolves(APOLLO);
 
     await call();
     expect(healthCheckUrlDialogStub).to.be.not.called;

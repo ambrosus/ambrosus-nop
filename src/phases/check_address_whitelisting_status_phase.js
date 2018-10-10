@@ -17,7 +17,7 @@ const checkAddressWhitelistingStatusPhase = (smartContractsModel, stateModel, ad
   const {requiredDeposit, roleAssigned} = await smartContractsModel.getAddressWhitelistingData(userAddress);
   await addressIsWhitelistedDialog(requiredDeposit, roleAssigned);
 
-  const existingRole = await stateModel.getExistingRole();
+  const existingRole = await stateModel.getRole();
   if (existingRole === null) {
     await stateModel.storeRole(roleAssigned);
   }

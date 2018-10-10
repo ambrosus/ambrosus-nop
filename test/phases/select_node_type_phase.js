@@ -31,32 +31,32 @@ describe('Select Node Type Phase', () => {
   beforeEach(async () => {
     stateModelStub = {
       storeRole: sinon.stub(),
-      getExistingRole: sinon.stub()
+      getRole: sinon.stub()
     };
     askForNodeTypeDialogStub = sinon.stub();
     roleSelectedDialogStub = sinon.stub();
   });
 
   it('ends if a role is already in the store', async () => {
-    stateModelStub.getExistingRole.resolves(exampleRole);
+    stateModelStub.getRole.resolves(exampleRole);
 
     const ret = await call();
 
-    expect(stateModelStub.getExistingRole).to.have.been.calledOnce;
+    expect(stateModelStub.getRole).to.have.been.calledOnce;
     expect(askForNodeTypeDialogStub).to.not.have.been.called;
     expect(roleSelectedDialogStub).to.have.been.calledOnceWith(exampleRole);
     expect(ret).to.equal(exampleRole);
   });
 
   it('stores correctly selected role', async () => {
-    stateModelStub.getExistingRole.resolves(null);
+    stateModelStub.getRole.resolves(null);
     askForNodeTypeDialogStub.resolves({
       nodeType: exampleRole
     });
 
     const ret = await call();
 
-    expect(stateModelStub.getExistingRole).to.have.been.calledOnce;
+    expect(stateModelStub.getRole).to.have.been.calledOnce;
     expect(askForNodeTypeDialogStub).to.have.been.calledOnce;
     expect(stateModelStub.storeRole).to.have.been.calledOnceWith(exampleRole);
     expect(roleSelectedDialogStub).to.have.been.calledOnceWith(exampleRole);
