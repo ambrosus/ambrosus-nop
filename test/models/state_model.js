@@ -48,7 +48,7 @@ describe('State Model', () => {
       addressForPrivateKey: sinon.stub().withArgs(examplePrivateKey)
         .resolves(exampleAddress),
       getRandomPassword: sinon.stub().returns(examplePassword),
-      getEncryptedWallet: sinon.stub().withArgs(examplePassword, examplePrivateKey)
+      getEncryptedWallet: sinon.stub().withArgs(examplePrivateKey, examplePassword)
         .returns(exampleEncryptedWallet)
     };
     setupCreatorStub = {
@@ -316,7 +316,7 @@ describe('State Model', () => {
       expect(setupCreatorStub.copyParityConfiguration).to.have.been.calledOnce;
       expect(cryptoStub.getRandomPassword).to.have.been.calledOnce;
       expect(setupCreatorStub.createPasswordFile).to.have.been.calledOnceWith(examplePassword);
-      expect(cryptoStub.getEncryptedWallet).to.have.been.calledOnceWith(examplePassword, examplePrivateKey);
+      expect(cryptoStub.getEncryptedWallet).to.have.been.calledOnceWith(examplePrivateKey, examplePassword);
       expect(setupCreatorStub.createKeyFile).to.have.been.calledOnceWith(exampleEncryptedWallet);
       expect(setupCreatorStub.prepareDockerComposeFile).to.have.been.calledOnce;
     });

@@ -130,7 +130,7 @@ export default class StateModel {
       const password = this.crypto.getRandomPassword();
       await this.setupCreator.createPasswordFile(password);
 
-      const encryptedWallet = this.crypto.getEncryptedWallet(password, privateKey);
+      const encryptedWallet = this.crypto.getEncryptedWallet(privateKey, password);
       await this.setupCreator.createKeyFile(encryptedWallet);
     }
 

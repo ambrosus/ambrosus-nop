@@ -30,10 +30,7 @@ describe('Crypto', () => {
         accounts: {
           create: sinon.stub(),
           privateKeyToAccount: sinon.stub(),
-          wallet: {
-            encrypt: sinon.stub(),
-            add: sinon.stub()
-          }
+          encrypt: sinon.stub()
         },
         getBalance: sinon.stub()
       },
@@ -88,16 +85,12 @@ describe('Crypto', () => {
     const password = 'theFunniestPasswordICouldEverImagine';
     const privateKey = '0xdeadface';
     const encryptedWallet = [{value: 123}];
-    const account = {foo: 'bar'};
 
     it('calls encrypt on web3', async () => {
-      web3Stub.eth.accounts.wallet.encrypt.returns([encryptedWallet]);
-      web3Stub.eth.accounts.privateKeyToAccount.returns(account);
+      web3Stub.eth.accounts.encrypt.returns([encryptedWallet]);
 
-      expect(await crypto.getEncryptedWallet(password, privateKey)).to.deep.equal(encryptedWallet);
-      expect(web3Stub.eth.accounts.wallet.encrypt).to.be.calledOnceWith(password);
-      expect(web3Stub.eth.accounts.privateKeyToAccount).to.be.calledOnceWith(privateKey);
-      expect(web3Stub.eth.accounts.wallet.add).to.be.calledOnceWith(account);
+      expect(await crypto.getEncryptedWallet(privateKey, password)).to.deep.equal(encryptedWallet);
+      expect(web3Stub.eth.accounts.encrypt).to.be.calledOnceWith(privateKey, password);
     });
   });
 
