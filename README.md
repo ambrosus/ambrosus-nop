@@ -15,12 +15,12 @@ Software package for assisting perspective node operators with the registration,
   - **[Developing and contributing](#running-tests-and-linting)**
 
 ## Installation
-The installation covers two different types of images prebuilt images and custom images. Prebuilt images are recommended by us, they are built by us and have all of the requirements already installed. Custom images are your own images that you want to use, or fresh images with nothing on them. 
+The installation covers two different types of images prebuilt images and custom images. Prebuilt images are recommended by us, they have all of the requirements already installed. Custom images have to be set up by yourself. 
 ### Prebuilt Machine Images
 Currently we have a public image on Amazon Web Services, but soon on other clouds as well. Only some clouds have public images supported, as soon as other clouds have the functionality supported we will add machine images there too. 
 
 #### Amazon Web Services
-Go to aws.amazon.com and log in if you have an account, otherwise create an account. When you have logged in press services -> ec2. Then chose a region that suits you, this can found in the top right of your screen. Now you should press a blue button which says 'Launch Instance'. Now search for the machine image 'ambrosus-nop' and it should appear in the section community AMIs. This should lead to the below picture:
+Go to aws.amazon.com and log in or create an account. When you have logged in press services -> ec2. Then chose a region that suits you, which can found in the top right of your screen. Now you should press a blue button which says 'Launch Instance'. Now search for the machine image 'ambrosus-nop' and it should appear in the section community AMIs. This should lead to the below picture:
 ![Ambrosus](https://i.imgur.com/er9ohSX.png)
 Press select and chose your desired instance type. There is no configuration needed after chosing instance type and the default values should work, same goes for the storage (although larger storage the the default 8 gb is recommended). The tags are optional as well, a tip would be to add a tag with the key 'Name' and a custom name for it (could be the name of the node you are running).  The 6th step configuring security group is important as it is the ports needed to be opened for incoming connections to the node. The following ports are needed for each different node:
 
@@ -41,7 +41,8 @@ For all ports add the source 0.0.0.0/0.
 
 A sample below for hermes/atlas:
 ![Ambrosus](https://i.imgur.com/ltqZRAI.png)
-Now you can proceed and launch the instance. A prompt should pop up asking you for a key pair. This is used to access the instance through ssh, either create a new on or use a existing one if you have used ssh previously. You can access the instance by typing ```ssh -i <Location of your PEM file> ubuntu@<The public ip address of the instance>```
+Now you can proceed and launch the instance. A prompt should pop up asking you for a key pair. This is used to access the instance through ssh, either create a new on or use a existing one if you have used ssh previously. 
+You can access the instance by typing ```ssh -i <Location of your PEM file> ubuntu@<The public ip address of the instance>```
 
 Now a instance should be created and you can carry on to the **[Using the NOP](#using-the-nop)** section.
 
@@ -149,12 +150,12 @@ You can run the following commands for starting nodes
 ##### Custom image
 Enter the directory where you cloned the repository, we will assume you followed this guide and it is in the home directory.
 ``` cd ~/ambrosus-nop```
-In this directory you should have the following directory structure. Notice the docker-compose directory and it's subdirectories.
+In the directory you should have the following directory structure. Notice the docker-compose directory and it's subdirectories.
      
      .
     ├── config                   
     ├── dist                    
-    ├── docker-compose    
+    ├── setup_templates    
     │   ├── atlas
     │   ├── apollo         
     │   └── hermes           
@@ -162,9 +163,9 @@ In this directory you should have the following directory structure. Notice the 
     ├── node_modules            
     ├── src
     └── test
-Now enter the directory for the node you want to start and then run docker-compose up -d. If it is an **Atlas** node the command would be:
+Now enter the directory for the node you want to start and then run docker-compose up -d. If it is an **Apollo** node the command would be:
 ```
-cd docker-compose/atlas
+cd setup_templates/apollo
 docker-compose up -d
 ```
 Commands are similar for all three nodes, the directory the commands get executed in diffrentiates them. 
