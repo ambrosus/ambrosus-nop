@@ -70,12 +70,14 @@ describe('Setup Creator', () => {
     const privateKeyPlaceholder = '<ENTER_YOUR_PRIVATE_KEY_HERE>';
     const rpcPlaceholder = '<ENTER_YOUR_RPC_HERE>';
     const headAddressPlaceholder = '<ENTER_YOUR_HEAD_CONTRACT_ADDRESS_HERE>';
+    const networkNamePlaceholder = '<ENTER_NETWORK_NAME_HERE>';
 
     const examplePrivateKey = '0xbeefcafe';
     const exampleRpc = 'http://localhost:8545';
     const exampleHeadAddress = '0xdeadface';
+    const exampleNetworkName = 'amb-net';
 
-    const sampleForm = (arg1, arg2, arg3) => `${arg1} || ${arg2} || ${arg3}`;
+    const sampleForm = (arg1, arg2, arg3, arg4) => `${arg1} || ${arg2} || ${arg3} || ${arg4}`;
 
     const nodeTypeName = 'atlas';
 
@@ -84,7 +86,7 @@ describe('Setup Creator', () => {
 
     beforeEach(async () => {
       await makeDirectory(`${testInputDir}${nodeTypeName}`);
-      await writeFile(templateFilePath, sampleForm(privateKeyPlaceholder, rpcPlaceholder, headAddressPlaceholder));
+      await writeFile(templateFilePath, sampleForm(privateKeyPlaceholder, rpcPlaceholder, headAddressPlaceholder, networkNamePlaceholder));
     });
 
     afterEach(async () => {
@@ -94,8 +96,8 @@ describe('Setup Creator', () => {
     });
 
     it('creates file correctly', async () => {
-      await setupCreator.prepareDockerComposeFile(nodeTypeName, examplePrivateKey, exampleRpc, exampleHeadAddress);
-      expect(await readFile(destinationFilePath)).to.deep.equal(sampleForm(examplePrivateKey, exampleRpc, exampleHeadAddress));
+      await setupCreator.prepareDockerComposeFile(nodeTypeName, examplePrivateKey, exampleRpc, exampleHeadAddress, exampleNetworkName);
+      expect(await readFile(destinationFilePath)).to.deep.equal(sampleForm(examplePrivateKey, exampleRpc, exampleHeadAddress, exampleNetworkName));
     });
   });
 
@@ -126,7 +128,7 @@ describe('Setup Creator', () => {
 
   describe('copyChainJson', () => {
     const networkName = 'dev';
-    const chainJsonContents = 'chain_json_contents';
+    const chainJsonContents = `{"name": "${networkName}"}`;
     const srcChainJsonPath = `${testInputDir}chain_files/${networkName}.json`;
     const destChainJsonPath = `${testOutputDir}chain.json`;
 
@@ -142,8 +144,9 @@ describe('Setup Creator', () => {
     });
 
     it('copies files correctly', async () => {
-      await setupCreator.copyChainJson(networkName);
+      const result = await setupCreator.copyChainJson(networkName);
       expect(await readFile(destChainJsonPath)).to.equal(chainJsonContents);
+      expect(result).to.equal(networkName);
     });
   });
 });

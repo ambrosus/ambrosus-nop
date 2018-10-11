@@ -142,8 +142,8 @@ export default class StateModel {
       await this.setupCreator.createKeyFile(encryptedWallet);
     }
 
-    const networkName = await this.getNameForNetwork();
-    this.setupCreator.copyChainJson(networkName);
+    const networkAlias = await this.getNameForNetwork();
+    const networkName = await this.setupCreator.copyChainJson(networkAlias);
 
     const address = await this.getExistingAddress();
     this.setupCreator.copyParityConfiguration(nodeTypeName, address);
@@ -151,6 +151,6 @@ export default class StateModel {
     const web3RPC = await this.getWeb3RPCForNetwork();
     const headContractAddress = await this.getHeadContractAddressForNetwork();
 
-    await this.setupCreator.prepareDockerComposeFile(nodeTypeName, privateKey, web3RPC, headContractAddress);
+    await this.setupCreator.prepareDockerComposeFile(nodeTypeName, privateKey, web3RPC, headContractAddress, networkName);
   }
 }

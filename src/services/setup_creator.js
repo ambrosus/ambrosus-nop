@@ -25,13 +25,14 @@ export default class SetupCreator {
     await writeFile(`${this.outputDirectory}keyfile`, JSON.stringify(encryptedWallet, null, 2));
   }
 
-  async prepareDockerComposeFile(nodeTypeName, privateKey, web3RPC, headContractAddress) {
+  async prepareDockerComposeFile(nodeTypeName, privateKey, web3RPC, headContractAddress, networkName) {
     await this.ensureOutputDirectoryExists();
     let dockerFile = await readFile(`${this.templateDirectory}${nodeTypeName}/docker-compose.yml`);
 
     dockerFile = dockerFile.replace(/<ENTER_YOUR_PRIVATE_KEY_HERE>/gi, privateKey);
     dockerFile = dockerFile.replace(/<ENTER_YOUR_RPC_HERE>/gi, web3RPC);
     dockerFile = dockerFile.replace(/<ENTER_YOUR_HEAD_CONTRACT_ADDRESS_HERE>/gi, headContractAddress);
+    dockerFile = dockerFile.replace(/<ENTER_NETWORK_NAME_HERE>/gi, networkName);
 
     await writeFile(`${this.outputDirectory}docker-compose.yml`, dockerFile);
   }
@@ -48,7 +49,9 @@ export default class SetupCreator {
   async copyChainJson(networkName) {
     await this.ensureOutputDirectoryExists();
     const chainFile = await readFile(`${this.templateDirectory}chain_files/${networkName}.json`);
+    const parsedChainJson = JSON.parse(chainFile);
     await writeFile(`${this.outputDirectory}chain.json`, chainFile);
+    return parsedChainJson.name;
   }
 
   async ensureOutputDirectoryExists() {
