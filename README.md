@@ -7,7 +7,6 @@ Software package for assisting perspective node operators with the registration,
   - **[Installation](#installation)**
     - **[Prebuilt Machine Images](#prebuilt-machine-images)**
         - **[Amazon Web Services](#amazon-web-services)**
-        - Google Cloud
     - **[Custom Machine Image](#custom-machine-image)**
   - **[Using the NOP](#using-the-nop)**
   - **[Insight and Statistics of the node](#insight-and-statistics-of-the-node)**
@@ -15,9 +14,14 @@ Software package for assisting perspective node operators with the registration,
   - **[Developing and contributing](#running-tests-and-linting)**
 
 ## Installation
-The installation covers two different types of images prebuilt images and custom images. Prebuilt images are recommended by us, they have all of the requirements already installed. Custom images have to be set up by yourself. 
+There are two ways to configure an Ambrosus node:
+
+- use a pre-built machine image developer and maintained by the Ambrosus team
+- install the software by yourself on a machine
+We recommend using the former option for most users that don't need advanced configuration.
+
 ### Prebuilt Machine Images
-Currently we have a public image on Amazon Web Services, but soon on other clouds as well. Only some clouds have public images supported, as soon as other clouds have the functionality supported we will add machine images there too. 
+Currently a prebuild image is only supported on Amazon Web Services.
 
 #### Amazon Web Services
 Go to [Amazon Web Services](aws.amazon.com) and log in or create an account. When you have logged in press services -> ec2. Then chose a region that suits you, which can found in the top right of your screen. Now you should press a blue button which says 'Launch Instance'. Now search for the machine image 'ambrosus-nop' and it should appear in the section community AMIs. This should lead to the below picture:
@@ -41,13 +45,10 @@ For all ports add the source 0.0.0.0/0.
 
 A sample below for hermes/atlas:
 ![Ambrosus](https://i.imgur.com/ltqZRAI.png)
-Now you can proceed and launch the instance. A prompt should pop up asking you for a key pair. This is used to access the instance through ssh, either create a new on or use a existing one if you have used ssh previously. 
+Now you can proceed and launch the instance. A prompt should pop up asking you for a key pair. This is used to access the instance through ssh, either create a new on or use a existing one if you have used ssh previously. If you create a new PEM file, store it somewhere securely and do not lose it as it is needed to access the instance.
 You can access the instance by typing ```ssh -i <Location of your PEM file> ubuntu@<The public ip address of the instance>```
 
 Now a instance should be created and you can carry on to the **[Using the NOP](#using-the-nop)** section.
-
-#### Google Cloud
-*No machine image yet, will be added soon*
 
 ### Custom Machine Image
 You can launch an Ambrosus node from any cloud provider but you will have to install the prerequisites yourself. We will go through a clean installation on a DigitalOcean machine image.
