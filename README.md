@@ -145,32 +145,15 @@ Then you can run the NOP again with a clean state by ```npm start```
 
 ### Starting a Node
 ##### Ambrosus prebuilt machine image
-You can run the following commands for starting nodes
-- For an Apollo node run: ```start-apollo```
-- For an Hermes node run: ```start-hermes```
-- For and Atlas node run: ```start-atlas```
+You can run the following command for starting the node you onboarded
+-  ```start-node```
+And stopping the node with 
+- ```stop-node```
 ##### Custom image
 Enter the directory where you cloned the repository, we will assume you followed this guide and it is in the home directory.
 ``` cd ~/ambrosus-nop```
-In the directory you should have the following directory structure. Notice the docker-compose directory and it's subdirectories.
-     
-     .
-    ├── config                   
-    ├── dist                    
-    ├── setup_templates    
-    │   ├── atlas
-    │   ├── apollo         
-    │   └── hermes           
-    ├── test                    
-    ├── node_modules            
-    ├── src
-    └── test
-Now enter the directory for the node you want to start and then run docker-compose up -d. If it is an **Apollo** node the command would be:
-```
-cd setup_templates/apollo
-docker-compose up -d
-```
-Commands are similar for all three nodes, the directory the commands get executed in diffrentiates them. 
+Run ```docker-compose up -d``` to start the node you onboarded
+You can run ```docker-compose stop``` for stopping the node.
 
 ## Insight and statistics of the node
 To check statistics and get insights of the node you are running please visit the Ambrosus dashboard.
