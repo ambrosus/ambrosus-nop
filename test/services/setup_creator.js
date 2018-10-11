@@ -100,31 +100,49 @@ describe('Setup Creator', () => {
   });
 
   describe('copyParityConfiguration', () => {
+    const sampleForm = (content) => `parity_config_contents... ${content}`;
+    const placeholder = '<TYPE_YOUR_ADDRESS_HERE>';
+    const address = '0x123456789';
     const nodeTypeName = 'apollo';
-    const parityConfigContents = 'parity_config_contents';
-    const chainJsonContents = 'chain_json_contents';
     const srcParityConfigPath = `${testInputDir}${nodeTypeName}/parity_config.toml`;
-    const srcChainJsonPath = `${testInputDir}${nodeTypeName}/chain.json`;
     const destParityConfigPath = `${testOutputDir}parity_config.toml`;
-    const destChainJsonPath = `${testOutputDir}chain.json`;
 
     beforeEach(async () => {
       await makeDirectory(`${testInputDir}${nodeTypeName}`);
-      await writeFile(srcParityConfigPath, parityConfigContents);
-      await writeFile(srcChainJsonPath, chainJsonContents);
+      await writeFile(srcParityConfigPath, sampleForm(placeholder));
     });
 
     afterEach(async () => {
       await removeFile(destParityConfigPath);
-      await removeFile(destChainJsonPath);
       await removeFile(srcParityConfigPath);
-      await removeFile(srcChainJsonPath);
       await removeDirectory(`${testInputDir}${nodeTypeName}`);
     });
 
     it('copies files correctly', async () => {
-      await setupCreator.copyParityConfiguration(nodeTypeName);
-      expect(await readFile(destParityConfigPath)).to.equal(parityConfigContents);
+      await setupCreator.copyParityConfiguration(nodeTypeName, address);
+      expect(await readFile(destParityConfigPath)).to.equal(sampleForm(address));
+    });
+  });
+
+  describe('copyChainJson', () => {
+    const networkName = 'dev';
+    const chainJsonContents = 'chain_json_contents';
+    const srcChainJsonPath = `${testInputDir}chain_files/${networkName}.json`;
+    const destChainJsonPath = `${testOutputDir}chain.json`;
+
+    beforeEach(async () => {
+      await makeDirectory(`${testInputDir}chain_files`);
+      await writeFile(srcChainJsonPath, chainJsonContents);
+    });
+
+    afterEach(async () => {
+      await removeFile(destChainJsonPath);
+      await removeFile(srcChainJsonPath);
+      await removeDirectory(`${testInputDir}chain_files`);
+    });
+
+    it('copies files correctly', async () => {
+      await setupCreator.copyChainJson(networkName);
       expect(await readFile(destChainJsonPath)).to.equal(chainJsonContents);
     });
   });

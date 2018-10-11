@@ -2,5 +2,9 @@
   "dev": {
     "rpc": "http://34.254.30.236:8545",
     "headContractAddress": "0x0000000000000000000000000000000000000f10"
+  },
+  "test": {
+    "rpc": "https://proxy-test.ambrosus.com/",
+    "headContractAddress": "0x0000000000000000000000000000000000000f10"
   }
 }

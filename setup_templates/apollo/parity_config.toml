@@ -2,9 +2,6 @@
 base_path = "/app/"
 chain = "/app/chain.json"
 
-[network]
-nat = "extip:<Type your Public IP HERE>"
-
 [rpc]
 apis = ["web3", "eth", "net", "parity"]
 interface = "all"
@@ -16,7 +13,7 @@ disable = true
 password = ["/app/password.pwds"]
 
 [mining]
-engine_signer = "<Type YOUR ADDRESS HERE>"
+engine_signer = "<TYPE_YOUR_ADDRESS_HERE>"
 reseal_on_txs = "none"
 
 [misc]
