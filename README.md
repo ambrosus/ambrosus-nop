@@ -18,6 +18,7 @@ There are two ways to configure an Ambrosus node:
 
 - use a pre-built machine image developer and maintained by the Ambrosus team
 - install the software by yourself on a machine
+
 We recommend using the former option for most users that don't need advanced configuration.
 
 ### Prebuilt Machine Images
