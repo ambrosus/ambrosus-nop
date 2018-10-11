@@ -20,7 +20,7 @@ The installation covers two different types of images prebuilt images and custom
 Currently we have a public image on Amazon Web Services, but soon on other clouds as well. Only some clouds have public images supported, as soon as other clouds have the functionality supported we will add machine images there too. 
 
 #### Amazon Web Services
-Go to aws.amazon.com and log in or create an account. When you have logged in press services -> ec2. Then chose a region that suits you, which can found in the top right of your screen. Now you should press a blue button which says 'Launch Instance'. Now search for the machine image 'ambrosus-nop' and it should appear in the section community AMIs. This should lead to the below picture:
+Go to [Amazon Web Services](aws.amazon.com) and log in or create an account. When you have logged in press services -> ec2. Then chose a region that suits you, which can found in the top right of your screen. Now you should press a blue button which says 'Launch Instance'. Now search for the machine image 'ambrosus-nop' and it should appear in the section community AMIs. This should lead to the below picture:
 ![Ambrosus](https://i.imgur.com/er9ohSX.png)
 Press select and chose your desired instance type. There is no configuration needed after chosing instance type and the default values should work, same goes for the storage (although larger storage the the default 8 gb is recommended). The tags are optional as well, a tip would be to add a tag with the key 'Name' and a custom name for it (could be the name of the node you are running).  The 6th step configuring security group is important as it is the ports needed to be opened for incoming connections to the node. The following ports are needed for each different node:
 
