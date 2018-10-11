@@ -14,4 +14,4 @@ services:
       - ./chain.json:/app/chain.json
       - ./password.pwds:/app/password.pwds
       - ./parity_config.toml:/app/config.toml
-      - ./keyfile:/app/keys/ambnet-dev/keyfile 
+      - ./keyfile:/app/keys/<ENTER_NETWORK_NAME_HERE>/keyfile 
