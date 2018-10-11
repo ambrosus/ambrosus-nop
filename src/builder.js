@@ -51,6 +51,8 @@ import askForNetworkDialog from './dialogs/ask_for_network_dialog';
 import networkSelectedDialog from './dialogs/network_selected_dialog';
 import healthCheckUrlDialog from './dialogs/healthcheck_url_dialog';
 import dockerComposeCommandDialog from './dialogs/docker_compose_command_dialog';
+import insufficientFundsDialog from './dialogs/insufficient_funds_dialog';
+import genericErrorDialog from './dialogs/generic_error_dialog';
 
 import execCmd from './utils/execCmd';
 import messages from './messages';
@@ -94,6 +96,8 @@ class Builder {
     objects.networkSelectedDialog = networkSelectedDialog(messages);
     objects.healthCheckUrlDialog = healthCheckUrlDialog(messages);
     objects.dockerComposeCommandDialog = dockerComposeCommandDialog(messages);
+    objects.insufficientFundsDialog = insufficientFundsDialog(messages);
+    objects.genericErrorDialog = genericErrorDialog(messages);
 
     objects.selectNetworkPhase = selectNetworkPhase(networks, objects.stateModel, objects.askForNetworkDialog, objects.networkSelectedDialog);
     objects.checkDockerAvailablePhase = checkDockerAvailablePhase(objects.systemModel, objects.dockerDetectedDialog, objects.dockerMissingDialog);
@@ -128,7 +132,7 @@ class Builder {
     objects.checkAddressWhitelistingStatusPhase = checkAddressWhitelistingStatusPhase(objects.smartContractsModel, objects.stateModel, objects.addressIsNotWhitelistedDialog, objects.addressIsWhitelistedDialog);
     objects.performOnboardingPhase = performOnboardingPhase(objects.stateModel, objects.smartContractsModel,
       objects.notEnoughBalanceDialog, objects.alreadyOnboardedDialog, objects.onboardingConfirmationDialog,
-      objects.onboardingSuccessfulDialog);
+      objects.onboardingSuccessfulDialog, objects.insufficientFundsDialog, objects.genericErrorDialog);
     objects.prepareDockerPhase = prepareDockerPhase(objects.stateModel, objects.healthCheckUrlDialog, objects.dockerComposeCommandDialog);
 
     return objects;
