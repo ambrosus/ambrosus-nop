@@ -52,14 +52,9 @@ export default class SetupCreator {
   }
 
   async ensureOutputDirectoryExists() {
-    let stat;
     try {
-      stat = await getPath(this.outputDirectory);
+      await getPath(this.outputDirectory);
     } catch (error) {
-      await makeDirectory(this.outputDirectory);
-      return;
-    }
-    if (!stat.isDirectory()) {
       await makeDirectory(this.outputDirectory);
     }
   }
