@@ -327,16 +327,10 @@ describe('State Model', () => {
   describe('prepareSetupFiles', async () => {
     it('creates all needed files for Apollo', async () => {
       storeStub.has.returns(true);
-      storeStub.read.onCall(0).returns(APOLLO)
-        .onCall(1)
+      storeStub.read.withArgs('role').returns(APOLLO)
+        .withArgs('privateKey')
         .returns(examplePrivateKey)
-        .onCall(2)
-        .returns(exampleNetwork)
-        .onCall(3)
-        .returns(exampleAddress)
-        .onCall(4)
-        .returns(exampleNetwork)
-        .onCall(5)
+        .withArgs('network')
         .returns(exampleNetwork);
       await stateModel.prepareSetupFiles();
       expect(cryptoStub.getRandomPassword).to.have.been.calledOnce;
@@ -350,16 +344,10 @@ describe('State Model', () => {
 
     it('creates all needed files (but skips some) for non Apollo', async () => {
       storeStub.has.returns(true);
-      storeStub.read.onCall(0).returns(HERMES)
-        .onCall(1)
+      storeStub.read.withArgs('role').returns(HERMES)
+        .withArgs('privateKey')
         .returns(examplePrivateKey)
-        .onCall(2)
-        .returns(exampleNetwork)
-        .onCall(3)
-        .returns(exampleAddress)
-        .onCall(4)
-        .returns(exampleNetwork)
-        .onCall(5)
+        .withArgs('network')
         .returns(exampleNetwork);
       await stateModel.prepareSetupFiles();
       expect(cryptoStub.getRandomPassword).to.have.not.been.called;
