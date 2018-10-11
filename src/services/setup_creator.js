@@ -7,7 +7,7 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-import {readFile, writeFile} from '../utils/file';
+import {readFile, writeFile, getPath, makeDirectory} from '../utils/file';
 
 export default class SetupCreator {
   constructor(templateDirectory, outputDirectory) {
@@ -16,14 +16,17 @@ export default class SetupCreator {
   }
 
   async createPasswordFile(password) {
+    await this.ensureOutputDirectoryExists();
     await writeFile(`${this.outputDirectory}password.pwds`, password);
   }
 
   async createKeyFile(encryptedWallet) {
+    await this.ensureOutputDirectoryExists();
     await writeFile(`${this.outputDirectory}keyfile`, JSON.stringify(encryptedWallet, null, 2));
   }
 
   async prepareDockerComposeFile(nodeTypeName, privateKey, web3RPC, headContractAddress) {
+    await this.ensureOutputDirectoryExists();
     let dockerFile = await readFile(`${this.templateDirectory}${nodeTypeName}/docker-compose.yml`);
 
     dockerFile = dockerFile.replace(/<ENTER_YOUR_PRIVATE_KEY_HERE>/gi, privateKey);
@@ -34,6 +37,7 @@ export default class SetupCreator {
   }
 
   async copyParityConfiguration(nodeTypeName, address) {
+    await this.ensureOutputDirectoryExists();
     let parityConfigFile = await readFile(`${this.templateDirectory}${nodeTypeName}/parity_config.toml`);
 
     parityConfigFile = parityConfigFile.replace(/<TYPE_YOUR_ADDRESS_HERE>/gi, address);
@@ -42,7 +46,21 @@ export default class SetupCreator {
   }
 
   async copyChainJson(networkName) {
+    await this.ensureOutputDirectoryExists();
     const chainFile = await readFile(`${this.templateDirectory}chain_files/${networkName}.json`);
-    await writeFile(`chain.json`, chainFile);
+    await writeFile(`${this.outputDirectory}chain.json`, chainFile);
+  }
+
+  async ensureOutputDirectoryExists() {
+    let stat;
+    try {
+      stat = await getPath(this.outputDirectory);
+    } catch (error) {
+      await makeDirectory(this.outputDirectory);
+      return;
+    }
+    if (!stat.isDirectory()) {
+      await makeDirectory(this.outputDirectory);
+    }
   }
 }

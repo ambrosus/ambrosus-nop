@@ -82,4 +82,15 @@ const makeDirectory = (path) =>
     });
   });
 
-export {writeFile, readFile, removeFile, checkFileExists, listDirectory, removeDirectory, makeDirectory};
+const getPath = (path) =>
+  new Promise((resolve, reject) => {
+    fs.lstat(path, (err, stats) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(stats);
+      }
+    });
+  });
+
+export {writeFile, readFile, removeFile, checkFileExists, listDirectory, removeDirectory, makeDirectory, getPath};
