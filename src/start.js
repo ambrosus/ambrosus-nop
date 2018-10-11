@@ -34,9 +34,9 @@ const start = async () => {
     return;
   }
 
-  const onboarded = await performOnboardingPhase(whitelistingStatus);
+  const isOnboarded = await performOnboardingPhase(whitelistingStatus);
 
-  if (onboarded) {
+  if (isOnboarded) {
     await prepareDockerPhase();
   }
 };
