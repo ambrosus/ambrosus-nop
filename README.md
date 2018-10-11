@@ -21,7 +21,7 @@ There are two ways to configure an Ambrosus node:
 We recommend using the former option for most users that don't need advanced configuration.
 
 ### Prebuilt Machine Images
-Currently a prebuild image is only supported on Amazon Web Services.
+Currently a prebuilt image is only supported on Amazon Web Services.
 
 #### Amazon Web Services
 Go to [Amazon Web Services](aws.amazon.com) and log in or create an account. When you have logged in press services -> ec2. Then chose a region that suits you, which can found in the top right of your screen. Now you should press a blue button which says 'Launch Instance'. Now search for the machine image 'ambrosus-nop' and it should appear in the section community AMIs. This should lead to the below picture:
