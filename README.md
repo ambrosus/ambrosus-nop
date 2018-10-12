@@ -156,9 +156,10 @@ And stopping the node with
 - ```stop-node```
 ##### Custom image
 Enter the directory where you cloned the repository, we will assume you followed this guide and it is in the home directory.
-``` cd ~/ambrosus-nop```
-Run ```docker-compose up -d``` to start the node you onboarded
-You can run ```docker-compose stop``` for stopping the node.
+``` cd ~/ambrosus-nop```.
+Run ```docker-compose up -d``` to start the node you onboarded.
+
+You can run ```docker-compose stop``` to stop the node.
 
 ## Insight and statistics of the node
 To check statistics and get insights of the node you are running please visit the Ambrosus dashboard.
