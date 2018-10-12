@@ -39,13 +39,15 @@ const messages = {
   unitAmb: 'AMB',
   notEnoughBalance: (amount) => `Not enough balance. You need at least ${amount} in order to perform onboarding.`,
   onboardingWarning: (address, nodeType, amount) => `You will now onboard ${address} as the ${nodeType} node.\nWarning: this operations will cost ${amount}.`,
-  continueConfirmation: 'Do you wish to continue?',
+  continueConfirmation: 'Do you want to continue?',
   onboardingSuccessful: 'You are now successfully onboarded!',
   alreadyOnboarded: (role) => `Onboarded as ${role}.`,
   networkSelected: (network) => `Network: ${network}`,
   healthCheckUrl: (url) => `After starting node, you can check its health at: ${url}`,
   dockerComposeInfo: (command) => `To start your node enter following command: ${command}`,
-  dockerComposeCommand: 'docker-compose up -d'
+  dockerComposeCommand: 'docker-compose up -d',
+  yes: 'Yes',
+  no: 'No'
 };
 
 export default messages;
