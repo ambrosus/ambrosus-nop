@@ -27,13 +27,15 @@ describe('Perform onboarding Phase', () => {
   let alreadyOnboardedDialogStub;
   let onboardingConfirmationDialogStub;
   let onboardingSuccessfulDialogStub;
+  let insufficientFundsDialogStub;
+  let genericErrorDialogStub;
 
   const exampleWhitelistingStatus = {
     roleAssigned: 'bar',
     requiredDeposit: '123'
   };
 
-  const call = async (whitelistingStatus) => performOnboardingPhase(stateModelStub, smartContractsModelStub, notEnoughBalanceDialogStub, alreadyOnboardedDialogStub, onboardingConfirmationDialogStub, onboardingSuccessfulDialogStub)(whitelistingStatus);
+  const call = async (whitelistingStatus) => performOnboardingPhase(stateModelStub, smartContractsModelStub, notEnoughBalanceDialogStub, alreadyOnboardedDialogStub, onboardingConfirmationDialogStub, onboardingSuccessfulDialogStub, insufficientFundsDialogStub, genericErrorDialogStub)(whitelistingStatus);
 
   beforeEach(async () => {
     stateModelStub = {
@@ -49,6 +51,8 @@ describe('Perform onboarding Phase', () => {
     alreadyOnboardedDialogStub = sinon.stub().returns();
     onboardingConfirmationDialogStub = sinon.stub().resolves({onboardingConfirmation: true});
     onboardingSuccessfulDialogStub = sinon.stub().returns();
+    insufficientFundsDialogStub = sinon.stub();
+    genericErrorDialogStub = sinon.stub();
   });
 
   it('onboarding successful: displays dialogs and calls performOnboarding', async () => {
@@ -81,5 +85,19 @@ describe('Perform onboarding Phase', () => {
     await call(exampleWhitelistingStatus);
     expect(onboardingConfirmationDialogStub).to.be.calledOnce;
     expect(smartContractsModelStub.performOnboarding).to.be.not.called;
+  });
+
+  it('onboarding failed: insufficient funds', async () => {
+    smartContractsModelStub.performOnboarding.throws(new Error('Error: Insufficient funds'));
+    await call(exampleWhitelistingStatus);
+    expect(insufficientFundsDialogStub).to.be.calledOnce;
+    expect(onboardingSuccessfulDialogStub).to.be.not.called;
+  });
+
+  it('onboarding failed: unknown error', async () => {
+    smartContractsModelStub.performOnboarding.throws(new Error('Error: Something is not working'));
+    await call(exampleWhitelistingStatus);
+    expect(genericErrorDialogStub).to.be.calledOnce;
+    expect(onboardingSuccessfulDialogStub).to.be.not.called;
   });
 });

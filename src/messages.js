@@ -47,7 +47,9 @@ const messages = {
   dockerComposeInfo: (command) => `To start your node enter following command: ${command}`,
   dockerComposeCommand: 'docker-compose up -d',
   yes: 'Yes',
-  no: 'No'
+  no: 'No',
+  insufficientFunds: 'You have insufficient funds to perform transaction',
+  genericError: (message) => `An error occured: ${message}`
 };
 
 export default messages;

@@ -8,7 +8,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 */
 
 const performOnboardingPhase = (
-  stateModel, smartContractsModel, notEnoughBalanceDialog, alreadyOnboardedDialog, onboardingConfirmationDialog, onboardingSuccessfulDialog) =>
+  stateModel, smartContractsModel, notEnoughBalanceDialog, alreadyOnboardedDialog, onboardingConfirmationDialog, onboardingSuccessfulDialog, insufficientFundsDialog, genericErrorDialog) =>
   async (whitelistingStatus) => {
     const userAddress = await stateModel.getExistingAddress();
     const onboardedRole = await smartContractsModel.getOnboardedRole(userAddress);
@@ -25,8 +25,17 @@ const performOnboardingPhase = (
       return false;
     }
 
-    await smartContractsModel.performOnboarding(userAddress, whitelistingStatus.roleAssigned,
-      whitelistingStatus.requiredDeposit, await stateModel.getNodeUrl());
+    try {
+      await smartContractsModel.performOnboarding(userAddress, whitelistingStatus.roleAssigned,
+        whitelistingStatus.requiredDeposit, await stateModel.getNodeUrl());
+    } catch (error) {
+      if (error.message.includes('Insufficient funds')) {
+        insufficientFundsDialog();
+      } else {
+        genericErrorDialog(error.message);
+      }
+      return false;
+    }
 
     onboardingSuccessfulDialog();
     return true;
