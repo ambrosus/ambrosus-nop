@@ -140,7 +140,7 @@ npm start
 ```
 *this location can vary, it depends on where you cloned the repository.
 
-If you want to reset the process you will have to type the following command.**Warning: this deletes state.json and the private key generated**
+If you want to reset the process you will have to type the following command.**Warning: this deletes state.json and the private key generated**.
 ```
 cd ~/ambrosus-nop
 rm state.json
