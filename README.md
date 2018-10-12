@@ -130,6 +130,7 @@ The NOP has two different stages, the aim of the first stage is to whitelist you
 The aim of the second stage is to onboard your node, this can only be done upon being whitelisted. If the node is whitelisted you can run the NOP again to onboard your node. When the onboarding is complete, the NOP will fill out variables in the docker-compose file specific to your onboarded node.
 ##### Ambrosus prebuilt machine image
 Run ```ambrosus-nop``` to start the NOP.
+
 If you want to restart the process run ```ambrosus-nop-reset```. **Warning: this deletes state.json and the private key generated**.
 ##### Custom image
 Run the following commands:
