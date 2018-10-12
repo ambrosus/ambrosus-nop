@@ -16,10 +16,19 @@ const onboardingConfirmationDialog = (messages) => async (address, role, deposit
   console.log(chalk.green(messages.onboardingWarning(chalk.yellow(address), chalk.yellow(role), chalk.yellow(`${depositInAmb} ${messages.unitAmb}`))));
   return inquirer.prompt([
     {
-      type: 'confirm',
+      type: 'list',
       name: 'onboardingConfirmation',
       message: messages.continueConfirmation,
-      default: false
+      choices: [
+        {
+          name: messages.no,
+          value: false
+        },
+        {
+          name: messages.yes,
+          value: true
+        }
+      ]
     }
   ]);
 };
