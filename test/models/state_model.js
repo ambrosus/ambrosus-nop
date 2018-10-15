@@ -292,6 +292,7 @@ describe('State Model', () => {
 
   describe('assembleSubmission', () => {
     const assembledSubmission = {
+      network: exampleNetwork.name,
       address: exampleAddress,
       role: exampleRole,
       url: exampleUrl,
@@ -303,23 +304,27 @@ describe('State Model', () => {
       storeStub.has.withArgs('role').resolves(true);
       storeStub.has.withArgs('url').resolves(true);
       storeStub.has.withArgs('email').resolves(true);
+      storeStub.has.withArgs('network').resolves(true);
       storeStub.read.withArgs('privateKey').resolves(examplePrivateKey);
       storeStub.read.withArgs('role').resolves(exampleRole);
       storeStub.read.withArgs('url').resolves(exampleUrl);
       storeStub.read.withArgs('email').resolves(exampleEmail);
+      storeStub.read.withArgs('network').resolves(exampleNetwork);
     });
     it('assembles submission', async () => {
       expect(await stateModel.assembleSubmission()).to.deep.equal(assembledSubmission);
-      expect(storeStub.has).to.have.callCount(4);
-      expect(storeStub.read).to.have.callCount(4);
+      expect(storeStub.has).to.have.callCount(5);
+      expect(storeStub.read).to.have.callCount(5);
       expect(storeStub.has).to.have.been.calledWith('privateKey');
       expect(storeStub.has).to.have.been.calledWith('role');
       expect(storeStub.has).to.have.been.calledWith('url');
       expect(storeStub.has).to.have.been.calledWith('email');
+      expect(storeStub.has).to.have.been.calledWith('network');
       expect(storeStub.read).to.have.been.calledWith('privateKey');
       expect(storeStub.read).to.have.been.calledWith('role');
       expect(storeStub.read).to.have.been.calledWith('url');
       expect(storeStub.read).to.have.been.calledWith('email');
+      expect(storeStub.read).to.have.been.calledWith('network');
       expect(cryptoStub.addressForPrivateKey).to.have.been.calledOnceWith(examplePrivateKey);
     });
   });
