@@ -7,7 +7,15 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
+import path from 'path';
 import {readFile, writeFile, getPath, makeDirectory} from '../utils/file';
+
+const passwordFileName = 'password.pwds';
+const keyFileName = 'keyfile';
+const dockerFileName = 'docker-compose.yml';
+const parityConfigFileName = 'parity_config.toml';
+const chainTemplateDirectory = 'chain_files';
+const chainDescriptionFileName = 'chain.json';
 
 export default class SetupCreator {
   constructor(templateDirectory, outputDirectory) {
@@ -17,40 +25,40 @@ export default class SetupCreator {
 
   async createPasswordFile(password) {
     await this.ensureOutputDirectoryExists();
-    await writeFile(`${this.outputDirectory}password.pwds`, password);
+    await writeFile(path.join(this.outputDirectory, passwordFileName), password);
   }
 
   async createKeyFile(encryptedWallet) {
     await this.ensureOutputDirectoryExists();
-    await writeFile(`${this.outputDirectory}keyfile`, JSON.stringify(encryptedWallet, null, 2));
+    await writeFile(path.join(this.outputDirectory, keyFileName), JSON.stringify(encryptedWallet, null, 2));
   }
 
   async prepareDockerComposeFile(nodeTypeName, privateKey, web3RPC, headContractAddress, networkName) {
     await this.ensureOutputDirectoryExists();
-    let dockerFile = await readFile(`${this.templateDirectory}${nodeTypeName}/docker-compose.yml`);
+    let dockerFile = await readFile(path.join(this.templateDirectory, nodeTypeName, dockerFileName));
 
     dockerFile = dockerFile.replace(/<ENTER_YOUR_PRIVATE_KEY_HERE>/gi, privateKey);
     dockerFile = dockerFile.replace(/<ENTER_YOUR_RPC_HERE>/gi, web3RPC);
     dockerFile = dockerFile.replace(/<ENTER_YOUR_HEAD_CONTRACT_ADDRESS_HERE>/gi, headContractAddress);
     dockerFile = dockerFile.replace(/<ENTER_NETWORK_NAME_HERE>/gi, networkName);
 
-    await writeFile(`${this.outputDirectory}docker-compose.yml`, dockerFile);
+    await writeFile(path.join(this.outputDirectory, dockerFileName), dockerFile);
   }
 
   async copyParityConfiguration(nodeTypeName, address) {
     await this.ensureOutputDirectoryExists();
-    let parityConfigFile = await readFile(`${this.templateDirectory}${nodeTypeName}/parity_config.toml`);
+    let parityConfigFile = await readFile(path.join(this.templateDirectory, nodeTypeName, parityConfigFileName));
 
     parityConfigFile = parityConfigFile.replace(/<TYPE_YOUR_ADDRESS_HERE>/gi, address);
 
-    await writeFile(`${this.outputDirectory}parity_config.toml`, parityConfigFile);
+    await writeFile(path.join(this.outputDirectory, parityConfigFileName), parityConfigFile);
   }
 
   async copyChainJson(networkName) {
     await this.ensureOutputDirectoryExists();
-    const chainFile = await readFile(`${this.templateDirectory}chain_files/${networkName}.json`);
+    const chainFile = await readFile(path.join(this.templateDirectory, chainTemplateDirectory, `${networkName}.json`));
     const parsedChainJson = JSON.parse(chainFile);
-    await writeFile(`${this.outputDirectory}chain.json`, chainFile);
+    await writeFile(path.join(this.outputDirectory, chainDescriptionFileName), chainFile);
     return parsedChainJson.name;
   }
 
