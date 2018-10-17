@@ -112,6 +112,7 @@ export default class StateModel {
   async assembleSubmission() {
     const privateKey = await this.getExistingPrivateKey();
     return {
+      network: await this.getNameForNetwork(),
       address: await this.crypto.addressForPrivateKey(privateKey),
       role: await this.getRole(),
       url: await this.getNodeUrl(),
