@@ -17,10 +17,7 @@ export default class StateModel {
   }
 
   async getNetwork() {
-    if (await this.store.has('network')) {
-      return await this.store.read('network');
-    }
-    return null;
+    return this.store.safeRead('network');
   }
 
   async storeNetwork(network) {
@@ -34,10 +31,7 @@ export default class StateModel {
   }
 
   async getExistingPrivateKey() {
-    if (await this.store.has('privateKey')) {
-      return await this.store.read('privateKey');
-    }
-    return null;
+    return this.store.safeRead('privateKey');
   }
 
   async storePrivateKey(privateKey) {
@@ -53,10 +47,7 @@ export default class StateModel {
   }
 
   async getRole() {
-    if (await this.store.has('role')) {
-      return await this.store.read('role');
-    }
-    return null;
+    return this.store.safeRead('role');
   }
 
   async storeRole(role) {
@@ -64,10 +55,7 @@ export default class StateModel {
   }
 
   async getNodeUrl() {
-    if (await this.store.has('url')) {
-      return await this.store.read('url');
-    }
-    return null;
+    return this.store.safeRead('url');
   }
 
   async storeNodeUrl(url) {
@@ -75,44 +63,17 @@ export default class StateModel {
   }
 
   async getUserEmail() {
-    if (await this.store.has('email')) {
-      return await this.store.read('email');
-    }
-    return null;
+    return this.store.safeRead('email');
   }
 
   async storeUserEmail(email) {
     await this.store.write('email', email);
   }
 
-  async getWeb3RPCForNetwork() {
-    if (await this.store.has('network')) {
-      const {rpc} = await this.store.read('network');
-      return rpc;
-    }
-    return null;
-  }
-
-  async getHeadContractAddressForNetwork() {
-    if (await this.store.has('network')) {
-      const {headContractAddress} = await this.store.read('network');
-      return headContractAddress;
-    }
-    return null;
-  }
-
-  async getNameForNetwork() {
-    if (await this.store.has('network')) {
-      const {name} = await this.store.read('network');
-      return name;
-    }
-    return null;
-  }
-
   async assembleSubmission() {
     const privateKey = await this.getExistingPrivateKey();
     return {
-      network: await this.getNameForNetwork(),
+      network: (await this.getNetwork()).name,
       address: await this.crypto.addressForPrivateKey(privateKey),
       role: await this.getRole(),
       url: await this.getNodeUrl(),
@@ -143,14 +104,11 @@ export default class StateModel {
       await this.setupCreator.createKeyFile(encryptedWallet);
     }
 
-    const networkAlias = await this.getNameForNetwork();
+    const {name: networkAlias, rpc: web3RPC, headContractAddress} = await this.getNetwork();
     const networkName = await this.setupCreator.copyChainJson(networkAlias);
 
     const address = await this.getExistingAddress();
-    this.setupCreator.copyParityConfiguration(nodeTypeName, address);
-
-    const web3RPC = await this.getWeb3RPCForNetwork();
-    const headContractAddress = await this.getHeadContractAddressForNetwork();
+    await this.setupCreator.copyParityConfiguration(nodeTypeName, address);
 
     await this.setupCreator.prepareDockerComposeFile(nodeTypeName, privateKey, web3RPC, headContractAddress, networkName);
   }

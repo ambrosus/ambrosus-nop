@@ -93,6 +93,26 @@ describe('Store', () => {
     });
   });
 
+  describe('safe reading', () => {
+    beforeEach(async () => {
+      const example = {
+        oneTwoThree: 123
+      };
+      await writeFile(
+        testFile,
+        JSON.stringify(example), null, 2
+      );
+    });
+
+    it('returns the value stored under key in the file', async () => {
+      expect(await store.safeRead(`oneTwoThree`)).to.equal(123);
+    });
+
+    it('returns null if requested key is not found in the file', async () => {
+      expect(await store.safeRead(`otherKey`)).to.be.null;
+    });
+  });
+
   describe('checking for key', () => {
     const existingKey = 'abc';
     const nonExistingKey = 'xyz';
