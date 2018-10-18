@@ -10,7 +10,7 @@
     "build": "babel ./src -d ./dist --copy-files",
     "start": "node dist/start.js",
     "test": "mocha",
-    "dev:start": "source ./dev.env && babel-node --inspect src/start.js",
+    "dev:start": "babel-node --inspect src/start.js",
     "dev:lint": "eslint src test config",
     "dev:lint:fix": "eslint src test config --fix"
   },

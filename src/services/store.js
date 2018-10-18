@@ -28,6 +28,13 @@ export default class Store {
     return contents[key];
   }
 
+  async safeRead(key) {
+    if (await this.has(key)) {
+      return this.read(key);
+    }
+    return null;
+  }
+
   async has(key) {
     const contents = await this.readFile();
     return contents[key] !== undefined;
