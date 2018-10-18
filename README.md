@@ -96,10 +96,12 @@ sudo apt-get install -y nodejs
 sudo apt install git
 sudo apt install apt-transport-https ca-certificates curl software-properties-common
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+npm install -g yarn
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
 sudo apt update
 sudo apt install docker-ce
-pip install docker-compose
+sudo curl -L https://github.com/docker/compose/releases/download/1.18.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
 ```
 
 Run ```sudo systemctl status docker``` to check if docker is running fine.
@@ -120,8 +122,8 @@ All prerequirements are installed. Now clone the NOP repo, build it and then ins
 ```
 git clone https://github.com/ambrosus/ambrosus-nop.git
 cd ambrosus-nop
-npm install
-npm run-script build
+yarn install
+yarn build
 ```
 
 ## Using the NOP
@@ -136,7 +138,7 @@ If you want to restart the process run ```ambrosus-nop-reset```. **Warning: this
 Run the following commands:
 ```
 cd ~/ambrosus-nop*
-npm start
+yarn start
 ```
 *this location can vary, it depends on where you cloned the repository.
 
@@ -145,7 +147,7 @@ If you want to reset the process you will have to type the following command.**W
 cd ~/ambrosus-nop
 rm state.json
 ```
-Then you can run the NOP again with a clean state by ```npm start```
+Then you can run the NOP again with a clean state by ```yarn start```
 
 ### Starting a Node
 ##### Ambrosus prebuilt machine image
