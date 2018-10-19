@@ -2,11 +2,12 @@
 version: '2.4'
 services:
   parity:
-    image: parity/parity:v2.1.1
-    command: --config /app/config.toml
-    working_dir: /app
+    image: parity/parity:v2.0.8
+    entrypoint: /home/parity/bin/parity
+    command: --config /mnt/parity/config.toml
+    working_dir: /mnt/parity
+    user: root
     restart: unless-stopped
-    entrypoint: /entrypoint.sh
     ports:
       - '30303:30303/tcp'
       - '30303:30303/udp'

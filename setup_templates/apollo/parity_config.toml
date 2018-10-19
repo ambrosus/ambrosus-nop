@@ -15,6 +15,7 @@ password = ["/app/password.pwds"]
 [mining]
 engine_signer = "<TYPE_YOUR_ADDRESS_HERE>"
 reseal_on_txs = "none"
+force_sealing = true
 
 [misc]
 logging = "own_tx=trace"
