@@ -246,7 +246,7 @@ describe('State Model', () => {
       expect(setupCreatorStub.copyChainJson).to.have.been.calledOnceWith(exampleNetwork.name);
       expect(setupCreatorStub.copyParityConfiguration).to.have.been.calledOnceWith('apollo', {address: exampleAddress, ip: exampleIP});
       expect(setupCreatorStub.prepareDockerComposeFile).to.have.been.calledOnceWith(
-        'apollo', examplePrivateKey, exampleNetwork.rpc, exampleNetwork.headContractAddress, exampleNetworkFullName);
+        'apollo', examplePrivateKey, exampleNetwork.headContractAddress, exampleNetworkFullName);
     });
 
     it('creates files for Hermes and Atlas', async () => {
@@ -265,7 +265,7 @@ describe('State Model', () => {
       expect(setupCreatorStub.copyChainJson).to.have.been.calledOnceWith(exampleNetwork.name);
       expect(setupCreatorStub.copyParityConfiguration).to.have.been.calledOnceWith('hermes', {});
       expect(setupCreatorStub.prepareDockerComposeFile).to.have.been.calledOnceWith(
-        'hermes', examplePrivateKey, exampleNetwork.rpc, exampleNetwork.headContractAddress, exampleNetworkFullName);
+        'hermes', examplePrivateKey, exampleNetwork.headContractAddress, exampleNetworkFullName);
     });
 
     it('throws if invalid role provided', async () => {

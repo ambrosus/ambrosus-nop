@@ -106,10 +106,10 @@ export default class StateModel {
 
     const privateKey = await this.getPrivateKey();
 
-    const {name: networkAlias, rpc: web3RPC, headContractAddress} = await this.getNetwork();
+    const {name: networkAlias, headContractAddress} = await this.getNetwork();
     const networkName = await this.setupCreator.copyChainJson(networkAlias);
 
-    await this.setupCreator.prepareDockerComposeFile(nodeTypeName, privateKey, web3RPC, headContractAddress, networkName);
+    await this.setupCreator.prepareDockerComposeFile(nodeTypeName, privateKey, headContractAddress, networkName);
 
     if (role === APOLLO) {
       const password = this.crypto.getRandomPassword();

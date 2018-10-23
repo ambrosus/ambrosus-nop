@@ -27,13 +27,9 @@ services:
       - mongodb
       - parity
     environment:
-     ######################################################################
-     ######################################################################
       - WEB3_NODEPRIVATEKEY=<ENTER_YOUR_PRIVATE_KEY_HERE>
-      - WEB3_RPC=<ENTER_YOUR_RPC_HERE>
       - HEAD_CONTRACT_ADDRESS=<ENTER_YOUR_HEAD_CONTRACT_ADDRESS_HERE>
-     ######################################################################
-     ######################################################################
+      - WEB3_RPC=http://parity:8545
       - MONGO_HOSTS=mongodb:27017
       - MONGO_DB_NAME=ambrosus
       - AUTHORIZATION_WITH_SECRET_KEY_ENABLED=false
