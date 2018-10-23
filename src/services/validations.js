@@ -7,6 +7,8 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
+import ipRegex from 'ip-regex';
+
 export default class Validations {
   isValidPrivateKey(candidate) {
     const addressRegex = /^0x[0-9a-f]{64}$/i;
@@ -21,5 +23,9 @@ export default class Validations {
   isValidEmail(candidate) {
     const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return emailRegex.exec(candidate) !== null;
+  }
+
+  isValidIP(candidate) {
+    return ipRegex({exact: true}).test(candidate);
   }
 }

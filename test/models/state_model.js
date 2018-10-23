@@ -29,6 +29,7 @@ describe('State Model', () => {
   const exampleAddress = '0xB1D28124D5771dD347a0BDECbC72CFb2BFf4B2D7';
   const exampleRole = APOLLO;
   const exampleUrl = 'https://amb-node.com';
+  const exampleIP = '10.45.1.1';
   const exampleEmail = 'amb_node_operator@mail.com';
   const exampleNetwork = {
     rpc: 'localhost:8545',
@@ -92,13 +93,13 @@ describe('State Model', () => {
     });
   });
 
-  describe('getExistingPrivateKey', () => {
+  describe('getPrivateKey', () => {
     beforeEach(async () => {
       storeStub.safeRead.resolves(examplePrivateKey);
     });
 
     it('returns private key if one exists', async () => {
-      expect(await stateModel.getExistingPrivateKey()).to.equal(examplePrivateKey);
+      expect(await stateModel.getPrivateKey()).to.equal(examplePrivateKey);
       expect(storeStub.safeRead).to.have.been.calledOnceWith('privateKey');
     });
   });
@@ -110,13 +111,13 @@ describe('State Model', () => {
     });
   });
 
-  describe('getExistingAddress', () => {
+  describe('getAddress', () => {
     beforeEach(async () => {
       storeStub.safeRead.resolves(examplePrivateKey);
     });
 
     it('converts private key to address if one exists', async () => {
-      expect(await stateModel.getExistingAddress()).to.equal(exampleAddress);
+      expect(await stateModel.getAddress()).to.equal(exampleAddress);
       expect(storeStub.safeRead).to.have.been.calledOnceWith('privateKey');
       expect(cryptoStub.addressForPrivateKey).to.have.been.calledOnceWith(examplePrivateKey);
     });
@@ -158,6 +159,24 @@ describe('State Model', () => {
     });
   });
 
+  describe('storeNodeIP', () => {
+    it('stores IP', async () => {
+      await expect(stateModel.storeNodeIP(exampleIP)).to.be.eventually.fulfilled;
+      expect(storeStub.write).to.have.been.calledOnceWith('ip', exampleIP);
+    });
+  });
+
+  describe('getNodeIP', () => {
+    beforeEach(async () => {
+      storeStub.safeRead.resolves(exampleIP);
+    });
+
+    it('returns node url if one exists', async () => {
+      expect(await stateModel.getNodeIP()).to.equal(exampleIP);
+      expect(storeStub.safeRead).to.have.been.calledOnceWith('ip');
+    });
+  });
+
   describe('getUserEmail', () => {
     beforeEach(async () => {
       storeStub.safeRead.resolves(exampleEmail);
@@ -182,6 +201,7 @@ describe('State Model', () => {
       address: exampleAddress,
       role: exampleRole,
       url: exampleUrl,
+      ip: exampleIP,
       email: exampleEmail
     };
 
@@ -189,16 +209,18 @@ describe('State Model', () => {
       storeStub.safeRead.withArgs('privateKey').resolves(examplePrivateKey);
       storeStub.safeRead.withArgs('role').resolves(exampleRole);
       storeStub.safeRead.withArgs('url').resolves(exampleUrl);
+      storeStub.safeRead.withArgs('ip').resolves(exampleIP);
       storeStub.safeRead.withArgs('email').resolves(exampleEmail);
       storeStub.safeRead.withArgs('network').resolves(exampleNetwork);
     });
 
     it('assembles submission', async () => {
       expect(await stateModel.assembleSubmission()).to.deep.equal(assembledSubmission);
-      expect(storeStub.safeRead).to.have.callCount(5);
+      expect(storeStub.safeRead).to.have.callCount(6);
       expect(storeStub.safeRead).to.have.been.calledWith('privateKey');
       expect(storeStub.safeRead).to.have.been.calledWith('role');
       expect(storeStub.safeRead).to.have.been.calledWith('url');
+      expect(storeStub.safeRead).to.have.been.calledWith('ip');
       expect(storeStub.safeRead).to.have.been.calledWith('email');
       expect(storeStub.safeRead).to.have.been.calledWith('network');
       expect(cryptoStub.addressForPrivateKey).to.have.been.calledOnceWith(examplePrivateKey);
@@ -206,10 +228,12 @@ describe('State Model', () => {
   });
 
   describe('prepareSetupFiles', async () => {
-    it('creates all needed files for Apollo', async () => {
+    it('creates files for Apollo', async () => {
       storeStub.safeRead.withArgs('role').resolves(APOLLO)
         .withArgs('privateKey')
         .resolves(examplePrivateKey)
+        .withArgs('ip')
+        .resolves(exampleIP)
         .withArgs('network')
         .resolves(exampleNetwork);
       setupCreatorStub.copyChainJson.resolves(exampleNetworkFullName);
@@ -220,12 +244,12 @@ describe('State Model', () => {
       expect(cryptoStub.getEncryptedWallet).to.have.been.calledOnceWith(examplePrivateKey, examplePassword);
       expect(setupCreatorStub.createKeyFile).to.have.been.calledOnceWith(exampleEncryptedWallet);
       expect(setupCreatorStub.copyChainJson).to.have.been.calledOnceWith(exampleNetwork.name);
-      expect(setupCreatorStub.copyParityConfiguration).to.have.been.calledOnceWith('apollo', exampleAddress);
+      expect(setupCreatorStub.copyParityConfiguration).to.have.been.calledOnceWith('apollo', {address: exampleAddress, ip: exampleIP});
       expect(setupCreatorStub.prepareDockerComposeFile).to.have.been.calledOnceWith(
         'apollo', examplePrivateKey, exampleNetwork.rpc, exampleNetwork.headContractAddress, exampleNetworkFullName);
     });
 
-    it('creates all needed files (but skips some) for non Apollo', async () => {
+    it('creates files for Hermes and Atlas', async () => {
       storeStub.safeRead.withArgs('role').resolves(HERMES)
         .withArgs('privateKey')
         .resolves(examplePrivateKey)
@@ -239,7 +263,7 @@ describe('State Model', () => {
       expect(cryptoStub.getEncryptedWallet).to.have.not.been.called;
       expect(setupCreatorStub.createKeyFile).to.have.not.been.called;
       expect(setupCreatorStub.copyChainJson).to.have.been.calledOnceWith(exampleNetwork.name);
-      expect(setupCreatorStub.copyParityConfiguration).to.have.been.calledOnceWith('hermes', exampleAddress);
+      expect(setupCreatorStub.copyParityConfiguration).to.have.been.calledOnceWith('hermes', {});
       expect(setupCreatorStub.prepareDockerComposeFile).to.have.been.calledOnceWith(
         'hermes', examplePrivateKey, exampleNetwork.rpc, exampleNetwork.headContractAddress, exampleNetworkFullName);
     });

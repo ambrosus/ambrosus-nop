@@ -8,9 +8,9 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 */
 
 const getPrivateKey = async (stateModel, askForPrivateKeyDialog) => {
-  const existingPrivateKey = await stateModel.getExistingPrivateKey();
-  if (existingPrivateKey !== null) {
-    return existingPrivateKey;
+  const storedPrivateKey = await stateModel.getPrivateKey();
+  if (storedPrivateKey !== null) {
+    return storedPrivateKey;
   }
 
   const answers = await askForPrivateKeyDialog();

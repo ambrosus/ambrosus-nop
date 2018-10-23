@@ -102,16 +102,21 @@ describe('Setup Creator', () => {
   });
 
   describe('copyParityConfiguration', () => {
-    const sampleForm = (content) => `parity_config_contents... ${content}`;
-    const placeholder = '<TYPE_YOUR_ADDRESS_HERE>';
-    const address = '0x123456789';
+    const exampleAddress = '0x123456789';
+    const exampleIP = '10.0.0.1';
+
+    const inputForm = `parity_config_contents... <TYPE_YOUR_ADDRESS_HERE> ... <TYPE_YOUR_IP_HERE>`;
+    const formWithAddressReplaced = `parity_config_contents... ${exampleAddress} ... <TYPE_YOUR_IP_HERE>`;
+    const formWithIPReplaced = `parity_config_contents... <TYPE_YOUR_ADDRESS_HERE> ... ${exampleIP}`;
+
     const nodeTypeName = 'apollo';
-    const srcParityConfigPath = `${testInputDir}${nodeTypeName}/parity_config.toml`;
+    const templateDir = `${testInputDir}${nodeTypeName}`;
+    const srcParityConfigPath = `${templateDir}/parity_config.toml`;
     const destParityConfigPath = `${testOutputDir}parity_config.toml`;
 
     beforeEach(async () => {
       await makeDirectory(`${testInputDir}${nodeTypeName}`);
-      await writeFile(srcParityConfigPath, sampleForm(placeholder));
+      await writeFile(srcParityConfigPath, inputForm);
     });
 
     afterEach(async () => {
@@ -120,9 +125,14 @@ describe('Setup Creator', () => {
       await removeDirectory(`${testInputDir}${nodeTypeName}`);
     });
 
-    it('copies files correctly', async () => {
-      await setupCreator.copyParityConfiguration(nodeTypeName, address);
-      expect(await readFile(destParityConfigPath)).to.equal(sampleForm(address));
+    it('copies files correctly and replaces the TYPE_YOUR_ADDRESS_HERE placeholder if address was provided', async () => {
+      await setupCreator.copyParityConfiguration(nodeTypeName, {address: exampleAddress});
+      expect(await readFile(destParityConfigPath)).to.equal(formWithAddressReplaced);
+    });
+
+    it('copies files correctly and replaces the TYPE_YOUR_IP_HERE placeholder if IP was provided', async () => {
+      await setupCreator.copyParityConfiguration(nodeTypeName, {ip: exampleIP});
+      expect(await readFile(destParityConfigPath)).to.equal(formWithIPReplaced);
     });
   });
 

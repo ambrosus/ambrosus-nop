@@ -39,7 +39,7 @@ describe('Perform onboarding Phase', () => {
 
   beforeEach(async () => {
     stateModelStub = {
-      getExistingAddress: sinon.stub().resolves(exampleAddress),
+      getAddress: sinon.stub().resolves(exampleAddress),
       getNodeUrl: sinon.stub().resolves(exampleUrl)
     };
     smartContractsModelStub = {
@@ -57,7 +57,7 @@ describe('Perform onboarding Phase', () => {
 
   it('onboarding successful: displays dialogs and calls performOnboarding', async () => {
     await call(exampleWhitelistingStatus);
-    expect(stateModelStub.getExistingAddress).to.be.calledOnce;
+    expect(stateModelStub.getAddress).to.be.calledOnce;
     expect(smartContractsModelStub.getOnboardedRole).to.be.calledOnceWith(exampleAddress);
     expect(smartContractsModelStub.hasEnoughBalance).to.be.calledOnceWith(exampleAddress, exampleWhitelistingStatus.requiredDeposit);
     expect(onboardingConfirmationDialogStub).to.be.calledOnceWith(exampleAddress, exampleWhitelistingStatus.roleAssigned, exampleWhitelistingStatus.requiredDeposit);

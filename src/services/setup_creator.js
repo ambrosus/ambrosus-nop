@@ -45,11 +45,17 @@ export default class SetupCreator {
     await writeFile(path.join(this.outputDirectory, dockerFileName), dockerFile);
   }
 
-  async copyParityConfiguration(nodeTypeName, address) {
+  async copyParityConfiguration(nodeTypeName, values) {
     await this.ensureOutputDirectoryExists();
     let parityConfigFile = await readFile(path.join(this.templateDirectory, nodeTypeName, parityConfigFileName));
 
-    parityConfigFile = parityConfigFile.replace(/<TYPE_YOUR_ADDRESS_HERE>/gi, address);
+    if (values.address !== undefined) {
+      parityConfigFile = parityConfigFile.replace(/<TYPE_YOUR_ADDRESS_HERE>/gi, values.address);
+    }
+
+    if (values.ip !== undefined) {
+      parityConfigFile = parityConfigFile.replace(/<TYPE_YOUR_IP_HERE>/gi, values.ip);
+    }
 
     await writeFile(path.join(this.outputDirectory, parityConfigFileName), parityConfigFile);
   }

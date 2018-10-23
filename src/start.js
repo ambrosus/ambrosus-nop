@@ -9,10 +9,11 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 
 import Builder from './builder';
 import config from '../config/config';
+import {APOLLO} from './consts';
 
 const start = async () => {
-  let builderObjects = Builder.buildStage1(config);
-  const {checkDockerAvailablePhase, selectNetworkPhase, getPrivateKeyPhase} = builderObjects;
+  const stage1Objects = Builder.buildStage1(config);
+  const {checkDockerAvailablePhase, selectNetworkPhase, getPrivateKeyPhase} = stage1Objects;
 
   if (!await checkDockerAvailablePhase()) {
     return;
@@ -20,13 +21,17 @@ const start = async () => {
   const network = await selectNetworkPhase();
   const privateKey = await getPrivateKeyPhase();
 
-  builderObjects = Builder.buildStage2(builderObjects, network, privateKey);
-  const {checkAddressWhitelistingStatusPhase, selectNodeTypePhase, getNodeUrlPhase, getUserEmailPhase, manualSubmissionPhase, performOnboardingPhase, prepareDockerPhase} = builderObjects;
+  const stage2Objects = Builder.buildStage2(stage1Objects, network, privateKey);
+  const {checkAddressWhitelistingStatusPhase, selectNodeTypePhase, getNodeIPPhase, getNodeUrlPhase, getUserEmailPhase, manualSubmissionPhase, performOnboardingPhase, prepareDockerPhase} = stage2Objects;
 
   const whitelistingStatus = await checkAddressWhitelistingStatusPhase();
 
-  await selectNodeTypePhase();
-  await getNodeUrlPhase();
+  const role = await selectNodeTypePhase();
+  if (role === APOLLO) {
+    await getNodeIPPhase();
+  } else {
+    await getNodeUrlPhase();
+  }
   await getUserEmailPhase();
 
   if (whitelistingStatus === null) {

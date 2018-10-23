@@ -30,7 +30,7 @@ export default class StateModel {
     return privateKey;
   }
 
-  async getExistingPrivateKey() {
+  async getPrivateKey() {
     return this.store.safeRead('privateKey');
   }
 
@@ -38,8 +38,8 @@ export default class StateModel {
     await this.store.write('privateKey', privateKey);
   }
 
-  async getExistingAddress() {
-    const privateKey = await this.getExistingPrivateKey();
+  async getAddress() {
+    const privateKey = await this.getPrivateKey();
     if (privateKey) {
       return this.crypto.addressForPrivateKey(privateKey);
     }
@@ -62,6 +62,14 @@ export default class StateModel {
     await this.store.write('url', url);
   }
 
+  async getNodeIP() {
+    return this.store.safeRead('ip');
+  }
+
+  async storeNodeIP(ip) {
+    await this.store.write('ip', ip);
+  }
+
   async getUserEmail() {
     return this.store.safeRead('email');
   }
@@ -71,12 +79,13 @@ export default class StateModel {
   }
 
   async assembleSubmission() {
-    const privateKey = await this.getExistingPrivateKey();
+    const privateKey = await this.getPrivateKey();
     return {
       network: (await this.getNetwork()).name,
       address: await this.crypto.addressForPrivateKey(privateKey),
       role: await this.getRole(),
       url: await this.getNodeUrl(),
+      ip: await this.getNodeIP(),
       email: await this.getUserEmail()
     };
   }
@@ -95,21 +104,25 @@ export default class StateModel {
       throw new Error('Invalid role');
     }
 
-    const privateKey = await this.getExistingPrivateKey();
+    const privateKey = await this.getPrivateKey();
+
+    const {name: networkAlias, rpc: web3RPC, headContractAddress} = await this.getNetwork();
+    const networkName = await this.setupCreator.copyChainJson(networkAlias);
+
+    await this.setupCreator.prepareDockerComposeFile(nodeTypeName, privateKey, web3RPC, headContractAddress, networkName);
+
     if (role === APOLLO) {
       const password = this.crypto.getRandomPassword();
       await this.setupCreator.createPasswordFile(password);
 
       const encryptedWallet = this.crypto.getEncryptedWallet(privateKey, password);
       await this.setupCreator.createKeyFile(encryptedWallet);
+
+      const address = await this.getAddress();
+      const nodeIp = await this.getNodeIP();
+      await this.setupCreator.copyParityConfiguration(nodeTypeName, {address, ip: nodeIp});
+    } else {
+      await this.setupCreator.copyParityConfiguration(nodeTypeName, {});
     }
-
-    const {name: networkAlias, rpc: web3RPC, headContractAddress} = await this.getNetwork();
-    const networkName = await this.setupCreator.copyChainJson(networkAlias);
-
-    const address = await this.getExistingAddress();
-    await this.setupCreator.copyParityConfiguration(nodeTypeName, address);
-
-    await this.setupCreator.prepareDockerComposeFile(nodeTypeName, privateKey, web3RPC, headContractAddress, networkName);
   }
 }
