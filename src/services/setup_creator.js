@@ -33,12 +33,11 @@ export default class SetupCreator {
     await writeFile(path.join(this.outputDirectory, keyFileName), JSON.stringify(encryptedWallet, null, 2));
   }
 
-  async prepareDockerComposeFile(nodeTypeName, privateKey, web3RPC, headContractAddress, networkName) {
+  async prepareDockerComposeFile(nodeTypeName, privateKey, headContractAddress, networkName) {
     await this.ensureOutputDirectoryExists();
     let dockerFile = await readFile(path.join(this.templateDirectory, nodeTypeName, dockerFileName));
 
     dockerFile = dockerFile.replace(/<ENTER_YOUR_PRIVATE_KEY_HERE>/gi, privateKey);
-    dockerFile = dockerFile.replace(/<ENTER_YOUR_RPC_HERE>/gi, web3RPC);
     dockerFile = dockerFile.replace(/<ENTER_YOUR_HEAD_CONTRACT_ADDRESS_HERE>/gi, headContractAddress);
     dockerFile = dockerFile.replace(/<ENTER_NETWORK_NAME_HERE>/gi, networkName);
 
