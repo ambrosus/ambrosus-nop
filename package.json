@@ -22,6 +22,7 @@
     "ambrosus-node-contracts": "0.0.11",
     "chalk": "^2.4.1",
     "inquirer": "^6.0.0",
+    "ip-regex": "^3.0.0",
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {

@@ -33,7 +33,7 @@ describe('Get Private Key Phase', () => {
       addressForPrivateKey: sinon.stub().resolves(exampleAddress)
     };
     stateModelStub = {
-      getExistingPrivateKey: sinon.stub(),
+      getPrivateKey: sinon.stub(),
       storePrivateKey: sinon.stub(),
       generateAndStoreNewPrivateKey: sinon.stub()
     };
@@ -42,11 +42,11 @@ describe('Get Private Key Phase', () => {
   });
 
   it('ends if a private key is already in the store', async () => {
-    stateModelStub.getExistingPrivateKey.resolves(examplePrivateKey);
+    stateModelStub.getPrivateKey.resolves(examplePrivateKey);
 
     const ret = await call();
 
-    expect(stateModelStub.getExistingPrivateKey).to.have.been.calledOnce;
+    expect(stateModelStub.getPrivateKey).to.have.been.calledOnce;
     expect(askForPrivateKeyDialogStub).to.not.have.been.called;
     expect(cryptoStub.addressForPrivateKey).to.have.been.calledOnceWith(examplePrivateKey);
     expect(privateKeyDetectedDialogStub).to.have.been.calledOnceWith(exampleAddress);
@@ -54,7 +54,7 @@ describe('Get Private Key Phase', () => {
   });
 
   it('generates and stores a new private key (generate option)', async () => {
-    stateModelStub.getExistingPrivateKey.resolves(null);
+    stateModelStub.getPrivateKey.resolves(null);
     askForPrivateKeyDialogStub.resolves({
       source: 'generate'
     });
@@ -62,7 +62,7 @@ describe('Get Private Key Phase', () => {
 
     const ret = await call();
 
-    expect(stateModelStub.getExistingPrivateKey).to.have.been.calledOnce;
+    expect(stateModelStub.getPrivateKey).to.have.been.calledOnce;
     expect(askForPrivateKeyDialogStub).to.have.been.calledOnce;
     expect(stateModelStub.generateAndStoreNewPrivateKey).to.have.been.calledOnce;
     expect(cryptoStub.addressForPrivateKey).to.have.been.calledOnceWith(examplePrivateKey);
@@ -71,7 +71,7 @@ describe('Get Private Key Phase', () => {
   });
 
   it('stores the provided private key (manual option)', async () => {
-    stateModelStub.getExistingPrivateKey.resolves(null);
+    stateModelStub.getPrivateKey.resolves(null);
     askForPrivateKeyDialogStub.resolves({
       source: 'manual',
       privateKey: examplePrivateKey
@@ -80,7 +80,7 @@ describe('Get Private Key Phase', () => {
 
     const ret = await call();
 
-    expect(stateModelStub.getExistingPrivateKey).to.have.been.calledOnce;
+    expect(stateModelStub.getPrivateKey).to.have.been.calledOnce;
     expect(askForPrivateKeyDialogStub).to.have.been.calledOnce;
     expect(stateModelStub.storePrivateKey).to.have.been.calledOnceWith(examplePrivateKey);
     expect(cryptoStub.addressForPrivateKey).to.have.been.calledOnceWith(examplePrivateKey);

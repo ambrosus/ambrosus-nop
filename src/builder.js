@@ -24,6 +24,7 @@ import getPrivateKeyPhase from './phases/get_private_key_phase';
 import checkAddressWhitelistingStatusPhase from './phases/check_address_whitelisting_status_phase';
 import selectNodeTypePhase from './phases/select_node_type_phase';
 import getNodeUrlPhase from './phases/get_node_url_phase';
+import getNodeIPPhase from './phases/get_node_ip_phase';
 import getUserEmailPhase from './phases/get_user_email_phase';
 import manualSubmissionPhase from './phases/manual_submission_phase';
 import performOnboardingPhase from './phases/perform_onboarding_phase';
@@ -36,8 +37,10 @@ import dockerMissingDialog from './dialogs/docker_missing_dialog';
 import privateKeyDetectedDialog from './dialogs/private_key_detected_dialog';
 import askForNodeTypeDialog from './dialogs/ask_for_node_type_dialog';
 import askForNodeUrlDialog from './dialogs/ask_for_node_url_dialog';
+import askForNodeIPDialog from './dialogs/ask_for_node_ip_dialog';
 import roleSelectedDialog from './dialogs/role_selected_dialog';
 import nodeUrlDetectedDialog from './dialogs/node_url_detected_dialog';
+import nodeIPDetectedDialog from './dialogs/node_ip_detected_dialog';
 import askForUserEmailDialog from './dialogs/ask_for_user_email_dialog';
 import userEmailDetectedDialog from './dialogs/user_email_detected_dialog';
 import displaySubmissionDialog from './dialogs/display_submission_dialog';
@@ -82,7 +85,9 @@ class Builder {
     objects.askForNodeTypeDialog = askForNodeTypeDialog(messages);
     objects.roleSelectedDialog = roleSelectedDialog(messages);
     objects.askForNodeUrlDialog = askForNodeUrlDialog(objects.validations, messages);
+    objects.askForNodeIPDialog = askForNodeIPDialog(objects.validations, messages);
     objects.nodeUrlDetectedDialog = nodeUrlDetectedDialog(messages);
+    objects.nodeIPDetectedDialog = nodeIPDetectedDialog(messages);
     objects.askForUserEmailDialog = askForUserEmailDialog(objects.validations, messages);
     objects.userEmailDetectedDialog = userEmailDetectedDialog(messages);
     objects.displaySubmissionDialog = displaySubmissionDialog(messages);
@@ -106,8 +111,8 @@ class Builder {
     return objects;
   }
 
-  static buildStage2(oldObjects, network, privateKey) {
-    const objects = {...oldObjects};
+  static buildStage2(stage1Objects, network, privateKey) {
+    const objects = {...stage1Objects};
 
     objects.web3 = new Web3(network.rpc);
     const account = objects.web3.eth.accounts.privateKeyToAccount(privateKey);
@@ -127,6 +132,7 @@ class Builder {
 
     objects.selectNodeTypePhase = selectNodeTypePhase(objects.stateModel, objects.askForNodeTypeDialog, objects.roleSelectedDialog);
     objects.getNodeUrlPhase = getNodeUrlPhase(objects.stateModel, objects.nodeUrlDetectedDialog, objects.askForNodeUrlDialog);
+    objects.getNodeIPPhase = getNodeIPPhase(objects.stateModel, objects.nodeIPDetectedDialog, objects.askForNodeIPDialog);
     objects.getUserEmailPhase = getUserEmailPhase(objects.stateModel, objects.userEmailDetectedDialog, objects.askForUserEmailDialog);
     objects.manualSubmissionPhase = manualSubmissionPhase(objects.stateModel, objects.displaySubmissionDialog);
     objects.checkAddressWhitelistingStatusPhase = checkAddressWhitelistingStatusPhase(objects.smartContractsModel, objects.stateModel, objects.addressIsNotWhitelistedDialog, objects.addressIsWhitelistedDialog);

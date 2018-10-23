@@ -10,7 +10,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 const performOnboardingPhase = (
   stateModel, smartContractsModel, notEnoughBalanceDialog, alreadyOnboardedDialog, onboardingConfirmationDialog, onboardingSuccessfulDialog, insufficientFundsDialog, genericErrorDialog) =>
   async (whitelistingStatus) => {
-    const userAddress = await stateModel.getExistingAddress();
+    const userAddress = await stateModel.getAddress();
     const onboardedRole = await smartContractsModel.getOnboardedRole(userAddress);
     if (onboardedRole) {
       alreadyOnboardedDialog(onboardedRole);

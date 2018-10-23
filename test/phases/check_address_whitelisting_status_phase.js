@@ -38,7 +38,7 @@ describe('Check Address Whitelisting Status Phase', () => {
     stateModelStub = {
       getRole: sinon.stub(),
       storeRole: sinon.stub(),
-      getExistingAddress: sinon.stub().resolves(exampleAddress)
+      getAddress: sinon.stub().resolves(exampleAddress)
     };
     smartContractsModelStub = {
       isAddressWhitelisted: sinon.stub(),
