@@ -100,7 +100,7 @@ class Builder {
     objects.askForNetworkDialog = askForNetworkDialog(messages);
     objects.networkSelectedDialog = networkSelectedDialog(messages);
     objects.healthCheckUrlDialog = healthCheckUrlDialog(messages);
-    objects.dockerComposeCommandDialog = dockerComposeCommandDialog(messages);
+    objects.dockerComposeCommandDialog = dockerComposeCommandDialog(messages, config.outputDirectory);
     objects.insufficientFundsDialog = insufficientFundsDialog(messages);
     objects.genericErrorDialog = genericErrorDialog(messages);
 
