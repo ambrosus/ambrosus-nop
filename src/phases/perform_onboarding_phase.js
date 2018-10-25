@@ -8,27 +8,37 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 */
 
 const performOnboardingPhase = (
-  stateModel, smartContractsModel, notEnoughBalanceDialog, alreadyOnboardedDialog, onboardingConfirmationDialog, onboardingSuccessfulDialog) =>
+  stateModel, smartContractsModel, notEnoughBalanceDialog, alreadyOnboardedDialog, onboardingConfirmationDialog, onboardingSuccessfulDialog, insufficientFundsDialog, genericErrorDialog) =>
   async (whitelistingStatus) => {
-    const userAddress = await stateModel.getExistingAddress();
+    const userAddress = await stateModel.getAddress();
     const onboardedRole = await smartContractsModel.getOnboardedRole(userAddress);
     if (onboardedRole) {
       alreadyOnboardedDialog(onboardedRole);
-      return;
+      return true;
     }
     if (!await smartContractsModel.hasEnoughBalance(userAddress, whitelistingStatus.requiredDeposit)) {
       notEnoughBalanceDialog(whitelistingStatus.requiredDeposit);
-      return;
+      return false;
     }
     const dialogResult = await onboardingConfirmationDialog(userAddress, whitelistingStatus.roleAssigned, whitelistingStatus.requiredDeposit);
     if (!dialogResult.onboardingConfirmation) {
-      return;
+      return false;
     }
 
-    await smartContractsModel.performOnboarding(userAddress, whitelistingStatus.roleAssigned,
-      whitelistingStatus.requiredDeposit, await stateModel.getExistingNodeUrl());
+    try {
+      await smartContractsModel.performOnboarding(userAddress, whitelistingStatus.roleAssigned,
+        whitelistingStatus.requiredDeposit, await stateModel.getNodeUrl());
+    } catch (error) {
+      if (error.message.includes('Insufficient funds')) {
+        insufficientFundsDialog();
+      } else {
+        genericErrorDialog(error.message);
+      }
+      return false;
+    }
 
     onboardingSuccessfulDialog();
+    return true;
   };
 
 export default performOnboardingPhase;

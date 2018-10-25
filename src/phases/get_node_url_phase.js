@@ -7,13 +7,10 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-
-import {APOLLO} from '../consts';
-
 const getNodeUrl = async (stateModel, askForNodeUrlDialog) => {
-  const existingNodeUrl = await stateModel.getExistingNodeUrl();
-  if (existingNodeUrl !== null) {
-    return existingNodeUrl;
+  const storedNodeUrl = await stateModel.getNodeUrl();
+  if (storedNodeUrl !== null) {
+    return storedNodeUrl;
   }
 
   const answers = await askForNodeUrlDialog();
@@ -23,13 +20,6 @@ const getNodeUrl = async (stateModel, askForNodeUrlDialog) => {
 };
 
 const getNodeUrlPhase = (stateModel, nodeUrlDetectedDialog, askForNodeUrlDialog) => async () => {
-  const role = await stateModel.getExistingRole();
-  if (role === null) {
-    throw new Error('Role should have been selected at this stage');
-  }
-  if (role === APOLLO) {
-    return null;
-  }
   const nodeUrl = await getNodeUrl(stateModel, askForNodeUrlDialog);
   await nodeUrlDetectedDialog(nodeUrl);
   return nodeUrl;

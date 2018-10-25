@@ -27,18 +27,20 @@ describe('Perform onboarding Phase', () => {
   let alreadyOnboardedDialogStub;
   let onboardingConfirmationDialogStub;
   let onboardingSuccessfulDialogStub;
+  let insufficientFundsDialogStub;
+  let genericErrorDialogStub;
 
   const exampleWhitelistingStatus = {
     roleAssigned: 'bar',
     requiredDeposit: '123'
   };
 
-  const call = async (whitelistingStatus) => performOnboardingPhase(stateModelStub, smartContractsModelStub, notEnoughBalanceDialogStub, alreadyOnboardedDialogStub, onboardingConfirmationDialogStub, onboardingSuccessfulDialogStub)(whitelistingStatus);
+  const call = async (whitelistingStatus) => performOnboardingPhase(stateModelStub, smartContractsModelStub, notEnoughBalanceDialogStub, alreadyOnboardedDialogStub, onboardingConfirmationDialogStub, onboardingSuccessfulDialogStub, insufficientFundsDialogStub, genericErrorDialogStub)(whitelistingStatus);
 
   beforeEach(async () => {
     stateModelStub = {
-      getExistingAddress: sinon.stub().resolves(exampleAddress),
-      getExistingNodeUrl: sinon.stub().resolves(exampleUrl)
+      getAddress: sinon.stub().resolves(exampleAddress),
+      getNodeUrl: sinon.stub().resolves(exampleUrl)
     };
     smartContractsModelStub = {
       hasEnoughBalance: sinon.stub().resolves(true),
@@ -49,15 +51,17 @@ describe('Perform onboarding Phase', () => {
     alreadyOnboardedDialogStub = sinon.stub().returns();
     onboardingConfirmationDialogStub = sinon.stub().resolves({onboardingConfirmation: true});
     onboardingSuccessfulDialogStub = sinon.stub().returns();
+    insufficientFundsDialogStub = sinon.stub();
+    genericErrorDialogStub = sinon.stub();
   });
 
   it('onboarding successful: displays dialogs and calls performOnboarding', async () => {
     await call(exampleWhitelistingStatus);
-    expect(stateModelStub.getExistingAddress).to.be.calledOnce;
+    expect(stateModelStub.getAddress).to.be.calledOnce;
     expect(smartContractsModelStub.getOnboardedRole).to.be.calledOnceWith(exampleAddress);
     expect(smartContractsModelStub.hasEnoughBalance).to.be.calledOnceWith(exampleAddress, exampleWhitelistingStatus.requiredDeposit);
     expect(onboardingConfirmationDialogStub).to.be.calledOnceWith(exampleAddress, exampleWhitelistingStatus.roleAssigned, exampleWhitelistingStatus.requiredDeposit);
-    expect(stateModelStub.getExistingNodeUrl).to.be.calledOnceWith;
+    expect(stateModelStub.getNodeUrl).to.be.calledOnceWith;
     expect(smartContractsModelStub.performOnboarding).to.be.calledOnceWith(exampleAddress, exampleWhitelistingStatus.roleAssigned, exampleWhitelistingStatus.requiredDeposit, exampleUrl);
     expect(onboardingSuccessfulDialogStub).to.be.calledOnce;
   });
@@ -81,5 +85,19 @@ describe('Perform onboarding Phase', () => {
     await call(exampleWhitelistingStatus);
     expect(onboardingConfirmationDialogStub).to.be.calledOnce;
     expect(smartContractsModelStub.performOnboarding).to.be.not.called;
+  });
+
+  it('onboarding failed: insufficient funds', async () => {
+    smartContractsModelStub.performOnboarding.throws(new Error('Error: Insufficient funds'));
+    await call(exampleWhitelistingStatus);
+    expect(insufficientFundsDialogStub).to.be.calledOnce;
+    expect(onboardingSuccessfulDialogStub).to.be.not.called;
+  });
+
+  it('onboarding failed: unknown error', async () => {
+    smartContractsModelStub.performOnboarding.throws(new Error('Error: Something is not working'));
+    await call(exampleWhitelistingStatus);
+    expect(genericErrorDialogStub).to.be.calledOnce;
+    expect(onboardingSuccessfulDialogStub).to.be.not.called;
   });
 });

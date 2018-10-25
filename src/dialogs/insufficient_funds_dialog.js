@@ -7,8 +7,12 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-module.exports = Object.freeze({
-  storePath: process.env.STORE_PATH || 'state.json',
-  templateDirectory: process.env.TEMPLATE_DIRECTORY || './setup_templates/',
-  outputDirectory: process.env.OUTPUT_DIRECTORY || './output'
-});
+import chalk from 'chalk';
+
+const insufficientFundsDialog = (messages) => () => {
+  console.log(chalk.red(messages.insufficientFunds));
+};
+
+export default insufficientFundsDialog;
+
+

@@ -43,7 +43,7 @@ describe('Select Network Phase', () => {
   beforeEach(async () => {
     stateModelStub = {
       storeNetwork: sinon.stub(),
-      getExistingNetwork: sinon.stub().resolves(null)
+      getNetwork: sinon.stub().resolves(null)
     };
     askForNetworkDialogStub = sinon.stub().resolves({
       network: exampleStoredNetwork.name
@@ -54,7 +54,7 @@ describe('Select Network Phase', () => {
   it('stores selected network', async () => {
     const phaseResult = await call(exampleAvailableNetworks);
 
-    expect(stateModelStub.getExistingNetwork).to.have.been.calledOnce;
+    expect(stateModelStub.getNetwork).to.have.been.calledOnce;
     expect(askForNetworkDialogStub).to.have.been.calledOnceWith(['test', 'dev']);
     expect(stateModelStub.storeNetwork).to.have.been.calledOnceWith(exampleStoredNetwork);
     expect(networkSelectedDialogStub).to.have.been.calledOnceWith(exampleStoredNetwork.name);
@@ -62,11 +62,11 @@ describe('Select Network Phase', () => {
   });
 
   it('skips selection dialog if network is already in the store', async () => {
-    stateModelStub.getExistingNetwork.resolves(exampleStoredNetwork);
+    stateModelStub.getNetwork.resolves(exampleStoredNetwork);
 
     const phaseResult = await call(exampleAvailableNetworks);
 
-    expect(stateModelStub.getExistingNetwork).to.have.been.calledOnce;
+    expect(stateModelStub.getNetwork).to.have.been.calledOnce;
     expect(askForNetworkDialogStub).to.not.have.been.called;
     expect(networkSelectedDialogStub).to.have.been.calledOnceWith(exampleStoredNetwork.name);
     expect(phaseResult).to.deep.equal(exampleStoredNetwork);
@@ -75,7 +75,7 @@ describe('Select Network Phase', () => {
   it('skips selection dialog if only one network is available', async () => {
     const phaseResult = await call({test: exampleAvailableNetworks.test});
 
-    expect(stateModelStub.getExistingNetwork).to.have.been.calledOnce;
+    expect(stateModelStub.getNetwork).to.have.been.calledOnce;
     expect(askForNetworkDialogStub).to.not.have.been.called;
     expect(stateModelStub.storeNetwork).to.have.been.calledOnceWith(exampleStoredNetwork);
     expect(networkSelectedDialogStub).to.have.been.calledOnceWith(exampleStoredNetwork.name);

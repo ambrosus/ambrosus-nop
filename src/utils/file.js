@@ -22,7 +22,7 @@ const writeFile = (path, data) =>
 
 const readFile = (path) =>
   new Promise((resolve, reject) => {
-    fs.readFile(path, (err, data) => {
+    fs.readFile(path, 'utf8', (err, data) => {
       if (err) {
         reject(err);
       } else {
@@ -60,4 +60,37 @@ const listDirectory = (path) =>
     });
   });
 
-export {writeFile, readFile, removeFile, checkFileExists, listDirectory};
+const removeDirectory = (path) =>
+  new Promise((resolve, reject) => {
+    fs.rmdir(path, (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
+    });
+  });
+
+const makeDirectory = (path) =>
+  new Promise((resolve, reject) => {
+    fs.mkdir(path, (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
+    });
+  });
+
+const getPath = (path) =>
+  new Promise((resolve, reject) => {
+    fs.lstat(path, (err, stats) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(stats);
+      }
+    });
+  });
+
+export {writeFile, readFile, removeFile, checkFileExists, listDirectory, removeDirectory, makeDirectory, getPath};

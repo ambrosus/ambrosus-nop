@@ -9,7 +9,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 
 
 const getUserEmail = async (stateModel, askForUserEmailDialog) => {
-  const existingUserEmail = await stateModel.getExistingUserEmail();
+  const existingUserEmail = await stateModel.getUserEmail();
   if (existingUserEmail !== null) {
     return existingUserEmail;
   }

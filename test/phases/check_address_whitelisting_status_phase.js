@@ -36,9 +36,9 @@ describe('Check Address Whitelisting Status Phase', () => {
 
   beforeEach(async () => {
     stateModelStub = {
-      getExistingRole: sinon.stub(),
+      getRole: sinon.stub(),
       storeRole: sinon.stub(),
-      getExistingAddress: sinon.stub().resolves(exampleAddress)
+      getAddress: sinon.stub().resolves(exampleAddress)
     };
     smartContractsModelStub = {
       isAddressWhitelisted: sinon.stub(),
@@ -57,14 +57,14 @@ describe('Check Address Whitelisting Status Phase', () => {
     expect(addressIsNotWhitelistedDialog).to.have.been.called;
     expect(smartContractsModelStub.getAddressWhitelistingData).to.have.not.been.called;
     expect(addressIsWhitelistedDialog).to.have.not.been.called;
-    expect(stateModelStub.getExistingRole).to.have.not.been.called;
+    expect(stateModelStub.getRole).to.have.not.been.called;
     expect(ret).to.equal(null);
   });
 
   it('returns address whitelisting status if address whitelisted already', async () => {
     smartContractsModelStub.isAddressWhitelisted.resolves(true);
     smartContractsModelStub.getAddressWhitelistingData.resolves(exampleStatus);
-    stateModelStub.getExistingRole.resolves(ATLAS_1);
+    stateModelStub.getRole.resolves(ATLAS_1);
 
     const ret = await call();
 
@@ -72,14 +72,14 @@ describe('Check Address Whitelisting Status Phase', () => {
     expect(addressIsNotWhitelistedDialog).to.have.not.been.called;
     expect(smartContractsModelStub.getAddressWhitelistingData).to.have.been.calledOnceWith(exampleAddress);
     expect(addressIsWhitelistedDialog).to.have.been.calledOnceWith(exampleStatus.requiredDeposit, exampleStatus.roleAssigned);
-    expect(stateModelStub.getExistingRole).to.have.been.calledOnceWith();
+    expect(stateModelStub.getRole).to.have.been.calledOnceWith();
     expect(ret).to.deep.equal(exampleStatus);
   });
 
   it('stores fetched role if no role already in the store', async () => {
     smartContractsModelStub.isAddressWhitelisted.resolves(true);
     smartContractsModelStub.getAddressWhitelistingData.resolves(exampleStatus);
-    stateModelStub.getExistingRole.resolves(null);
+    stateModelStub.getRole.resolves(null);
 
     await call();
 
@@ -89,7 +89,7 @@ describe('Check Address Whitelisting Status Phase', () => {
   it('throws if fetched role does not match already kept in the store', async () => {
     smartContractsModelStub.isAddressWhitelisted.resolves(true);
     smartContractsModelStub.getAddressWhitelistingData.resolves(exampleStatus);
-    stateModelStub.getExistingRole.resolves(HERMES);
+    stateModelStub.getRole.resolves(HERMES);
 
     expect(call()).to.be.eventually.rejectedWith('Role selected differs from role assigned in whitelist. Please contact Ambrosus Tech Support');
   });
