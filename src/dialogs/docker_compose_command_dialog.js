@@ -9,8 +9,13 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 
 import chalk from 'chalk';
 
-const dockerComposeCommandDialog = (messages) => async () => {
-  console.log(chalk.green(messages.dockerComposeInfo(chalk.yellow(messages.dockerComposeCommand))));
+const dockerComposeCommandDialog = (messages, outputDir) => async () => {
+  console.log(chalk.green(
+    messages.dockerComposeInfo(
+      chalk.yellow(outputDir),
+      chalk.yellow(messages.dockerComposeCommand)
+    )
+  ));
 };
 
 export default dockerComposeCommandDialog;

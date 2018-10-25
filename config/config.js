@@ -10,5 +10,5 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 module.exports = Object.freeze({
   storePath: process.env.STORE_PATH || 'state.json',
   templateDirectory: process.env.TEMPLATE_DIRECTORY || './setup_templates/',
-  outputDirectory: process.env.OUTPUT_DIRECTORY || './'
+  outputDirectory: process.env.OUTPUT_DIRECTORY || './output'
 });
