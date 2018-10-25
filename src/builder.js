@@ -59,7 +59,7 @@ import genericErrorDialog from './dialogs/generic_error_dialog';
 
 import execCmd from './utils/execCmd';
 import messages from './messages';
-import networks from '../networks';
+import networks from '../config/networks';
 
 import Web3 from 'web3';
 
