@@ -141,36 +141,49 @@ cd ambrosus-nop
 yarn install
 yarn build
 ```
-NOP performs two essential steps:​ 1. whitelisting of your address, and 2. onboarding of your node. The aim of the first step is to whitelist your node, which is done manually by the Ambrosus team, and for that you will have to send your node details to us (the text displayed in your terming when your run NOP the first time). 
+Now, you can run NOP using the following commands:
+
+```
+cd ~/ambrosus-nop
+yarn start
+```
+
+*Note: the location can vary depending on where you cloned the repository.*
+
+NOP performs two key steps: 1. whitelisting of your address, and 2. onboarding of your node. The aim of the first step is to whitelist your node, which is done manually by the Ambrosus team, and for that you will have to send your node details to us (the text displayed in your terminal when your run NOP the first time), which looks like this:
+
+![Alt text](docs/nop-output.png?raw=true "NOP Output")
 
 **This first step will generate a file called ```state.json```, which contains your private key (you can see the contents with this command ```less ~/ambrosus-nop/state.json```). Please save that private key somewhere safe (outside the virtual machine) and DO NOT send this file to anyone! **
 
-The aim of the second stage is to onboard your node, this can only be done upon being whitelisted. If the node is whitelisted you can run the NOP again to onboard your node. When the onboarding is complete, the NOP will fill out variables in the docker-compose file specific to your onboarded node.
-##### Ambrosus prebuilt machine image
-Run ```ambrosus-nop``` to start the NOP.
+If you have been invited in one of the waves, we will rapidly whitelist your address (and send you test token if you're on test-net) and confirm you're ready to onboard. 
 
-If you want to restart the process run ```ambrosus-nop-reset```. **Warning: this deletes state.json and the private key generated! Make sure you have stored your private key somewhere safe before**.
-##### Custom image
-Run the following commands:
-```
-cd ~/ambrosus-nop*
-yarn start
-```
-*this location can vary, it depends on where you cloned the repository.
+The aim of the second step is to onboard your node so you can actually run it. This can only be done once your address has been whitelisted and the address of your node has sufficient Amber Tokens required for the node type. For this, all you need to do is to run again NOP  using ```yarn start```.
 
-If you want to reset the process you will have to type the following command.**Warning: this deletes state.json and the private key generated**.
+When the onboarding is complete, the NOP will fill out variables in the docker-compose file specific to your onboarded node, and you'll be able to run it. 
+
+If you want to reset the process you will have to type the following command. 
+
 ```
 cd ~/ambrosus-nop
 rm state.json
 ```
-Then you can run the NOP again with a clean state by ```yarn start```
+
+**Warning: this deletes state.json and the private key generated! Make sure you have stored your private key somewhere safe before**.
+
+##### Ambrosus prebuilt machine image
+If you're using a ready-made machine image, you can run NOP simply with ```ambrosus-nop```.
+
+If you want to restart the process run ```ambrosus-nop-reset``` . 
+
+**Warning: this deletes state.json and the private key generated! Make sure you have stored your private key somewhere safe before**.
 
 ## Running the Masternode
 
-Now that your machine has been successfully setup and NOP has completed, you're ready to start the masternode application. 
+Now that your machine has been successfully setup and NOP has completed, you're now finally able to start the masternode application. 
 
-### Ambrosus prebuilt machine image
-You can run the following command for starting the node you onboarded
+### Ambrosus pre-built machine image
+You can run the following command for starting your node:
 -  ```start-node```
 
 And stopping the node with 
