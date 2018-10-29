@@ -1,25 +1,37 @@
 [![Build Status](https://travis-ci.com/ambrosus/ambrosus-nop.svg?token=3AeQ6aqcxJ7ZUnsz6KJt&branch=master)](https://travis-ci.com/ambrosus/ambrosus-nop)
 
 # The Ambrosus Node Onboarding Package
-Software package for assisting perspective node operators with the registration, onboarding and instalation of new nodes. 
+NOP is command-line tool making it easier for Ambrosus Masternodes operators to register, onboard and operate new nodes on AMB-NET (Apollo, Atlas and Hermes nodes). 
+
+**ATTENTION:** Although anyone will be able to setup a virtual environment and run NOP, the last step (running the masternode application) will require your node to have been whitelisted. For this, you must have first [applied via our official form](http://tech.ambrosus.com/apply) and then be formally invited to join an onboarding wave per email. Sending us your whitelisting details before you have applied and been invited will simply be ignored at this stage.
 
 ## Table of Contents
+  - **[Overview](#overview)**
   - **[Installation](#installation)**
     - **[Prebuilt Machine Images](#prebuilt-machine-images)**
         - **[Amazon Web Services](#amazon-web-services)**
     - **[Custom Machine Image](#custom-machine-image)**
   - **[Using the NOP](#using-the-nop)**
+  - **[Running the Masternode](#running-the-masternode)**
   - **[Insight and Statistics of the node](#insight-and-statistics-of-the-node)**
   - **[Troubleshooting](#troubleshooting)**
   - **[Developing and contributing](#running-tests-and-linting)**
 
+## Overview
+
+Running an AMB-NET masternode is a three-step process:
+1. Prepare a virtual machine environment
+2. Run NOP to configure your Masternode
+3. Run the masternode application
+
 ## Installation
-There are two ways to configure an Ambrosus node:
 
-- use a pre-built machine image developer and maintained by the Ambrosus team
-- install the software by yourself on a machine
+There are two ways to seup your virtual machine environment to run an Ambrosus masternode:
 
-We recommend using the former option for most users that don't need advanced configuration.
+1. Use a ready-made machine image build and maintained by the Ambrosus team
+2. Install the software and dependencies yourself on a machine
+
+The first option is simpler as it requires less technical experience. However, for obviousy security reasons setting a machine from scratch is a more secure approach.
 
 ### Prebuilt Machine Images
 Currently a prebuilt image is only supported on Amazon Web Services.
@@ -87,7 +99,9 @@ Now enter the password that you received by Email from digital ocean.
 [Now it would be recommeneded that you create an user account with sudo privileges instead of running from root.](https://www.digitalocean.com/community/tutorials/how-to-create-a-sudo-user-on-ubuntu-quickstart)
 And if you create an user it would be advised to [add the user to a docker group to not have to use sudo](https://docs.docker.com/install/linux/linux-postinstall/).
 
-Run the following commands to install the prerequisites for running a node:
+You will need to run a few commands (see below) to install the various tools, packages, and dependencies to execute NOP and we have put a [video online that show how it should look like](https://www.youtube.com/watch?v=VCVwLIoiti8).
+
+Once you're logged in on your virtual machine, run the following commands (1 line per command):
 ```
 sudo apt-get update
 sudo apt-get install python-pip
@@ -103,9 +117,8 @@ sudo apt install docker-ce
 sudo curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 ```
+If you've made it until here, your environment should be ready to run NOP. You can now run ```sudo systemctl status docker``` to check if docker is running fine. Your should see something like this: 
 
-Run ```sudo systemctl status docker``` to check if docker is running fine.
-A output like this indicates that docker is running fine:
 ```
 root@ubuntu-s-1vcpu-1gb-ams3-01:~# systemctl status docker
 ● docker.service - Docker Application Container Engine
@@ -118,22 +131,25 @@ root@ubuntu-s-1vcpu-1gb-ams3-01:~# systemctl status docker
            ├─9496 /usr/bin/dockerd -H fd://
            └─9517 docker-containerd --config /var/run/docker/co
 ```
-All prerequirements are installed. Now clone the NOP repo, build it and then install it.
+
+## Using the NOP
+
+Now your environment is ready, you can clone the NOP repo and build it using the following commands:
 ```
 git clone https://github.com/ambrosus/ambrosus-nop.git
 cd ambrosus-nop
 yarn install
 yarn build
 ```
+NOP performs two essential steps:​ 1. whitelisting of your address, and 2. onboarding of your node. The aim of the first step is to whitelist your node, which is done manually by the Ambrosus team, and for that you will have to send your node details to us (the text displayed in your terming when your run NOP the first time). 
 
-## Using the NOP
-The NOP has two different stages, the aim of the first stage is to whitelist your node. The whitelisting is done by Ambrosus but you will have to send your node details to us. The node details are generated by the NOP. **When you've completed the first stage a file called state.json is generated. The file has your private key, please save the private key. You can view the file by ```less ~/ambrosus-nop/state.json```**.
+**This first step will generate a file called ```state.json```, which contains your private key (you can see the contents with this command ```less ~/ambrosus-nop/state.json```). Please save that private key somewhere safe (outside the virtual machine) and DO NOT send this file to anyone! **
 
 The aim of the second stage is to onboard your node, this can only be done upon being whitelisted. If the node is whitelisted you can run the NOP again to onboard your node. When the onboarding is complete, the NOP will fill out variables in the docker-compose file specific to your onboarded node.
 ##### Ambrosus prebuilt machine image
 Run ```ambrosus-nop``` to start the NOP.
 
-If you want to restart the process run ```ambrosus-nop-reset```. **Warning: this deletes state.json and the private key generated**.
+If you want to restart the process run ```ambrosus-nop-reset```. **Warning: this deletes state.json and the private key generated! Make sure you have stored your private key somewhere safe before**.
 ##### Custom image
 Run the following commands:
 ```
@@ -149,14 +165,18 @@ rm state.json
 ```
 Then you can run the NOP again with a clean state by ```yarn start```
 
-### Starting a Node
-##### Ambrosus prebuilt machine image
+## Running the Masternode
+
+Now that your machine has been successfully setup and NOP has completed, you're ready to start the masternode application. 
+
+### Ambrosus prebuilt machine image
 You can run the following command for starting the node you onboarded
 -  ```start-node```
 
 And stopping the node with 
 - ```stop-node```
-##### Custom image
+
+### Custom image
 Enter the directory where you cloned the repository, we will assume you followed this guide and it is in the home directory.
 ``` cd ~/ambrosus-nop```.
 Run ```docker-compose up -d``` to start the node you onboarded.
