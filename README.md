@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.com/ambrosus/ambrosus-nop.svg?token=3AeQ6aqcxJ7ZUnsz6KJt&branch=master)](https://travis-ci.com/ambrosus/ambrosus-nop)
 
 # The Ambrosus Node Onboarding Package
-NOP is command-line tool making it easier for Ambrosus Masternodes operators to register, onboard and operate new nodes on AMB-NET (Apollo, Atlas and Hermes nodes). 
+The Ambrosus Node Onboarding Package (NOP) is a command-line tool which makes it easier for Ambrosus Masternodes operators to register, onboard and operate new nodes on AMB-NET (Apollo, Atlas and Hermes nodes).
 
 **ATTENTION:** Although anyone will be able to setup a virtual environment and run NOP, the last step (running the masternode application) will require your node to have been whitelisted. For this, you must have first [applied via our official form](http://tech.ambrosus.com/apply) and then be formally invited to join an onboarding wave per email. Sending us your whitelisting details before you have applied and been invited will simply be ignored at this stage.
 
@@ -31,7 +31,7 @@ There are two ways to seup your virtual machine environment to run an Ambrosus m
 1. Use a ready-made machine image build and maintained by the Ambrosus team
 2. Install the software and dependencies yourself on a machine
 
-The first option is simpler as it requires less technical experience. However, for obviousy security reasons setting a machine from scratch is a more secure approach.
+The first option is simpler as it requires less technical experience. However, for obvious security reasons setting a machine from scratch is a more secure approach.
 
 ### Prebuilt Machine Images
 Currently a prebuilt image is only supported on Amazon Web Services.
@@ -67,9 +67,9 @@ Now a instance should be created and you can carry on to the **[Using the NOP](#
 You can launch an Ambrosus node from any cloud provider but you will have to install the prerequisites yourself. We will go through a clean installation on a DigitalOcean machine image.
 
 ##### Creating a Droplet
-Create an account and log in. Press 'Droplets' and then 'Create Droplet'. Use the OS Ubuntu and then choose what machine preferences and which data center suits you. Then either create a SSH key which you will use to access the instance or if you do not choose one you will get a password to your email. Write a hostname that suits you and launch the instance. 
+Create an account and log in. Press 'Droplets' and then 'Create Droplet'. Use the OS Ubuntu and then choose what machine preferences and which data center suits you. Then either create a SSH key which you will use to access the instance or if you do not choose one you will get a password to your email. Write a hostname that suits you and launch the instance.
 
-Now lets setup a firewall for the instance to make sure the instance is accessible only through specific ports. Your instance should be launched and you should see it by pressing 'Droplets'. Click on the instance you launched and then press 'Networking' -> 'Manage Firewalls'. 
+Now lets setup a firewall for the instance to make sure the instance is accessible only through specific ports. Your instance should be launched and you should see it by pressing 'Droplets'. Click on the instance you launched and then press 'Networking' -> 'Manage Firewalls'.
 Add rules for the following ports according to the node you are running:
  - Hermes & Atlas:
     - Port range: 9876
@@ -104,7 +104,6 @@ You will need to run a few commands (see below) to install the various tools, pa
 Once you're logged in on your virtual machine, run the following commands (1 line per command):
 ```
 sudo apt-get update
-sudo apt-get install python-pip
 curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
 sudo apt-get install -y nodejs
 sudo apt install git
@@ -117,7 +116,7 @@ sudo apt install docker-ce
 sudo curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 ```
-If you've made it until here, your environment should be ready to run NOP. You can now run ```sudo systemctl status docker``` to check if docker is running fine. Your should see something like this: 
+If you've made it until here, your environment should be ready to run NOP. You can now run ```sudo systemctl status docker``` to check if docker is running fine. Your should see something like this:
 
 ```
 root@ubuntu-s-1vcpu-1gb-ams3-01:~# systemctl status docker
@@ -154,15 +153,15 @@ NOP performs two key steps: 1. whitelisting of your address, and 2. onboarding o
 
 ![Alt text](docs/nop-output.png?raw=true "NOP Output")
 
-**This first step will generate a file called ```state.json```, which contains your private key (you can see the contents with this command ```less ~/ambrosus-nop/state.json```). Please save that private key somewhere safe (outside the virtual machine) and DO NOT send this file to anyone! **
+**This first step will generate a file called ```state.json```, which contains your private key (you can see the contents with this command ```less ~/ambrosus-nop/state.json```). Please save that private key somewhere safe (outside the virtual machine) and DO NOT send this file to anyone!**
 
-If you have been invited in one of the waves, we will rapidly whitelist your address (and send you test token if you're on test-net) and confirm you're ready to onboard. 
+If you have been invited in one of the waves, we will rapidly whitelist your address (and send you test token if you're on test-net) and confirm you're ready to onboard.
 
-The aim of the second step is to onboard your node so you can actually run it. This can only be done once your address has been whitelisted and the address of your node has sufficient Amber Tokens required for the node type. For this, all you need to do is to run again NOP  using ```yarn start```.
+The aim of the second step is to onboard your node so you can actually run it. This can only be done once your address has been whitelisted and the address of your node has sufficient Amber Tokens required for the node type. For this, all you need to do is to run again NOP using ```yarn start```.
 
-When the onboarding is complete, the NOP will fill out variables in the docker-compose file specific to your onboarded node, and you'll be able to run it. 
+When the onboarding is complete, the NOP will fill out variables in the docker-compose file specific to your onboarded node, and you'll be able to run it.
 
-If you want to reset the process you will have to type the following command. 
+If you want to reset the process you will have to type the following command.
 
 ```
 cd ~/ambrosus-nop
@@ -174,19 +173,19 @@ rm state.json
 ##### Ambrosus prebuilt machine image
 If you're using a ready-made machine image, you can run NOP simply with ```ambrosus-nop```.
 
-If you want to restart the process run ```ambrosus-nop-reset``` . 
+If you want to restart the process run ```ambrosus-nop-reset``` .
 
 **Warning: this deletes state.json and the private key generated! Make sure you have stored your private key somewhere safe before**.
 
 ## Running the Masternode
 
-Now that your machine has been successfully setup and NOP has completed, you're now finally able to start the masternode application. 
+Now that your machine has been successfully setup and NOP has completed, you're now finally able to start the masternode application.
 
 ### Ambrosus pre-built machine image
 You can run the following command for starting your node:
 -  ```start-node```
 
-And stopping the node with 
+And stopping the node with
 - ```stop-node```
 
 ### Custom image
@@ -197,7 +196,7 @@ Run ```docker-compose up -d``` to start the node you onboarded.
 You can run ```docker-compose stop``` to stop the node.
 
 ## Insight and statistics of the node
-To check statistics and get insights of the node you are running please visit the Ambrosus dashboard.
+To check statistics and get insights of the node you are running you will be able in the future to visit the Ambrosus dashboard.
 
 For further details of what is happening within the docker containers you can use ```docker ps``` to find container IDs and then write ```docker logs <container id>``` to see the logs.
 
@@ -232,7 +231,7 @@ yarn dev:start
 ```
 
 ## Contribution
-We will accept contributions of good code that we can use from anyone.  
+We will accept contributions of good code that we can use from anyone.
 Please see [CONTRIBUTION.md](CONTRIBUTION.md)
 
 Before you issue pull request:
