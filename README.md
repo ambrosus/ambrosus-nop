@@ -88,7 +88,7 @@ The source can have the default values. When you have added the ports apply them
 
 Every cloud should have a similar setup.
 
-##### Installation requirements
+##### Accessing the Virtual Machine
 To access the instance type the following command:
 ###### Without SSH key
 ``` ssh root@<The instances IP address>```
