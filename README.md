@@ -96,6 +96,7 @@ Now enter the password that you received by Email from digital ocean.
 ###### With SSH key
 ```ssh -i <The SSH key you specified> root@<The IP address>```
 
+###### Linux User Setup
 Now it would be recommeneded that you create an user account with sudo privileges instead of running from root. Enter the following commands in your terminal:
 ```
 adduser <your desired username>
