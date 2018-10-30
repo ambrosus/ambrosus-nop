@@ -96,8 +96,8 @@ Now enter the password that you received by Email from digital ocean.
 ###### With SSH key
 ```ssh -i <The SSH key you specified> root@<The IP address>```
 
-###### Linux User Setup
-Now it would be recommeneded that you create an user account with sudo privileges instead of running from root. Enter the following commands in your terminal:
+##### Linux User Setup
+It would be recommeneded that you create an user account with sudo privileges instead of running from root. Enter the following commands in your terminal:
 ```
 adduser <your desired username>
 ```
@@ -118,6 +118,7 @@ sudo groupadd docker
 sudo usermod -aG docker $USER
 ```
 Restart your virtual machine to make sure the changes take effect. When you have restarted run ```docker run hello-world``` and it should work without sudo.
+##### Installing the required packages 
 
 You will need to run a few commands (see below) to install the various tools, packages, and dependencies to execute NOP and we have put a [video online that show how it should look like](https://www.youtube.com/watch?v=VCVwLIoiti8).
 
