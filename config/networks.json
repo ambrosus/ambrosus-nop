@@ -1,10 +1,14 @@
 {
   "dev": {
-    "rpc": "https://proxy-dev.ambrosus.com",
-    "headContractAddress": "0x0000000000000000000000000000000000000f10"
+    "rpc": "https://network.ambrosus-dev.com",
+    "headContractAddress": "0x0000000000000000000000000000000000000F10"
   },
   "test": {
-    "rpc": "https://proxy-test.ambrosus.com",
-    "headContractAddress": "0x0000000000000000000000000000000000000f10"
+    "rpc": "https://network.ambrosus-test.com",
+    "headContractAddress": "0x0000000000000000000000000000000000000F10"
+  },
+  "main": {
+    "rpc": "https://network.ambrosus.com",
+    "headContractAddress": "0x0000000000000000000000000000000000000F10"
   }
 }
