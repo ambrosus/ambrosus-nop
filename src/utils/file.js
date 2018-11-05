@@ -9,7 +9,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 
 import fs from 'fs';
 
-const writeFile = (path, data, opts={}) =>
+const writeFile = (path, data, opts = {}) =>
   new Promise((resolve, reject) => {
     fs.writeFile(path, data, opts, (err) => {
       if (err) {
