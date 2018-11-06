@@ -2,6 +2,9 @@
 base_path = "/app/"
 chain = "/app/chain.json"
 
+[network]
+warp = false
+
 [rpc]
 apis = ["web3", "eth", "net"]
 interface = "all"
