@@ -10,7 +10,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 import chalk from 'chalk';
 
 const alreadyOnboardedDialog = (messages) => async (onboardedRole) => {
-  console.log(chalk.green(messages.alreadyOnboarded(chalk.yellow(onboardedRole))));
+  console.log(chalk.green.bold(messages.alreadyOnboarded(chalk.yellow(onboardedRole))));
 };
 
 export default alreadyOnboardedDialog;

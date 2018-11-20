@@ -10,7 +10,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 import chalk from 'chalk';
 
 const onboardingSuccessfulDialog = (messages) => () => {
-  console.log(chalk.green(messages.onboardingSuccessful));
+  console.log(chalk.green.bold(messages.onboardingSuccessful));
 };
 
 export default onboardingSuccessfulDialog;

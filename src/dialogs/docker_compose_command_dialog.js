@@ -13,7 +13,7 @@ const dockerComposeCommandDialog = (messages, outputDir) => async () => {
   console.log(chalk.green(
     messages.dockerComposeInfo(
       chalk.yellow(outputDir),
-      chalk.yellow(messages.dockerComposeCommand)
+      chalk.yellow.bold(messages.dockerComposeCommand)
     )
   ));
 };

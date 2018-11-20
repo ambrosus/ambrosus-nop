@@ -12,7 +12,7 @@ const selectNetwork = async (availableNetworks, stateModel, askForNetworkDialog)
   if (existingNetwork !== null) {
     return existingNetwork;
   }
-  const availableNetworksNames = Object.keys(availableNetworks);
+  const availableNetworksNames = Object.keys(hideMainNetwork(availableNetworks));
   let selectedNetwork;
   if (availableNetworksNames.length === 0) {
     throw new Error('No networks are defined');
@@ -31,6 +31,11 @@ const selectNetworkPhase = (availableNetworks, stateModel, askForNetworkDialog, 
   const selectedNetwork = await selectNetwork(availableNetworks, stateModel, askForNetworkDialog);
   networkSelectedDialog(selectedNetwork.name);
   return selectedNetwork;
+};
+
+const hideMainNetwork = (availableNetworks) => {
+  delete availableNetworks.main;
+  return availableNetworks;
 };
 
 export default selectNetworkPhase;

@@ -80,14 +80,19 @@ export default class StateModel {
 
   async assembleSubmission() {
     const privateKey = await this.getPrivateKey();
-    return {
+    const submissionForm = {
       network: (await this.getNetwork()).name,
       address: await this.crypto.addressForPrivateKey(privateKey),
       role: await this.getRole(),
-      url: await this.getNodeUrl(),
-      ip: await this.getNodeIP(),
       email: await this.getUserEmail()
     };
+    if (await this.getNodeUrl()) {
+      submissionForm.url = await this.getNodeUrl();
+    }
+    if (await this.getNodeIP()) {
+      submissionForm.ip = await this.getNodeIP();
+    }
+    return submissionForm;
   }
 
   async prepareSetupFiles() {
