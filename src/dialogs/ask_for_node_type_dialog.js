@@ -38,15 +38,15 @@ const askForNodeTypeDialog = (messages) => async () => inquirer.prompt(
       message: messages.atlasVersionQuestion,
       choices: [
         {
-          name: messages.atlas3Name,
+          name: `${messages.atlas3Name} ${messages.atlasStakeForm(messages.atlas3Stake)}`,
           value: ATLAS_3
         },
         {
-          name: messages.atlas2Name,
+          name: `${messages.atlas2Name} ${messages.atlasStakeForm(messages.atlas2Stake)}`,
           value: ATLAS_2
         },
         {
-          name: messages.atlas1Name,
+          name: `${messages.atlas1Name} ${messages.atlasStakeForm(messages.atlas1Stake)}`,
           value: ATLAS_1
         }
       ]

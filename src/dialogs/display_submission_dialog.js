@@ -10,7 +10,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 import chalk from 'chalk';
 
 const displaySubmissionDialog = (messages) => async (submission) => {
-  console.log(chalk.green(messages.submissionInfo(chalk.yellow(messages.submissionMail))));
+  console.log(chalk.green(messages.submissionInfo(chalk.yellow(messages.submissionMail), chalk.yellow(messages.teamMember))));
   console.log(chalk.cyan(JSON.stringify(submission, null, 2)));
 };
 
