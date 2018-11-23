@@ -6,9 +6,5 @@
   "dev": {
     "rpc": "https://network.ambrosus-dev.com",
     "headContractAddress": "0x0000000000000000000000000000000000000F10"
-  },
-  "main": {
-    "rpc": "https://network.ambrosus.com",
-    "headContractAddress": "0x0000000000000000000000000000000000000F10"
   }
 }
