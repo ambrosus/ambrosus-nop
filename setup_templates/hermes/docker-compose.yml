@@ -4,6 +4,9 @@ services:
   mongodb:
     image: mongo:4.1
     restart: unless-stopped
+    volumes:
+      - ./data/db:/data/db
+      - ./data/configdb:/data/configdb
 
   parity:
     image: parity/parity:v2.0.8
