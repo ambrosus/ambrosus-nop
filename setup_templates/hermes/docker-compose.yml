@@ -21,7 +21,7 @@ services:
 
   worker: &hermes-props
     image: ambrosus/ambrosus-node:latest
-    command: bash -c 'yarn migrate && yarn start:hermes'
+    command: sh -c 'yarn migrate && yarn start:hermes'
     restart: unless-stopped
     depends_on:
       - mongodb
@@ -37,7 +37,7 @@ services:
 
   server:
     <<: *hermes-props
-    command: bash -c 'yarn start:server'
+    command: sh -c 'yarn start:server'
     depends_on:
       - worker
     ports:
