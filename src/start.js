@@ -44,6 +44,17 @@ const start = async () => {
   if (isOnboarded) {
     await prepareDockerPhase();
   }
+
+  const {selectActionPhase, actions: {quit: quitAction}} = stage2Objects;
+
+  while (!quitAction.wasPerformed) {
+    const selectedAction = await selectActionPhase();
+    try {
+      await selectedAction.perform();
+    } catch (err) {
+      console.log(`Error: ${err.message}`);
+    }
+  }
 };
 
 
@@ -52,4 +63,3 @@ start()
     console.error(err);
     process.exit(1);
   });
-
