@@ -26,35 +26,41 @@ describe('Select Action Phase', () => {
   beforeEach(async () => {
     selectActionDialogStub = sinon.stub();
     actions = {
-      first: {
-        name: 'First action'
-      },
-      second: {
-        name: 'Second action'
-      }
+      'First action': sinon.stub().resolves(false),
+      'Second action': sinon.stub().resolves(false),
+      Quit: sinon.stub().resolves(true)
     };
   });
 
   it('assembles action list and shows select action dialog', async () => {
-    selectActionDialogStub.resolves({action: 'first'});
+    selectActionDialogStub.onFirstCall().resolves({action: 'First action'});
+    selectActionDialogStub.onSecondCall().resolves({action: 'Quit'});
 
     await startPhase();
 
-    expect(selectActionDialogStub).to.have.been.calledOnceWith(
-      [
-        {
-          name: 'First action',
-          value: 'first'
-        }, {
-          name: 'Second action',
-          value: 'second'
-        }
-      ]);
+    expect(selectActionDialogStub).to.have.been.calledWithExactly(['First action', 'Second action', 'Quit']);
   });
 
-  it('returns the selected action', async () => {
-    selectActionDialogStub.resolves({action: 'second'});
+  it('exits only after Quit action was selected', async () => {
+    selectActionDialogStub.resolves({action: 'Second action'});
+    selectActionDialogStub.onCall(5).resolves({action: 'Quit'});
 
-    await expect(startPhase()).to.be.eventually.fulfilled.and.equal(actions.second);
+    await startPhase();
+
+    expect(selectActionDialogStub).to.have.callCount(6);
+  });
+
+  it('calls action associated with selected key on every iteration', async () => {
+    selectActionDialogStub.onFirstCall().resolves({action: 'First action'});
+    selectActionDialogStub.onSecondCall().resolves({action: 'Second action'});
+    selectActionDialogStub.onThirdCall().resolves({action: 'Quit'});
+
+    await startPhase();
+
+    expect(actions['First action']).to.be.calledOnceWith();
+    expect(actions['First action']).to.be.calledBefore(actions['Second action']);
+    expect(actions['Second action']).to.be.calledOnceWith();
+    expect(actions['Second action']).to.be.calledBefore(actions.Quit);
+    expect(actions.Quit).to.be.calledOnceWith();
   });
 });

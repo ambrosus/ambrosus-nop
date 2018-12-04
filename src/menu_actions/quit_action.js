@@ -7,20 +7,9 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-import Action from './action';
+/**
+ * @returns {function(): boolean} returns true when we want to quit the NOP
+ */
+const quitAction = () => () => true;
 
-export default class QuitAction extends Action {
-  constructor(messages) {
-    super();
-    this.messages = messages;
-    this.wasPerformed = false;
-  }
-
-  async perform() {
-    this.wasPerformed = true;
-  }
-
-  get name() {
-    return this.messages.actions.quit;
-  }
-}
+export default quitAction;

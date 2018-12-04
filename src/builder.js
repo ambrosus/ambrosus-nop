@@ -59,7 +59,7 @@ import insufficientFundsDialog from './dialogs/insufficient_funds_dialog';
 import genericErrorDialog from './dialogs/generic_error_dialog';
 import selectActionDialog from './dialogs/select_action_dialog';
 
-import QuitAction from './menu-actions/quit_action';
+import quitAction from './menu_actions/quit_action';
 
 import execCmd from './utils/execCmd';
 import messages from './messages';
@@ -146,7 +146,7 @@ class Builder {
     objects.prepareDockerPhase = prepareDockerPhase(objects.stateModel, objects.healthCheckUrlDialog, objects.dockerComposeCommandDialog);
 
     objects.actions = {
-      quit: new QuitAction(messages)
+      [messages.actions.quit]: quitAction()
     };
 
     objects.selectActionPhase = selectActionPhase(

@@ -8,16 +8,16 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 */
 
 const selectActionPhase = (actions, selectActionDialog) => async () => {
-  const actionSelectionList = Object
-    .entries(actions)
-    .map(
-      ([key, value]) => ({
-        name: value.name,
-        value: key
-      }));
-
-  const {action: selectedAction} = await selectActionDialog(actionSelectionList);
-  return actions[selectedAction];
+  const actionSelectionList = Object.keys(actions);
+  let shouldQuit = false;
+  while (!shouldQuit) {
+    const {action: selectedAction} = await selectActionDialog(actionSelectionList);
+    try {
+      shouldQuit = await actions[selectedAction]();
+    } catch (err) {
+      console.log(`Error: ${err.message}`);
+    }
+  }
 };
 
 export default selectActionPhase;
