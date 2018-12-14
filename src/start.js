@@ -13,7 +13,9 @@ import {APOLLO} from './consts';
 
 const start = async () => {
   const stage1Objects = Builder.buildStage1(config);
-  const {checkDockerAvailablePhase, selectNetworkPhase, getPrivateKeyPhase} = stage1Objects;
+  const {checkDockerAvailablePhase, selectNetworkPhase, getPrivateKeyPhase, logoDialog} = stage1Objects;
+
+  logoDialog();
 
   if (!await checkDockerAvailablePhase()) {
     return;
