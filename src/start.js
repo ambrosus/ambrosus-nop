@@ -22,7 +22,7 @@ const start = async () => {
   const privateKey = await getPrivateKeyPhase();
 
   const stage2Objects = Builder.buildStage2(stage1Objects, network, privateKey);
-  const {checkAddressWhitelistingStatusPhase, selectNodeTypePhase, getNodeIPPhase, getNodeUrlPhase, getUserEmailPhase, manualSubmissionPhase, performOnboardingPhase, prepareDockerPhase} = stage2Objects;
+  const {checkAddressWhitelistingStatusPhase, selectNodeTypePhase, getNodeIPPhase, getNodeUrlPhase, getUserEmailPhase, manualSubmissionPhase, performOnboardingPhase, prepareDockerPhase, selectActionPhase} = stage2Objects;
 
   const whitelistingStatus = await checkAddressWhitelistingStatusPhase();
 
@@ -44,6 +44,8 @@ const start = async () => {
   if (isOnboarded) {
     await prepareDockerPhase();
   }
+
+  await selectActionPhase();
 };
 
 
@@ -52,4 +54,3 @@ start()
     console.error(err);
     process.exit(1);
   });
-

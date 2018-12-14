@@ -59,7 +59,11 @@ const messages = {
   yes: 'Yes',
   no: 'No',
   insufficientFunds: 'You have insufficient funds to perform transaction 💸\n Top up with small amount and retry',
-  genericError: (message) => `An error occurred: ${message}`
+  genericError: (message) => `An error occurred: ${message}`,
+  selectActionQuestion: 'You can now perform one of the following actions',
+  actions: {
+    quit: 'Quit'
+  }
 };
 
 export default messages;
