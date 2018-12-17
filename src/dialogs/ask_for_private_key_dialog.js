@@ -32,7 +32,14 @@ const askForPrivateKeyDialog = (validations, messages) => async () => inquirer.p
       name: 'privateKey',
       message: messages.privateKeyInputInstruction,
       when: (state) => state.source === 'manual',
-      validate: (answer) => validations.isValidPrivateKey(answer) || chalk.red(messages.privateKeyInputError(chalk.yellow(answer)))
+      validate: (answer) => validations.isValidPrivateKey(answer) || chalk.red(messages.privateKeyInputError(chalk.yellow(answer))),
+      filter: (answer) => {
+        const prefixRegex = /^0x/g;
+        if (answer.match(prefixRegex) !== null) {
+          return answer;
+        }
+        return `0x${answer}`;
+      }
     }
   ]);
 

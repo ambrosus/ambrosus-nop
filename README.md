@@ -42,7 +42,7 @@ Go to [Amazon Web Services](https://aws.amazon.com) and log in or create an acco
 Press select and chose your desired instance type. There is no configuration needed after chosing instance type and the default values should work, same goes for the storage (although larger storage the the default 8 gb is recommended). The tags are optional as well, a tip would be to add a tag with the key 'Name' and a custom name for it (could be the name of the node you are running).  The 6th step configuring security group is important as it is the ports needed to be opened for incoming connections to the node. The following ports are needed for each different node:
 
  - Hermes & Atlas:
-    - Port range: 9876
+    - Port range: 80
         Protocol: **TCP**
     - Port range: 30303
         Protocol: **TCP**
@@ -72,7 +72,7 @@ Create an account and log in. Press 'Droplets' and then 'Create Droplet'. Use th
 Now lets setup a firewall for the instance to make sure the instance is accessible only through specific ports. Your instance should be launched and you should see it by pressing 'Droplets'. Click on the instance you launched and then press 'Networking' -> 'Manage Firewalls'.
 Add rules for the following ports according to the node you are running:
  - Hermes & Atlas:
-    - Port range: 9876
+    - Port range: 80
         Protocol: **TCP**
     - Port range: 30303
         Protocol: **TCP**
@@ -118,7 +118,7 @@ sudo groupadd docker
 sudo usermod -aG docker $USER
 ```
 Restart your virtual machine to make sure the changes take effect. When you have restarted run ```docker run hello-world``` and it should work without sudo.
-##### Installing the required packages 
+##### Installing the required packages
 
 You will need to run a few commands (see below) to install the various tools, packages, and dependencies to execute NOP and we have put a [video online that show how it should look like](https://www.youtube.com/watch?v=VCVwLIoiti8).
 

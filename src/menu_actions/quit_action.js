@@ -7,10 +7,9 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-import chalk from 'chalk';
+/**
+ * @returns {function(): boolean} returns true when we want to quit the NOP
+ */
+const quitAction = () => () => true;
 
-const alreadyOnboardedDialog = (messages) => async (onboardedRole) => {
-  console.log(chalk.green.bold(messages.alreadyOnboarded(chalk.yellow(onboardedRole))));
-};
-
-export default alreadyOnboardedDialog;
+export default quitAction;

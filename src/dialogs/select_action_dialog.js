@@ -7,10 +7,16 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-import chalk from 'chalk';
+import inquirer from 'inquirer';
 
-const alreadyOnboardedDialog = (messages) => async (onboardedRole) => {
-  console.log(chalk.green.bold(messages.alreadyOnboarded(chalk.yellow(onboardedRole))));
-};
+const selectActionDialog = (messages) => async (availableActions) => inquirer.prompt(
+  [
+    {
+      type: 'list',
+      name: 'action',
+      message: messages.selectActionQuestion,
+      choices: availableActions
+    }
+  ]);
 
-export default alreadyOnboardedDialog;
+export default selectActionDialog;

@@ -4,6 +4,9 @@ services:
   mongodb:
     image: mongo:4.1
     restart: unless-stopped
+    volumes:
+      - ./data/db:/data/db
+      - ./data/configdb:/data/configdb
 
   parity:
     image: parity/parity:v2.0.8
@@ -21,7 +24,7 @@ services:
 
   worker: &atlas-props
     image: ambrosus/ambrosus-node:latest
-    command: bash -c 'yarn migrate && yarn start:atlas'
+    command: sh -c 'yarn migrate && yarn start:atlas'
     restart: unless-stopped
     depends_on:
       - mongodb
@@ -37,8 +40,8 @@ services:
 
   server:
     <<: *atlas-props
-    command: bash -c 'yarn start:server'
+    command: sh -c 'yarn start:server'
     depends_on:
       - worker
     ports:
-      - 9876:9876
+      - 80:9876

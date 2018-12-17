@@ -216,7 +216,7 @@ describe('State Model', () => {
 
     it('assembles submission', async () => {
       expect(await stateModel.assembleSubmission()).to.deep.equal(assembledSubmission);
-      expect(storeStub.safeRead).to.have.callCount(6);
+      expect(storeStub.safeRead).to.have.callCount(8);
       expect(storeStub.safeRead).to.have.been.calledWith('privateKey');
       expect(storeStub.safeRead).to.have.been.calledWith('role');
       expect(storeStub.safeRead).to.have.been.calledWith('url');

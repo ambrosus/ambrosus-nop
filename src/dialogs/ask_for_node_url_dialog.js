@@ -16,7 +16,22 @@ const askForNodeUrlDialog = (validations, messages) => async () => inquirer.prom
       type: 'input',
       name: 'nodeUrl',
       message: messages.nodeUrlInputInstruction,
-      validate: (answer) => validations.isValidUrl(answer) || chalk.red(messages.nodeUrlInputError(chalk.yellow(answer)))
+      validate: (answer) => validations.isValidUrl(answer) || chalk.red(messages.nodeUrlInputError(chalk.yellow(answer))),
+      transformer: (input) => {
+        const prefixRegex = /^https?:\/\//g;
+        if (input.match(prefixRegex) !== null) {
+          return input;
+        }
+        return `(${chalk.red(messages.urlPrefixWarning)}) ${input}`;
+      },
+      filter: (answer) => {
+        const suffixRegex = /(.+?)(\/+$)/g;
+        const filteredAnswer = suffixRegex.exec(answer);
+        if (filteredAnswer) {
+          return filteredAnswer[1];
+        }
+        return answer;
+      }
     }
   ]);
 

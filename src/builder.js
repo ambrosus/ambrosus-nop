@@ -30,6 +30,7 @@ import manualSubmissionPhase from './phases/manual_submission_phase';
 import performOnboardingPhase from './phases/perform_onboarding_phase';
 import selectNetworkPhase from './phases/select_network_phase';
 import prepareDockerPhase from './phases/prepare_docker_phase';
+import selectActionPhase from './phases/select_action_phase';
 
 import askForPrivateKeyDialog from './dialogs/ask_for_private_key_dialog';
 import dockerDetectedDialog from './dialogs/docker_detected_dialog';
@@ -56,6 +57,10 @@ import healthCheckUrlDialog from './dialogs/healthcheck_url_dialog';
 import dockerComposeCommandDialog from './dialogs/docker_compose_command_dialog';
 import insufficientFundsDialog from './dialogs/insufficient_funds_dialog';
 import genericErrorDialog from './dialogs/generic_error_dialog';
+import logoDialog from './dialogs/logo_dialog';
+import selectActionDialog from './dialogs/select_action_dialog';
+
+import quitAction from './menu_actions/quit_action';
 
 import execCmd from './utils/execCmd';
 import messages from './messages';
@@ -103,6 +108,8 @@ class Builder {
     objects.dockerComposeCommandDialog = dockerComposeCommandDialog(messages, config.outputDirectory);
     objects.insufficientFundsDialog = insufficientFundsDialog(messages);
     objects.genericErrorDialog = genericErrorDialog(messages);
+    objects.selectActionDialog = selectActionDialog(messages);
+    objects.logoDialog = logoDialog;
 
     objects.selectNetworkPhase = selectNetworkPhase(networks, objects.stateModel, objects.askForNetworkDialog, objects.networkSelectedDialog);
     objects.checkDockerAvailablePhase = checkDockerAvailablePhase(objects.systemModel, objects.dockerDetectedDialog, objects.dockerMissingDialog);
@@ -117,7 +124,6 @@ class Builder {
     objects.web3 = new Web3(network.rpc);
     const account = objects.web3.eth.accounts.privateKeyToAccount(privateKey);
     objects.web3.eth.accounts.wallet.add(account);
-
     const {address} = account;
     objects.web3.eth.defaultAccount = address;
 
@@ -140,6 +146,15 @@ class Builder {
       objects.notEnoughBalanceDialog, objects.alreadyOnboardedDialog, objects.onboardingConfirmationDialog,
       objects.onboardingSuccessfulDialog, objects.insufficientFundsDialog, objects.genericErrorDialog);
     objects.prepareDockerPhase = prepareDockerPhase(objects.stateModel, objects.healthCheckUrlDialog, objects.dockerComposeCommandDialog);
+
+    objects.actions = {
+      [messages.actions.quit]: quitAction()
+    };
+
+    objects.selectActionPhase = selectActionPhase(
+      objects.actions,
+      objects.selectActionDialog
+    );
 
     return objects;
   }
