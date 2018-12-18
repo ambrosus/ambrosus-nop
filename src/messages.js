@@ -62,7 +62,7 @@ const messages = {
   genericError: (message) => `An error occurred: ${message}`,
   selectActionQuestion: 'You can now perform one of the following actions',
   actions: {
-    quit: 'Quit'
+    quit: 'Finish NOP'
   }
 };
 
