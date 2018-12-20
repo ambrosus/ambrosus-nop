@@ -61,7 +61,11 @@ const messages = {
   insufficientFunds: 'You have insufficient funds to perform transaction 💸\n Top up with small amount and retry',
   genericError: (message) => `An error occurred: ${message}`,
   selectActionQuestion: 'You can now perform one of the following actions',
+  changeUrlInfo: (oldUrl, newUrl, warning) => `You will now change your node URL from ${oldUrl} to ${newUrl}.\n${warning}`,
+  changeUrlWarning: '⚠️ WARNING!⚠️ This operation will cost you gas. Please, check again if provided URL is valid.',
+  changeUrlSuccessful: (newUrl) => `Success! Node URL changed to ${newUrl}`,
   actions: {
+    changeUrl: 'Change node URL',
     quit: 'Finish NOP'
   }
 };
