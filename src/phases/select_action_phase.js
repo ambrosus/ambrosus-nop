@@ -7,7 +7,7 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-const selectActionPhase = (actions, selectActionDialog) => async () => {
+const selectActionPhase = (actions, selectActionDialog, insufficientFundsDialog, genericErrorDialog) => async () => {
   const actionSelectionList = Object.keys(actions);
   let shouldQuit = false;
   while (!shouldQuit) {
@@ -15,7 +15,11 @@ const selectActionPhase = (actions, selectActionDialog) => async () => {
     try {
       shouldQuit = await actions[selectedAction]();
     } catch (err) {
-      console.log(`Error: ${err.message}`);
+      if (err.message.includes('Insufficient funds')) {
+        insufficientFundsDialog();
+      } else {
+        genericErrorDialog(err.message);
+      }
     }
   }
 };

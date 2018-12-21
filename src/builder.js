@@ -159,7 +159,9 @@ class Builder {
 
     objects.selectActionPhase = selectActionPhase(
       objects.actions,
-      objects.selectActionDialog
+      objects.selectActionDialog,
+      objects.insufficientFundsDialog,
+      objects.genericErrorDialog
     );
 
     return objects;
