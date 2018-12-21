@@ -44,7 +44,7 @@ describe('Change url action', () => {
       changeUrlSuccessfulDialogStub);
   });
 
-  it('returns false', async () => {
+   it(`always returns false, as it never ends NOP`, async () => {
     expect(await changeUrlActionCall()).to.be.false;
   });
 
