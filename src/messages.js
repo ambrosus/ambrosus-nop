@@ -62,7 +62,8 @@ const messages = {
   genericError: (message) => `An error occurred: ${message}`,
   selectActionQuestion: 'You can now perform one of the following actions',
   changeUrlInfo: (oldUrl, newUrl, warning) => `You will now change your node URL from ${oldUrl} to ${newUrl}.\n${warning}`,
-  changeUrlWarning: '⚠️ WARNING!⚠️ This operation will cost you gas. Please, check again if provided URL is valid.',
+  changeUrlWarning: (nectarWarning) => `${nectarWarning} Please, check again if provided URL is valid.`,
+  nectarWarning: '⚠️ WARNING!⚠️ This operation will cost you some nectar (usually less than 0.05 AMB).',
   changeUrlSuccessful: (newUrl) => `Success! Node URL changed to ${newUrl}`,
   actions: {
     changeUrl: 'Change node URL',

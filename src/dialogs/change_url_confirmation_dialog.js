@@ -11,7 +11,7 @@ import chalk from 'chalk';
 import inquirer from 'inquirer';
 
 const changeUrlConfirmationDialog = (messages) => async (oldUrl, newUrl) => {
-  console.log(chalk.green(messages.changeUrlInfo(chalk.yellow(oldUrl), chalk.yellow(newUrl), chalk.red(messages.changeUrlWarning))));
+  console.log(chalk.green(messages.changeUrlInfo(chalk.yellow(oldUrl), chalk.yellow(newUrl), chalk.red(messages.changeUrlWarning(messages.nectarWarning)))));
   const {confirmation} = await inquirer.prompt([
     {
       type: 'list',
