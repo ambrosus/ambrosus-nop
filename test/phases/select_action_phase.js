@@ -68,23 +68,26 @@ describe('Select Action Phase', () => {
     expect(actions.Quit).to.be.calledOnceWith();
   });
 
-  it('displays correct dialog when account has insufficient funds to perform transaction', async () => {
-    selectActionDialogStub.onFirstCall().resolves({action: 'First action'});
-    selectActionDialogStub.onSecondCall().resolves({action: 'Quit'});
-    actions['First action'].rejects(new Error('Error: Insufficient funds'));
+  describe('In case of errors', () => {
+    beforeEach(() => {
+      selectActionDialogStub.onFirstCall().resolves({action: 'First action'});
+      selectActionDialogStub.onSecondCall().resolves({action: 'Quit'});
+    });
 
-    await startPhase();
+    it('displays correct dialog when account has insufficient funds', async () => {
+      actions['First action'].rejects(new Error('Error: Insufficient funds'));
 
-    expect(insufficientFundsDialogStub).to.be.calledOnce;
-  });
+      await startPhase();
 
-  it('displays error dialog when action fails', async () => {
-    selectActionDialogStub.onFirstCall().resolves({action: 'First action'});
-    selectActionDialogStub.onSecondCall().resolves({action: 'Quit'});
-    actions['First action'].rejects(new Error('TestError'));
+      expect(insufficientFundsDialogStub).to.be.calledOnce;
+    });
 
-    await startPhase();
+    it('displays generic error dialog otherwise', async () => {
+      actions['First action'].rejects(new Error('TestError'));
 
-    expect(errorDialogStub).to.be.calledOnceWith('TestError');
+      await startPhase();
+
+      expect(errorDialogStub).to.be.calledOnceWith('TestError');
+    });
   });
 });

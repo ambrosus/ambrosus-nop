@@ -13,11 +13,11 @@ const performOnboardingPhase = (
     const userAddress = await stateModel.getAddress();
     const onboardedRole = await smartContractsModel.getOnboardedRole(userAddress);
     if (onboardedRole) {
-      alreadyOnboardedDialog(onboardedRole);
+      await alreadyOnboardedDialog(onboardedRole);
       return true;
     }
     if (!await smartContractsModel.hasEnoughBalance(userAddress, whitelistingStatus.requiredDeposit)) {
-      notEnoughBalanceDialog(whitelistingStatus.requiredDeposit);
+      await notEnoughBalanceDialog(whitelistingStatus.requiredDeposit);
       return false;
     }
     const dialogResult = await onboardingConfirmationDialog(userAddress, whitelistingStatus.roleAssigned, whitelistingStatus.requiredDeposit);
@@ -30,14 +30,14 @@ const performOnboardingPhase = (
         whitelistingStatus.requiredDeposit, await stateModel.getNodeUrl());
     } catch (error) {
       if (error.message.includes('Insufficient funds')) {
-        insufficientFundsDialog();
+        await insufficientFundsDialog();
       } else {
-        genericErrorDialog(error.message);
+        await genericErrorDialog(error.message);
       }
       return false;
     }
 
-    onboardingSuccessfulDialog();
+    await onboardingSuccessfulDialog();
     return true;
   };
 

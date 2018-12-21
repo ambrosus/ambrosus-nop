@@ -16,9 +16,9 @@ const selectActionPhase = (actions, selectActionDialog, insufficientFundsDialog,
       shouldQuit = await actions[selectedAction]();
     } catch (err) {
       if (err.message.includes('Insufficient funds')) {
-        insufficientFundsDialog();
+        await insufficientFundsDialog();
       } else {
-        genericErrorDialog(err.message);
+        await genericErrorDialog(err.message);
       }
     }
   }

@@ -7,7 +7,8 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-const changeUrlAction = (stateModel, rolesWrapper, askForNodeUrlDialog, confirmationDialog, changeUrlSuccessfulDialog) => async () => {
+const changeUrlAction = (stateModel, rolesWrapper, nectarWarningDialog, askForNodeUrlDialog, confirmationDialog, changeUrlSuccessfulDialog) => async () => {
+  await nectarWarningDialog();
   const oldUrl = await stateModel.getNodeUrl();
   const {nodeUrl: newUrl} = await askForNodeUrlDialog();
   if (await confirmationDialog(oldUrl, newUrl)) {

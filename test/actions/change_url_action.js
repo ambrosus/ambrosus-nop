@@ -20,6 +20,7 @@ const {expect} = chai;
 describe('Change url action', () => {
   let stateModelMock;
   let rolesWrapperMock;
+  let nectarWarningDialogStub;
   let askForNodeUrlDialogStub;
   let confirmationDialogStub;
   let changeUrlSuccessfulDialogStub;
@@ -31,6 +32,7 @@ describe('Change url action', () => {
   beforeEach(() => {
     askForNodeUrlDialogStub = sinon.stub().resolves({nodeUrl: exampleNewUrl});
     confirmationDialogStub = sinon.stub().resolves(true);
+    nectarWarningDialogStub = sinon.stub().resolves();
     changeUrlSuccessfulDialogStub = sinon.stub().resolves();
     rolesWrapperMock = {
       setNodeUrl: sinon.stub().resolves()
@@ -40,12 +42,17 @@ describe('Change url action', () => {
       getAddress: sinon.stub().resolves(exampleAddress),
       storeNodeUrl: sinon.stub().resolves()
     };
-    changeUrlActionCall = changeUrlAction(stateModelMock, rolesWrapperMock, askForNodeUrlDialogStub, confirmationDialogStub,
+    changeUrlActionCall = changeUrlAction(stateModelMock, rolesWrapperMock, nectarWarningDialogStub, askForNodeUrlDialogStub, confirmationDialogStub,
       changeUrlSuccessfulDialogStub);
   });
 
-   it(`always returns false, as it never ends NOP`, async () => {
+  it(`always returns false, as it never ends NOP`, async () => {
     expect(await changeUrlActionCall()).to.be.false;
+  });
+
+  it('shows nectar warning dialog before asking for url input', async () => {
+    await changeUrlActionCall();
+    expect(nectarWarningDialogStub).to.be.calledBefore(askForNodeUrlDialogStub);
   });
 
   it('takes new url from dialog and passes it to the roles wrapper', async () => {
