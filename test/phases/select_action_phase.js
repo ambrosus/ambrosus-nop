@@ -19,12 +19,16 @@ const {expect} = chai;
 
 describe('Select Action Phase', () => {
   let selectActionDialogStub;
+  let insufficientFundsDialogStub;
+  let errorDialogStub;
   let actions;
 
-  const startPhase = async () => selectActionPhase(actions, selectActionDialogStub)();
+  const startPhase = async () => selectActionPhase(actions, selectActionDialogStub, insufficientFundsDialogStub, errorDialogStub)();
 
   beforeEach(async () => {
     selectActionDialogStub = sinon.stub();
+    errorDialogStub = sinon.stub();
+    insufficientFundsDialogStub = sinon.stub();
     actions = {
       'First action': sinon.stub().resolves(false),
       'Second action': sinon.stub().resolves(false),
@@ -62,5 +66,28 @@ describe('Select Action Phase', () => {
     expect(actions['Second action']).to.be.calledOnceWith();
     expect(actions['Second action']).to.be.calledBefore(actions.Quit);
     expect(actions.Quit).to.be.calledOnceWith();
+  });
+
+  describe('In case of errors', () => {
+    beforeEach(() => {
+      selectActionDialogStub.onFirstCall().resolves({action: 'First action'});
+      selectActionDialogStub.onSecondCall().resolves({action: 'Quit'});
+    });
+
+    it('displays correct dialog when account has insufficient funds', async () => {
+      actions['First action'].rejects(new Error('Error: Insufficient funds'));
+
+      await startPhase();
+
+      expect(insufficientFundsDialogStub).to.be.calledOnce;
+    });
+
+    it('displays generic error dialog otherwise', async () => {
+      actions['First action'].rejects(new Error('TestError'));
+
+      await startPhase();
+
+      expect(errorDialogStub).to.be.calledOnceWith('TestError');
+    });
   });
 });

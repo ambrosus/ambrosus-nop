@@ -59,8 +59,12 @@ import insufficientFundsDialog from './dialogs/insufficient_funds_dialog';
 import genericErrorDialog from './dialogs/generic_error_dialog';
 import logoDialog from './dialogs/logo_dialog';
 import selectActionDialog from './dialogs/select_action_dialog';
+import changeUrlConfirmationDialog from './dialogs/change_url_confirmation_dialog';
+import changeUrlSuccessfulDialog from './dialogs/change_url_successful_dialog';
+import nectarWarningDialog from './dialogs/nectar_warning_dialog';
 
 import quitAction from './menu_actions/quit_action';
+import changeUrlAction from './menu_actions/change_url_action';
 
 import execCmd from './utils/execCmd';
 import messages from './messages';
@@ -110,6 +114,9 @@ class Builder {
     objects.genericErrorDialog = genericErrorDialog(messages);
     objects.selectActionDialog = selectActionDialog(messages);
     objects.logoDialog = logoDialog;
+    objects.changeUrlConfirmationDialog = changeUrlConfirmationDialog(messages);
+    objects.changeUrlSuccessfulDialog = changeUrlSuccessfulDialog(messages);
+    objects.nectarWarningDialog = nectarWarningDialog(messages);
 
     objects.selectNetworkPhase = selectNetworkPhase(networks, objects.stateModel, objects.askForNetworkDialog, objects.networkSelectedDialog);
     objects.checkDockerAvailablePhase = checkDockerAvailablePhase(objects.systemModel, objects.dockerDetectedDialog, objects.dockerMissingDialog);
@@ -148,12 +155,21 @@ class Builder {
     objects.prepareDockerPhase = prepareDockerPhase(objects.stateModel, objects.healthCheckUrlDialog, objects.dockerComposeCommandDialog);
 
     objects.actions = {
+      [messages.actions.changeUrl]: changeUrlAction(
+        objects.stateModel,
+        objects.rolesWrapper,
+        objects.nectarWarningDialog,
+        objects.askForNodeUrlDialog,
+        objects.changeUrlConfirmationDialog,
+        objects.changeUrlSuccessfulDialog),
       [messages.actions.quit]: quitAction()
     };
 
     objects.selectActionPhase = selectActionPhase(
       objects.actions,
-      objects.selectActionDialog
+      objects.selectActionDialog,
+      objects.insufficientFundsDialog,
+      objects.genericErrorDialog
     );
 
     return objects;

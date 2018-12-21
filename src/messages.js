@@ -48,7 +48,7 @@ const messages = {
   unitAmb: 'AMB',
   notEnoughBalance: (amount) => `Not enough balance 💸  You need at least ${amount} in order to perform onboarding 💸`,
   onboardingInfo: (address, nodeType, warning) => `You will now onboard ${address} as the ${nodeType} node.\n${warning}`,
-  onboardingWarning: (amount) => `⚠️ WARNING!⚠️  This operations will cost ${amount}!`,
+  onboardingWarning: (amount) => `⚠️ WARNING! ⚠️ This operations will cost ${amount}!`,
   continueConfirmation: 'Do you want to continue?',
   onboardingSuccessful: '🎉 You are now successfully onboarded !!! 🎉',
   alreadyOnboarded: (role) => `✅ Onboarded as ${role}`,
@@ -61,7 +61,11 @@ const messages = {
   insufficientFunds: 'You have insufficient funds to perform transaction 💸\n Top up with small amount and retry',
   genericError: (message) => `An error occurred: ${message}`,
   selectActionQuestion: 'You can now perform one of the following actions',
+  changeUrlConfirmation: (oldUrl, newUrl) => `You will now change your node URL from ${oldUrl} to ${newUrl}. Do you wish to continue?`,
+  nectarWarning: '⚠️ WARNING! ⚠️ This operation will cost you some nectar (usually less than 0.05 AMB).',
+  changeUrlSuccessful: (newUrl) => `Success! Node URL changed to ${newUrl}`,
   actions: {
+    changeUrl: 'Change node URL',
     quit: 'Finish NOP'
   }
 };
