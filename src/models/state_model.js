@@ -111,8 +111,9 @@ export default class StateModel {
 
     const privateKey = await this.getPrivateKey();
 
-    const {name: networkAlias, headContractAddress} = await this.getNetwork();
-    const networkName = await this.setupCreator.copyChainJson(networkAlias);
+    const {headContractAddress, chainspec} = await this.getNetwork();
+
+    const networkName = await this.setupCreator.fetchChainJson(chainspec);
 
     await this.setupCreator.prepareDockerComposeFile(nodeTypeName, privateKey, headContractAddress, networkName);
 
