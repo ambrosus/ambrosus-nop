@@ -140,9 +140,15 @@ describe('Setup Creator', () => {
     const chainJsonContent = '{"name": "dev"}';
     const destChainJsonPath = `${testOutputDir}chain.json`;
 
+    beforeEach(() => {
+      if (!nock.isActive()) {
+        nock.activate();
+      }
+    });
+
     afterEach(async () => {
       nock.cleanAll();
-      nock.enableNetConnect();
+      nock.restore();
       await removeFile(destChainJsonPath);
     });
 
