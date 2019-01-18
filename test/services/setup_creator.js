@@ -152,7 +152,7 @@ describe('Setup Creator', () => {
       await removeFile(destChainJsonPath);
     });
 
-    it('downloads the chainspec for from given url', async () => {
+    it('downloads the chainspec from given url', async () => {
       nock(chainSpecUrl)
         .get('/')
         .reply(200, chainJsonContent);
