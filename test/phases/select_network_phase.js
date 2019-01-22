@@ -131,6 +131,16 @@ describe('Select Network Phase', () => {
     expect(phaseResult).to.deep.equal(exampleStoredNetwork);
   });
 
+  for (const field of ['rpc', 'chainspec', 'headContractAddress']) {
+    // eslint-disable-next-line no-loop-func
+    it(`stores network again when network without ${field} was stored`, async () => {
+      stateModelStub.getNetwork.resolves({...exampleStoredNetwork, [field]: null});
+      const phaseResult = await call(exampleAvailableNetworks);
+      expect(stateModelStub.storeNetwork).to.have.been.calledOnceWith(exampleStoredNetwork);
+      expect(phaseResult).to.deep.equal(exampleStoredNetwork);
+    });
+  }
+
   it('skips selection dialog if only one network is available', async () => {
     const phaseResult = await call({test: exampleAvailableNetworks.test});
 
