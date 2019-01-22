@@ -26,10 +26,12 @@ describe('Select Network Phase', () => {
   const exampleAvailableNetworks = {
     test: {
       rpc: 'test',
+      chainspec: 'https://chainspec.ambrosus-test.com',
       headContractAddress: '0x0'
     },
     dev: {
       rpc: 'dev',
+      chainspec: 'https://chainspec.ambrosus-dev.com',
       headContractAddress: '0x1'
     }
   };
@@ -61,7 +63,7 @@ describe('Select Network Phase', () => {
     expect(phaseResult).to.deep.equal(exampleStoredNetwork);
   });
 
-  it('skips selection dialog if network is already in the store', async () => {
+  it('skips selection dialog if correct network is already in the store', async () => {
     stateModelStub.getNetwork.resolves(exampleStoredNetwork);
 
     const phaseResult = await call(exampleAvailableNetworks);
@@ -71,6 +73,16 @@ describe('Select Network Phase', () => {
     expect(networkSelectedDialogStub).to.have.been.calledOnceWith(exampleStoredNetwork.name);
     expect(phaseResult).to.deep.equal(exampleStoredNetwork);
   });
+
+  for (const field of ['rpc', 'chainspec', 'headContractAddress']) {
+    // eslint-disable-next-line no-loop-func
+    it(`stores network again when network without ${field} was stored`, async () => {
+      stateModelStub.getNetwork.resolves({...exampleStoredNetwork, [field]: null});
+      const phaseResult = await call(exampleAvailableNetworks);
+      expect(stateModelStub.storeNetwork).to.have.been.calledOnceWith(exampleStoredNetwork);
+      expect(phaseResult).to.deep.equal(exampleStoredNetwork);
+    });
+  }
 
   it('skips selection dialog if only one network is available', async () => {
     const phaseResult = await call({test: exampleAvailableNetworks.test});
