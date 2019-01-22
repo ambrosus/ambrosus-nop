@@ -33,6 +33,7 @@ describe('State Model', () => {
   const exampleEmail = 'amb_node_operator@mail.com';
   const exampleNetwork = {
     rpc: 'localhost:8545',
+    chainspec: 'https://chainspec.ambrosus.com',
     headContractAddress: '0x00000f10',
     name: 'dev'
   };
@@ -58,7 +59,7 @@ describe('State Model', () => {
       createPasswordFile: sinon.stub(),
       createKeyFile: sinon.stub(),
       prepareDockerComposeFile: sinon.stub(),
-      copyChainJson: sinon.stub()
+      fetchChainJson: sinon.stub()
     };
     stateModel = new StateModel(storeStub, cryptoStub, setupCreatorStub);
   });
@@ -236,14 +237,14 @@ describe('State Model', () => {
         .resolves(exampleIP)
         .withArgs('network')
         .resolves(exampleNetwork);
-      setupCreatorStub.copyChainJson.resolves(exampleNetworkFullName);
+      setupCreatorStub.fetchChainJson.resolves(exampleNetworkFullName);
 
       await stateModel.prepareSetupFiles();
       expect(cryptoStub.getRandomPassword).to.have.been.calledOnceWith();
       expect(setupCreatorStub.createPasswordFile).to.have.been.calledOnceWith(examplePassword);
       expect(cryptoStub.getEncryptedWallet).to.have.been.calledOnceWith(examplePrivateKey, examplePassword);
       expect(setupCreatorStub.createKeyFile).to.have.been.calledOnceWith(exampleEncryptedWallet);
-      expect(setupCreatorStub.copyChainJson).to.have.been.calledOnceWith(exampleNetwork.name);
+      expect(setupCreatorStub.fetchChainJson).to.have.been.calledOnceWith(exampleNetwork.chainspec);
       expect(setupCreatorStub.copyParityConfiguration).to.have.been.calledOnceWith('apollo', {address: exampleAddress, ip: exampleIP});
       expect(setupCreatorStub.prepareDockerComposeFile).to.have.been.calledOnceWith(
         'apollo', examplePrivateKey, exampleNetwork.headContractAddress, exampleNetworkFullName);
@@ -255,14 +256,14 @@ describe('State Model', () => {
         .resolves(examplePrivateKey)
         .withArgs('network')
         .resolves(exampleNetwork);
-      setupCreatorStub.copyChainJson.resolves(exampleNetworkFullName);
+      setupCreatorStub.fetchChainJson.resolves(exampleNetworkFullName);
 
       await stateModel.prepareSetupFiles();
       expect(cryptoStub.getRandomPassword).to.have.not.been.called;
       expect(setupCreatorStub.createPasswordFile).to.have.not.been.called;
       expect(cryptoStub.getEncryptedWallet).to.have.not.been.called;
       expect(setupCreatorStub.createKeyFile).to.have.not.been.called;
-      expect(setupCreatorStub.copyChainJson).to.have.been.calledOnceWith(exampleNetwork.name);
+      expect(setupCreatorStub.fetchChainJson).to.have.been.calledOnceWith(exampleNetwork.chainspec);
       expect(setupCreatorStub.copyParityConfiguration).to.have.been.calledOnceWith('hermes', {});
       expect(setupCreatorStub.prepareDockerComposeFile).to.have.been.calledOnceWith(
         'hermes', examplePrivateKey, exampleNetwork.headContractAddress, exampleNetworkFullName);

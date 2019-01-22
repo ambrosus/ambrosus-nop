@@ -9,12 +9,12 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 
 import path from 'path';
 import {readFile, writeFile, getPath, makeDirectory} from '../utils/file';
+import fileDownload from '../utils/file_download';
 
 const passwordFileName = 'password.pwds';
 const keyFileName = 'keyfile';
 const dockerFileName = 'docker-compose.yml';
 const parityConfigFileName = 'parity_config.toml';
-const chainTemplateDirectory = 'chain_files';
 const chainDescriptionFileName = 'chain.json';
 
 export default class SetupCreator {
@@ -59,11 +59,11 @@ export default class SetupCreator {
     await writeFile(path.join(this.outputDirectory, parityConfigFileName), parityConfigFile);
   }
 
-  async copyChainJson(networkName) {
+  async fetchChainJson(chainSpecUrl) {
     await this.ensureOutputDirectoryExists();
-    const chainFile = await readFile(path.join(this.templateDirectory, chainTemplateDirectory, `${networkName}.json`));
-    const parsedChainJson = JSON.parse(chainFile);
-    await writeFile(path.join(this.outputDirectory, chainDescriptionFileName), chainFile);
+    const outputFilePath = path.join(this.outputDirectory, chainDescriptionFileName);
+    await fileDownload(chainSpecUrl, outputFilePath);
+    const parsedChainJson = JSON.parse(await readFile(outputFilePath));
     return parsedChainJson.name;
   }
 

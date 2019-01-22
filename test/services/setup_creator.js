@@ -8,6 +8,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 */
 
 import chai from 'chai';
+import nock from 'nock';
 import chaiAsPromised from 'chai-as-promised';
 
 import SetupCreator from '../../src/services/setup_creator';
@@ -134,27 +135,39 @@ describe('Setup Creator', () => {
     });
   });
 
-  describe('copyChainJson', () => {
-    const networkName = 'dev';
-    const chainJsonContents = `{"name": "${networkName}"}`;
-    const srcChainJsonPath = `${testInputDir}chain_files/${networkName}.json`;
+  describe('fetchChainJson', () => {
+    const chainSpecUrl = 'https://chainspec.ambrosus-dev.com/';
+    const chainJsonContent = '{"name": "dev"}';
     const destChainJsonPath = `${testOutputDir}chain.json`;
 
-    beforeEach(async () => {
-      await makeDirectory(`${testInputDir}chain_files`);
-      await writeFile(srcChainJsonPath, chainJsonContents);
+    beforeEach(() => {
+      if (!nock.isActive()) {
+        nock.activate();
+      }
     });
 
     afterEach(async () => {
+      nock.cleanAll();
+      nock.restore();
       await removeFile(destChainJsonPath);
-      await removeFile(srcChainJsonPath);
-      await removeDirectory(`${testInputDir}chain_files`);
     });
 
-    it('copies files correctly', async () => {
-      const result = await setupCreator.copyChainJson(networkName);
-      expect(await readFile(destChainJsonPath)).to.equal(chainJsonContents);
-      expect(result).to.equal(networkName);
+    it('downloads the chainspec from given url', async () => {
+      nock(chainSpecUrl)
+        .get('/')
+        .reply(200, chainJsonContent);
+
+      const result = await setupCreator.fetchChainJson(chainSpecUrl);
+      expect(await readFile(destChainJsonPath)).to.equal(chainJsonContent);
+      expect(result).to.equal('dev');
+    });
+
+    it('throws when the server responds with code different from 200', async () => {
+      nock(chainSpecUrl)
+        .get('/')
+        .reply(500);
+
+      await expect(setupCreator.fetchChainJson(chainSpecUrl)).to.be.rejected;
     });
   });
 });
