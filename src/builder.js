@@ -13,7 +13,7 @@ import System from './services/system';
 import Validations from './services/validations';
 import SetupCreator from './services/setup_creator';
 
-import {HeadWrapper, KycWhitelistWrapper, RolesWrapper} from 'ambrosus-node-contracts';
+import {HeadWrapper, KycWhitelistWrapper, RolesWrapper, PayoutsWrapper, TimeWrapper, PayoutsActions} from 'ambrosus-node-contracts';
 
 import StateModel from './models/state_model';
 import SystemModel from './models/system_model';
@@ -61,15 +61,19 @@ import logoDialog from './dialogs/logo_dialog';
 import selectActionDialog from './dialogs/select_action_dialog';
 import changeUrlConfirmationDialog from './dialogs/change_url_confirmation_dialog';
 import changeUrlSuccessfulDialog from './dialogs/change_url_successful_dialog';
+import availablePayoutDialog from './dialogs/available_payouts_dialog';
+import confirmPayoutsWithdrawalDialog from './dialogs/confirm_payouts_withdraw_dialog';
+import withdrawalSuccessfulDialog from './dialogs/withdrawal_successful_dialog';
 import nectarWarningDialog from './dialogs/nectar_warning_dialog';
 
 import quitAction from './menu_actions/quit_action';
+import payoutsAction from './menu_actions/payouts_actions';
 import changeUrlAction from './menu_actions/change_url_action';
 
 import execCmd from './utils/execCmd';
+
 import messages from './messages';
 import networks from '../config/networks';
-
 import Web3 from 'web3';
 
 class Builder {
@@ -117,6 +121,9 @@ class Builder {
     objects.changeUrlConfirmationDialog = changeUrlConfirmationDialog(messages);
     objects.changeUrlSuccessfulDialog = changeUrlSuccessfulDialog(messages);
     objects.nectarWarningDialog = nectarWarningDialog(messages);
+    objects.availablePayoutDialog = availablePayoutDialog(messages);
+    objects.confirmPayoutsWithdrawalDialog = confirmPayoutsWithdrawalDialog(messages);
+    objects.withdrawalSuccessfulDialog = withdrawalSuccessfulDialog(messages);
 
     objects.selectNetworkPhase = selectNetworkPhase(networks, objects.stateModel, objects.askForNetworkDialog, objects.networkSelectedDialog);
     objects.checkDockerAvailablePhase = checkDockerAvailablePhase(objects.systemModel, objects.dockerDetectedDialog, objects.dockerMissingDialog);
@@ -137,6 +144,9 @@ class Builder {
     objects.headWrapper = new HeadWrapper(network.headContractAddress, objects.web3, address);
     objects.kycWhitelistWrapper = new KycWhitelistWrapper(objects.headWrapper, objects.web3, address);
     objects.rolesWrapper = new RolesWrapper(objects.headWrapper, objects.web3, address);
+    objects.timeWrapper = new TimeWrapper(objects.headWrapper, objects.web3, address);
+    objects.payoutsWrapper = new PayoutsWrapper(objects.headWrapper, objects.web3, address);
+    objects.payoutsActions = new PayoutsActions(objects.timeWrapper, objects.payoutsWrapper);
 
     objects.crypto = new Crypto(objects.web3);
 
@@ -162,6 +172,12 @@ class Builder {
         objects.askForNodeUrlDialog,
         objects.changeUrlConfirmationDialog,
         objects.changeUrlSuccessfulDialog),
+      [messages.actions.payouts]: payoutsAction(
+        objects.payoutsActions,
+        objects.availablePayoutDialog,
+        objects.confirmPayoutsWithdrawalDialog,
+        objects.withdrawalSuccessfulDialog
+      ),
       [messages.actions.quit]: quitAction()
     };
 
