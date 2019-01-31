@@ -62,12 +62,12 @@ import selectActionDialog from './dialogs/select_action_dialog';
 import changeUrlConfirmationDialog from './dialogs/change_url_confirmation_dialog';
 import changeUrlSuccessfulDialog from './dialogs/change_url_successful_dialog';
 import availablePayoutDialog from './dialogs/available_payouts_dialog';
-import confirmPayoutsWithdrawalDialog from './dialogs/confirm_payouts_withdraw_dialog';
+import confirmPayoutWithdrawalDialog from './dialogs/confirm_payout_withdraw_dialog';
 import withdrawalSuccessfulDialog from './dialogs/withdrawal_successful_dialog';
 import nectarWarningDialog from './dialogs/nectar_warning_dialog';
 
 import quitAction from './menu_actions/quit_action';
-import payoutsAction from './menu_actions/payouts_actions';
+import payoutAction from './menu_actions/payout_action';
 import changeUrlAction from './menu_actions/change_url_action';
 
 import execCmd from './utils/execCmd';
@@ -122,7 +122,7 @@ class Builder {
     objects.changeUrlSuccessfulDialog = changeUrlSuccessfulDialog(messages);
     objects.nectarWarningDialog = nectarWarningDialog(messages);
     objects.availablePayoutDialog = availablePayoutDialog(messages);
-    objects.confirmPayoutsWithdrawalDialog = confirmPayoutsWithdrawalDialog(messages);
+    objects.confirmPayoutWithdrawalDialog = confirmPayoutWithdrawalDialog(messages);
     objects.withdrawalSuccessfulDialog = withdrawalSuccessfulDialog(messages);
 
     objects.selectNetworkPhase = selectNetworkPhase(networks, objects.stateModel, objects.askForNetworkDialog, objects.networkSelectedDialog);
@@ -172,10 +172,10 @@ class Builder {
         objects.askForNodeUrlDialog,
         objects.changeUrlConfirmationDialog,
         objects.changeUrlSuccessfulDialog),
-      [messages.actions.payouts]: payoutsAction(
+      [messages.actions.payouts]: payoutAction(
         objects.payoutsActions,
         objects.availablePayoutDialog,
-        objects.confirmPayoutsWithdrawalDialog,
+        objects.confirmPayoutWithdrawalDialog,
         objects.withdrawalSuccessfulDialog
       ),
       [messages.actions.quit]: quitAction()

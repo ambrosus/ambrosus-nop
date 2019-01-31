@@ -9,7 +9,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 
 import inquirer from 'inquirer';
 
-const confirmPayoutsWithdrawalDialog = (messages) => async () => inquirer.prompt([
+const confirmPayoutWithdrawalDialog = (messages) => async () => inquirer.prompt([
   {
     type: 'list',
     name: 'payoutConfirmation',
@@ -27,6 +27,6 @@ const confirmPayoutsWithdrawalDialog = (messages) => async () => inquirer.prompt
   }
 ]);
 
-export default confirmPayoutsWithdrawalDialog;
+export default confirmPayoutWithdrawalDialog;
 
 

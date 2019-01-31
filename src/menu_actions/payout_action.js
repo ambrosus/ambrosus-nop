@@ -9,14 +9,14 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 
 import web3Utils from '../utils/web3_utils';
 
-const payoutsAction = (payoutsActions, availablePayoutDialog, confirmPayoutsWithdrawalDialog, withdrawalSuccessfulDialog) => async () => {
+const payoutAction = (payoutsActions, availablePayoutDialog, confirmPayoutWithdrawalDialog, withdrawalSuccessfulDialog) => async () => {
   const availablePayout = web3Utils.fromWei(await payoutsActions.getTotalAvailablePayout(), 'ether');
   await availablePayoutDialog(availablePayout);
-  if (availablePayout !== '0' && (await confirmPayoutsWithdrawalDialog()).payoutConfirmation) {
+  if (availablePayout !== '0' && (await confirmPayoutWithdrawalDialog()).payoutConfirmation) {
     await payoutsActions.withdraw();
     await withdrawalSuccessfulDialog(availablePayout);
   }
   return false;
 };
 
-export default payoutsAction;
+export default payoutAction;

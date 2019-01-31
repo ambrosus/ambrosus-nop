@@ -66,7 +66,7 @@ const messages = {
   changeUrlSuccessful: (newUrl) => `Success! Node URL changed to ${newUrl}`,
   availablePayouts: (availableAmount) => `You can withdraw ${availableAmount} AMB`,
   confirmWithdraw: 'Would you like to withdraw now?',
-  withdrawalSuccessful: (withdrawnAmount) => `Great! ${withdrawnAmount} AMB (minus small nectar fee) has been transfered to your account.`,
+  withdrawalSuccessful: (withdrawnAmount) => `Great! 💰 ${withdrawnAmount} AMB (minus small nectar fee) has been transfered to your account.`,
   actions: {
     payouts: 'Payouts',
     changeUrl: 'Change node URL',
