@@ -23,7 +23,7 @@ services:
       - ./parity_config.toml:/app/parity_config.toml
 
   worker: &atlas-props
-    image: ambrosus/ambrosus-node:latest
+    image: ambrosus/ambrosus-node:<ENTER_DOCKER_TAG_HERE>
     command: sh -c 'yarn migrate && yarn start:atlas'
     restart: unless-stopped
     depends_on:
