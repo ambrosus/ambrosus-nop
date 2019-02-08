@@ -64,6 +64,7 @@ import changeUrlSuccessfulDialog from './dialogs/change_url_successful_dialog';
 import availablePayoutDialog from './dialogs/available_payouts_dialog';
 import confirmPayoutWithdrawalDialog from './dialogs/confirm_payout_withdraw_dialog';
 import withdrawalSuccessfulDialog from './dialogs/withdrawal_successful_dialog';
+import dockerRestartRequiredDialog from './dialogs/docker_restart_required_dialog';
 import nectarWarningDialog from './dialogs/nectar_warning_dialog';
 
 import quitAction from './menu_actions/quit_action';
@@ -71,7 +72,6 @@ import payoutAction from './menu_actions/payout_action';
 import changeUrlAction from './menu_actions/change_url_action';
 
 import execCmd from './utils/execCmd';
-
 import messages from './messages';
 import networks from '../config/networks';
 import Web3 from 'web3';
@@ -124,8 +124,9 @@ class Builder {
     objects.availablePayoutDialog = availablePayoutDialog(messages);
     objects.confirmPayoutWithdrawalDialog = confirmPayoutWithdrawalDialog(messages);
     objects.withdrawalSuccessfulDialog = withdrawalSuccessfulDialog(messages);
+    objects.dockerRestartRequiredDialog = dockerRestartRequiredDialog(messages);
 
-    objects.selectNetworkPhase = selectNetworkPhase(networks, objects.stateModel, objects.askForNetworkDialog, objects.networkSelectedDialog);
+    objects.selectNetworkPhase = selectNetworkPhase(networks, objects.stateModel, objects.askForNetworkDialog, objects.networkSelectedDialog, objects.dockerRestartRequiredDialog);
     objects.checkDockerAvailablePhase = checkDockerAvailablePhase(objects.systemModel, objects.dockerDetectedDialog, objects.dockerMissingDialog);
     objects.getPrivateKeyPhase = getPrivateKeyPhase(objects.stateModel, objects.crypto, objects.privateKeyDetectedDialog, objects.askForPrivateKeyDialog);
 

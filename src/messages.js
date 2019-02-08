@@ -67,6 +67,8 @@ const messages = {
   availablePayouts: (availableAmount) => `You can withdraw ${availableAmount} AMB`,
   confirmWithdraw: 'Would you like to withdraw now?',
   withdrawalSuccessful: (withdrawnAmount) => `Great! 💰 ${withdrawnAmount} AMB (minus small nectar fee) has been transfered to your account.`,
+  warningMessage: '⚠️ WARNING! ⚠️',
+  dockerRestartRequired: 'Changes in network have been detected. Please restart the docker containers with',
   actions: {
     payouts: 'Payouts',
     changeUrl: 'Change node URL',

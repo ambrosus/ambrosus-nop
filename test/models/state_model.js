@@ -31,11 +31,13 @@ describe('State Model', () => {
   const exampleUrl = 'https://amb-node.com';
   const exampleIP = '10.45.1.1';
   const exampleEmail = 'amb_node_operator@mail.com';
+  const exampleDockerTag = '7fa1ed2';
   const exampleNetwork = {
     rpc: 'localhost:8545',
     chainspec: 'https://chainspec.ambrosus.com',
     headContractAddress: '0x00000f10',
-    name: 'dev'
+    name: 'dev',
+    dockerTag: exampleDockerTag
   };
   const exampleNetworkFullName = 'AMB-DEV';
   const examplePassword = 'randomBytes';
@@ -247,7 +249,7 @@ describe('State Model', () => {
       expect(setupCreatorStub.fetchChainJson).to.have.been.calledOnceWith(exampleNetwork.chainspec);
       expect(setupCreatorStub.copyParityConfiguration).to.have.been.calledOnceWith('apollo', {address: exampleAddress, ip: exampleIP});
       expect(setupCreatorStub.prepareDockerComposeFile).to.have.been.calledOnceWith(
-        'apollo', examplePrivateKey, exampleNetwork.headContractAddress, exampleNetworkFullName);
+        exampleDockerTag, 'apollo', examplePrivateKey, exampleNetwork.headContractAddress, exampleNetworkFullName);
     });
 
     it('creates files for Hermes and Atlas', async () => {
@@ -266,7 +268,7 @@ describe('State Model', () => {
       expect(setupCreatorStub.fetchChainJson).to.have.been.calledOnceWith(exampleNetwork.chainspec);
       expect(setupCreatorStub.copyParityConfiguration).to.have.been.calledOnceWith('hermes', {});
       expect(setupCreatorStub.prepareDockerComposeFile).to.have.been.calledOnceWith(
-        'hermes', examplePrivateKey, exampleNetwork.headContractAddress, exampleNetworkFullName);
+        exampleDockerTag, 'hermes', examplePrivateKey, exampleNetwork.headContractAddress, exampleNetworkFullName);
     });
 
     it('throws if invalid role provided', async () => {
