@@ -16,3 +16,4 @@ services:
       - ./password.pwds:/app/password.pwds
       - ./parity_config.toml:/app/parity_config.toml
       - ./keyfile:/app/keys/<ENTER_NETWORK_NAME_HERE>/keyfile
+      - ./chains:/app/chains

@@ -21,6 +21,7 @@ services:
     volumes:
       - ./chain.json:/app/chain.json
       - ./parity_config.toml:/app/parity_config.toml
+      - ./chains:/app/chains
 
   worker: &hermes-props
     image: ambrosus/ambrosus-node:<ENTER_DOCKER_TAG_HERE>
