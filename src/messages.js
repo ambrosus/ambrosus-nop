@@ -64,7 +64,13 @@ const messages = {
   changeUrlConfirmation: (oldUrl, newUrl) => `You will now change your node URL from ${oldUrl} to ${newUrl}. Do you wish to continue?`,
   nectarWarning: '⚠️ WARNING! ⚠️ This operation will cost you some nectar (usually less than 0.05 AMB).',
   changeUrlSuccessful: (newUrl) => `Success! Node URL changed to ${newUrl}`,
+  availablePayouts: (availableAmount) => `You can withdraw ${availableAmount} AMB`,
+  confirmWithdraw: 'Would you like to withdraw now?',
+  withdrawalSuccessful: (withdrawnAmount) => `Great! 💰 ${withdrawnAmount} AMB (minus small nectar fee) has been transfered to your account.`,
+  warningMessage: '⚠️ WARNING! ⚠️',
+  dockerRestartRequired: 'Changes in network have been detected. Please restart the docker containers with',
   actions: {
+    payouts: 'Payouts',
     changeUrl: 'Change node URL',
     quit: 'Finish NOP'
   }
