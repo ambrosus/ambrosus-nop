@@ -12,6 +12,8 @@ import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import selectActionPhase from '../../src/phases/select_action_phase';
+import prepareAction from '../../src/menu_actions/prepare_action';
+import {ATLAS_CODE, HERMES_CODE, HERMES, ATLAS_1} from '../../src/consts';
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
@@ -23,24 +25,33 @@ describe('Select Action Phase', () => {
   let errorDialogStub;
   let actions;
 
-  const startPhase = async () => selectActionPhase(actions, selectActionDialogStub, insufficientFundsDialogStub, errorDialogStub)();
+  const startPhase = async (role) => selectActionPhase(actions, selectActionDialogStub, insufficientFundsDialogStub, errorDialogStub)(role);
 
   beforeEach(async () => {
     selectActionDialogStub = sinon.stub();
     errorDialogStub = sinon.stub();
     insufficientFundsDialogStub = sinon.stub();
     actions = {
-      'First action': sinon.stub().resolves(false),
-      'Second action': sinon.stub().resolves(false),
-      Quit: sinon.stub().resolves(true)
+      'First action': prepareAction(sinon.stub().resolves(false), [HERMES_CODE, ATLAS_CODE]),
+      'Second action': prepareAction(sinon.stub().resolves(false), [ATLAS_CODE]),
+      Quit: prepareAction(sinon.stub().resolves(true))
     };
   });
 
-  it('assembles action list and shows select action dialog', async () => {
+  it(`assembles hermes' action list and shows select action dialog`, async () => {
     selectActionDialogStub.onFirstCall().resolves({action: 'First action'});
     selectActionDialogStub.onSecondCall().resolves({action: 'Quit'});
 
-    await startPhase();
+    await startPhase(HERMES);
+
+    expect(selectActionDialogStub).to.have.been.calledWithExactly(['First action', 'Quit']);
+  });
+
+  it(`assembles atlas' action list and shows select action dialog`, async () => {
+    selectActionDialogStub.onFirstCall().resolves({action: 'First action'});
+    selectActionDialogStub.onSecondCall().resolves({action: 'Quit'});
+
+    await startPhase(ATLAS_1);
 
     expect(selectActionDialogStub).to.have.been.calledWithExactly(['First action', 'Second action', 'Quit']);
   });
@@ -49,7 +60,7 @@ describe('Select Action Phase', () => {
     selectActionDialogStub.resolves({action: 'Second action'});
     selectActionDialogStub.onCall(5).resolves({action: 'Quit'});
 
-    await startPhase();
+    await startPhase(ATLAS_1);
 
     expect(selectActionDialogStub).to.have.callCount(6);
   });
@@ -59,13 +70,13 @@ describe('Select Action Phase', () => {
     selectActionDialogStub.onSecondCall().resolves({action: 'Second action'});
     selectActionDialogStub.onThirdCall().resolves({action: 'Quit'});
 
-    await startPhase();
+    await startPhase(ATLAS_1);
 
-    expect(actions['First action']).to.be.calledOnceWith();
-    expect(actions['First action']).to.be.calledBefore(actions['Second action']);
-    expect(actions['Second action']).to.be.calledOnceWith();
-    expect(actions['Second action']).to.be.calledBefore(actions.Quit);
-    expect(actions.Quit).to.be.calledOnceWith();
+    expect(actions['First action'].performAction).to.be.calledOnceWith();
+    expect(actions['First action'].performAction).to.be.calledBefore(actions['Second action']);
+    expect(actions['Second action'].performAction).to.be.calledOnceWith();
+    expect(actions['Second action'].performAction).to.be.calledBefore(actions.Quit);
+    expect(actions.Quit.performAction).to.be.calledOnceWith();
   });
 
   describe('In case of errors', () => {
@@ -75,17 +86,17 @@ describe('Select Action Phase', () => {
     });
 
     it('displays correct dialog when account has insufficient funds', async () => {
-      actions['First action'].rejects(new Error('Error: Insufficient funds'));
+      actions['First action'].performAction.rejects(new Error('Error: Insufficient funds'));
 
-      await startPhase();
+      await startPhase(ATLAS_1);
 
       expect(insufficientFundsDialogStub).to.be.calledOnce;
     });
 
     it('displays generic error dialog otherwise', async () => {
-      actions['First action'].rejects(new Error('TestError'));
+      actions['First action'].performAction.rejects(new Error('TestError'));
 
-      await startPhase();
+      await startPhase(ATLAS_1);
 
       expect(errorDialogStub).to.be.calledOnceWith('TestError');
     });
