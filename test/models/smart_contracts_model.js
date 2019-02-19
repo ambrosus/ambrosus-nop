@@ -159,19 +159,11 @@ describe('Smart Contract Model', () => {
   });
 
   describe('getOnboardedRole', () => {
-    let roleCodeToRoleStub;
-    const exampleRole = 'Hermes';
-
-    beforeEach(() => {
-      roleCodeToRoleStub = sinon.stub(smartContractsModel, 'roleCodeToRole').resolves(exampleRole);
-    });
-
     it('gets role with kyced deposit and returnes onboarded role name', async () => {
       rolesWrapperStub.onboardedRole.resolves(ATLAS_CODE);
-      expect(await smartContractsModel.getOnboardedRole(exampleAddress)).to.equal(exampleRole);
+      expect(await smartContractsModel.getOnboardedRole(exampleAddress)).to.equal('Atlas Zeta');
       expect(rolesWrapperStub.onboardedRole).to.be.calledOnceWith(exampleAddress);
       expect(kycWhitelistWrapperStub.getRequiredDeposit).to.be.calledOnceWith(exampleAddress);
-      expect(roleCodeToRoleStub).to.be.calledOnceWith(ATLAS_CODE, ATLAS_1_STAKE);
     });
 
     it('returns null if onboardedRole returns 0', async () => {
