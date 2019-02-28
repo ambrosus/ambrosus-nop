@@ -45,9 +45,8 @@ const start = async () => {
 
   if (isOnboarded) {
     await prepareDockerPhase();
+    await selectActionPhase(role);
   }
-
-  await selectActionPhase();
 };
 
 
