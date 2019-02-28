@@ -13,7 +13,7 @@ import System from './services/system';
 import Validations from './services/validations';
 import SetupCreator from './services/setup_creator';
 
-import {HeadWrapper, KycWhitelistWrapper, RolesWrapper, PayoutsWrapper, TimeWrapper, PayoutsActions, constants} from 'ambrosus-node-contracts';
+import {HeadWrapper, KycWhitelistWrapper, RolesWrapper, PayoutsWrapper, TimeWrapper, PayoutsActions, OnboardActions, AtlasStakeStoreWrapper, constants} from 'ambrosus-node-contracts';
 
 import StateModel from './models/state_model';
 import SystemModel from './models/system_model';
@@ -65,17 +65,20 @@ import availablePayoutDialog from './dialogs/available_payouts_dialog';
 import confirmPayoutWithdrawalDialog from './dialogs/confirm_payout_withdraw_dialog';
 import withdrawalSuccessfulDialog from './dialogs/withdrawal_successful_dialog';
 import dockerRestartRequiredDialog from './dialogs/docker_restart_required_dialog';
+import retirementSuccessfulDialog from './dialogs/retirement_successful_dialog';
+import confirmRetirementDialog from './dialogs/confirm_retirement_dialog';
 import nectarWarningDialog from './dialogs/nectar_warning_dialog';
 
-import quitAction from './menu_actions/quit_action';
+import prepareAction from './menu_actions/prepare_action';
 import payoutAction from './menu_actions/payout_action';
 import changeUrlAction from './menu_actions/change_url_action';
+import retireAction from './menu_actions/retire_action';
 
+import quitAction from './menu_actions/quit_action';
 import execCmd from './utils/execCmd';
 import messages from './messages';
 import networks from '../config/networks';
 import Web3 from 'web3';
-import prepareAction from './menu_actions/prepare_action';
 
 class Builder {
   static buildStage1(config) {
@@ -126,6 +129,8 @@ class Builder {
     objects.confirmPayoutWithdrawalDialog = confirmPayoutWithdrawalDialog(messages);
     objects.withdrawalSuccessfulDialog = withdrawalSuccessfulDialog(messages);
     objects.dockerRestartRequiredDialog = dockerRestartRequiredDialog(messages);
+    objects.confirmRetirementDialog = confirmRetirementDialog(messages);
+    objects.retirementSuccessfulDialog = retirementSuccessfulDialog(messages);
 
     objects.selectNetworkPhase = selectNetworkPhase(networks, objects.stateModel, objects.askForNetworkDialog, objects.networkSelectedDialog, objects.dockerRestartRequiredDialog);
     objects.checkDockerAvailablePhase = checkDockerAvailablePhase(objects.systemModel, objects.dockerDetectedDialog, objects.dockerMissingDialog);
@@ -148,7 +153,9 @@ class Builder {
     objects.rolesWrapper = new RolesWrapper(objects.headWrapper, objects.web3, address);
     objects.timeWrapper = new TimeWrapper(objects.headWrapper, objects.web3, address);
     objects.payoutsWrapper = new PayoutsWrapper(objects.headWrapper, objects.web3, address);
+    objects.atlasStakeWrapper = new AtlasStakeStoreWrapper(objects.headWrapper, objects.web3, address);
     objects.payoutsActions = new PayoutsActions(objects.timeWrapper, objects.payoutsWrapper);
+    objects.onboardActions = new OnboardActions(objects.kycWhitelistWrapper, objects.rolesWrapper, objects.atlasStakeWrapper);
 
     objects.crypto = new Crypto(objects.web3);
 
@@ -183,6 +190,11 @@ class Builder {
         objects.withdrawalSuccessfulDialog),
       [constants.ATLAS]
       ),
+      [messages.actions.retire]: prepareAction(retireAction(
+        objects.onboardActions,
+        objects.confirmRetirementDialog,
+        objects.retirementSuccessfulDialog
+      )),
       [messages.actions.quit]: prepareAction(quitAction())
     };
 

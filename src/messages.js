@@ -66,12 +66,17 @@ const messages = {
   changeUrlSuccessful: (newUrl) => `Success! Node URL changed to ${newUrl}`,
   availablePayouts: (availableAmount) => `You can withdraw ${availableAmount} AMB`,
   confirmWithdraw: 'Would you like to withdraw now?',
-  withdrawalSuccessful: (withdrawnAmount) => `Great! 💰 ${withdrawnAmount} AMB (minus small nectar fee) has been transfered to your account.`,
+  withdrawalSuccessful: (withdrawnAmount) => `Great! 💰 ${withdrawnAmount} AMB (minus small nectar fee) has been transferred to your account.`,
+  confirmRetirement: `After retirement you will not be able to perform node functions.
+  You will still be able to get onboarded again.
+  Do you want to continue?`,
+  retirementSuccessful: 'Your node has retired.',
   warningMessage: '⚠️ WARNING! ⚠️',
   dockerRestartRequired: 'Changes in network have been detected. Please restart the docker containers with',
   actions: {
     payouts: 'Payouts',
     changeUrl: 'Change node URL',
+    retire: 'Retire',
     quit: 'Finish NOP'
   }
 };
