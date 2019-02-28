@@ -1,5 +1,5 @@
 /*
-Copyright: Ambrosus Technologies GmbH
+Copyright: Ambrosus Inc.
 Email: tech@ambrosus.com
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -13,7 +13,7 @@ import System from './services/system';
 import Validations from './services/validations';
 import SetupCreator from './services/setup_creator';
 
-import {HeadWrapper, KycWhitelistWrapper, RolesWrapper, PayoutsWrapper, TimeWrapper, PayoutsActions} from 'ambrosus-node-contracts';
+import {HeadWrapper, KycWhitelistWrapper, RolesWrapper, PayoutsWrapper, TimeWrapper, PayoutsActions, constants} from 'ambrosus-node-contracts';
 
 import StateModel from './models/state_model';
 import SystemModel from './models/system_model';
@@ -75,6 +75,7 @@ import execCmd from './utils/execCmd';
 import messages from './messages';
 import networks from '../config/networks';
 import Web3 from 'web3';
+import prepareAction from './menu_actions/prepare_action';
 
 class Builder {
   static buildStage1(config) {
@@ -166,20 +167,23 @@ class Builder {
     objects.prepareDockerPhase = prepareDockerPhase(objects.stateModel, objects.healthCheckUrlDialog, objects.dockerComposeCommandDialog);
 
     objects.actions = {
-      [messages.actions.changeUrl]: changeUrlAction(
+      [messages.actions.changeUrl]: prepareAction(changeUrlAction(
         objects.stateModel,
         objects.rolesWrapper,
         objects.nectarWarningDialog,
         objects.askForNodeUrlDialog,
         objects.changeUrlConfirmationDialog,
         objects.changeUrlSuccessfulDialog),
-      [messages.actions.payouts]: payoutAction(
+      [constants.ATLAS, constants.HERMES]
+      ),
+      [messages.actions.payouts]: prepareAction(payoutAction(
         objects.payoutsActions,
         objects.availablePayoutDialog,
         objects.confirmPayoutWithdrawalDialog,
-        objects.withdrawalSuccessfulDialog
+        objects.withdrawalSuccessfulDialog),
+      [constants.ATLAS]
       ),
-      [messages.actions.quit]: quitAction()
+      [messages.actions.quit]: prepareAction(quitAction())
     };
 
     objects.selectActionPhase = selectActionPhase(
