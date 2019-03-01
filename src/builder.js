@@ -130,7 +130,7 @@ class Builder {
     objects.withdrawalSuccessfulDialog = withdrawalSuccessfulDialog(messages);
     objects.dockerRestartRequiredDialog = dockerRestartRequiredDialog(messages);
     objects.confirmRetirementDialog = confirmRetirementDialog(messages);
-    objects.retirementSuccessfulDialog = retirementSuccessfulDialog(messages);
+    objects.retirementSuccessfulDialog = retirementSuccessfulDialog(messages, config.outputDirectory);
 
     objects.selectNetworkPhase = selectNetworkPhase(networks, objects.stateModel, objects.askForNetworkDialog, objects.networkSelectedDialog, objects.dockerRestartRequiredDialog);
     objects.checkDockerAvailablePhase = checkDockerAvailablePhase(objects.systemModel, objects.dockerDetectedDialog, objects.dockerMissingDialog);

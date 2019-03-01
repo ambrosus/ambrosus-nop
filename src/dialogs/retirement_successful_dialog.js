@@ -9,8 +9,8 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 
 import chalk from 'chalk';
 
-const retirementSuccessfulDialog = (messages) => async () => {
-  console.log(chalk.green(messages.retirementSuccessful));
+const retirementSuccessfulDialog = (messages, outputDir) => async () => {
+  console.log(chalk.green(messages.retirementSuccessful(chalk.yellow(messages.dockerDownCommand), chalk.yellow(outputDir))));
 };
 
 export default retirementSuccessfulDialog;

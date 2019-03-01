@@ -56,6 +56,7 @@ const messages = {
   healthCheckUrl: (url) => `After starting your node, you can check its health by going to: ${url}`,
   dockerComposeInfo: (outputDir, command) => `Your node configuration is ready.\nIn order to start it, enter the ${outputDir} directory from the command line and run ${command}`,
   dockerComposeCommand: 'docker-compose up -d',
+  dockerDownCommand: 'docker-compose down',
   yes: 'Yes',
   no: 'No',
   insufficientFunds: 'You have insufficient funds to perform transaction 💸\n Top up with small amount and retry',
@@ -67,10 +68,13 @@ const messages = {
   availablePayouts: (availableAmount) => `You can withdraw ${availableAmount} AMB`,
   confirmWithdraw: 'Would you like to withdraw now?',
   withdrawalSuccessful: (withdrawnAmount) => `Great! 💰 ${withdrawnAmount} AMB (minus small nectar fee) has been transferred to your account.`,
-  confirmRetirement: `After retirement you will not be able to perform node functions.
-  You will still be able to get onboarded again.
+  confirmRetirement: `After retirement this node will stop being part of the network.
+  You will still be able to onboard it again.
   Do you want to continue?`,
-  retirementSuccessful: 'Your node has retired.',
+  retirementSuccessful: (dockerDownCommand, outputDir) => `
+  Your node has retired. 
+  Don't forget to turn off the node. You can do it by running ${dockerDownCommand} inside the ${outputDir} directory.
+  See you later!`,
   warningMessage: '⚠️ WARNING! ⚠️',
   dockerRestartRequired: 'Changes in network have been detected. Please restart the docker containers with',
   actions: {

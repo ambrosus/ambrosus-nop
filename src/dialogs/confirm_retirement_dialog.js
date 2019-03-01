@@ -8,12 +8,13 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 */
 
 import inquirer from 'inquirer';
+import chalk from 'chalk';
 
 const confirmRetirementDialog = (messages) => async () => inquirer.prompt([
   {
     type: 'list',
     name: 'retirementConfirmation',
-    message: messages.confirmRetirement,
+    message: chalk.yellow(chalk.bold(messages.confirmRetirement)),
     choices: [
       {
         name: messages.no,
