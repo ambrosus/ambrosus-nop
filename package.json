@@ -19,7 +19,7 @@
     "yarn": ">=1.3.2 <2.0.0"
   },
   "dependencies": {
-    "ambrosus-node-contracts": "0.0.36",
+    "ambrosus-node-contracts": "0.0.39",
     "chalk": "^2.4.1",
     "inquirer": "^6.0.0",
     "ip-regex": "^3.0.0",
