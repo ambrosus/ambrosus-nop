@@ -28,4 +28,8 @@ export default class Validations {
   isValidIP(candidate) {
     return ipRegex({exact: true}).test(candidate);
   }
+
+  isValidNumber(candidate) {
+    return candidate.length > 0 && !isNaN(candidate);
+  }
 }

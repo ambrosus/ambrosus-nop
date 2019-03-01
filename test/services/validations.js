@@ -158,4 +158,34 @@ describe('Validations', () => {
       })
     );
   });
+
+  describe('isValidNumber', () => {
+    const valid = [
+      '0',
+      '5',
+      '123123',
+      '3.14',
+      '1e10',
+      '-123'
+    ];
+
+    const invalid = [
+      '',
+      'test',
+      '1a',
+      'a1'
+    ];
+
+    valid.forEach((validExample) =>
+      it(`accepts ${validExample}`, () => {
+        expect(validations.isValidNumber(validExample)).to.be.true;
+      })
+    );
+
+    invalid.forEach((invalidExample) =>
+      it(`rejects ${invalidExample}`, () => {
+        expect(validations.isValidNumber(invalidExample)).to.be.false;
+      })
+    );
+  });
 });
