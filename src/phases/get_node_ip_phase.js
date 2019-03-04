@@ -16,7 +16,7 @@ const getNodeIP = async (stateModel, askForNodeIPDialog) => {
 
   const answers = await askForNodeIPDialog();
   const {nodeIP : providedIP} = answers;
-  stateModel.storeNodeIP(providedIP);
+  await stateModel.storeNodeIP(providedIP);
   return providedIP;
 };
 

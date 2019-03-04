@@ -67,14 +67,15 @@ import withdrawalSuccessfulDialog from './dialogs/withdrawal_successful_dialog';
 import dockerRestartRequiredDialog from './dialogs/docker_restart_required_dialog';
 import retirementSuccessfulDialog from './dialogs/retirement_successful_dialog';
 import confirmRetirementDialog from './dialogs/confirm_retirement_dialog';
+import askForApolloDepositDialog from './dialogs/ask_for_apollo_deposit_dialog';
 import nectarWarningDialog from './dialogs/nectar_warning_dialog';
 
 import prepareAction from './menu_actions/prepare_action';
 import payoutAction from './menu_actions/payout_action';
 import changeUrlAction from './menu_actions/change_url_action';
 import retireAction from './menu_actions/retire_action';
-
 import quitAction from './menu_actions/quit_action';
+
 import execCmd from './utils/execCmd';
 import messages from './messages';
 import networks from '../config/networks';
@@ -131,6 +132,7 @@ class Builder {
     objects.dockerRestartRequiredDialog = dockerRestartRequiredDialog(messages);
     objects.confirmRetirementDialog = confirmRetirementDialog(messages);
     objects.retirementSuccessfulDialog = retirementSuccessfulDialog(messages, config.outputDirectory);
+    objects.askForApolloDepositDialog = askForApolloDepositDialog(objects.validations, messages);
 
     objects.selectNetworkPhase = selectNetworkPhase(networks, objects.stateModel, objects.askForNetworkDialog, objects.networkSelectedDialog, objects.dockerRestartRequiredDialog);
     objects.checkDockerAvailablePhase = checkDockerAvailablePhase(objects.systemModel, objects.dockerDetectedDialog, objects.dockerMissingDialog);
@@ -169,7 +171,7 @@ class Builder {
     objects.manualSubmissionPhase = manualSubmissionPhase(objects.stateModel, objects.displaySubmissionDialog);
     objects.checkAddressWhitelistingStatusPhase = checkAddressWhitelistingStatusPhase(objects.smartContractsModel, objects.stateModel, objects.addressIsNotWhitelistedDialog, objects.addressIsWhitelistedDialog);
     objects.performOnboardingPhase = performOnboardingPhase(objects.stateModel, objects.smartContractsModel,
-      objects.notEnoughBalanceDialog, objects.alreadyOnboardedDialog, objects.onboardingConfirmationDialog,
+      objects.notEnoughBalanceDialog, objects.alreadyOnboardedDialog, objects.askForApolloDepositDialog, objects.onboardingConfirmationDialog,
       objects.onboardingSuccessfulDialog, objects.insufficientFundsDialog, objects.genericErrorDialog);
     objects.prepareDockerPhase = prepareDockerPhase(objects.stateModel, objects.healthCheckUrlDialog, objects.dockerComposeCommandDialog);
 
