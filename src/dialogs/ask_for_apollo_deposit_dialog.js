@@ -13,19 +13,19 @@ import {utils} from 'web3';
 
 const askForApolloDepositDialog = (validations, messages) => async (minimalDeposit) => {
   const minimalDepositBn = utils.toBN(minimalDeposit);
-  const minimalDepositInWei = utils.fromWei(minimalDeposit, 'ether');
+  const minimalDepositInAmb = utils.fromWei(minimalDeposit, 'ether');
   const {deposit} = await inquirer.prompt(
     [
       {
         type: 'input',
         name: 'deposit',
-        message: messages.apolloDepositInputInstruction(chalk.yellow(minimalDepositInWei)),
+        message: messages.apolloDepositInputInstruction(chalk.yellow(minimalDepositInAmb)),
         validate: (answer) => {
           if (!validations.isValidNumber(answer)) {
             return chalk.red(messages.depositNumberError(chalk.yellow(answer)));
           }
-          if (!minimalDepositBn.lte(utils.toBN(utils.toWei(answer, 'ether')))) {
-            return chalk.red(messages.depositTooSmallError(chalk.yellow(minimalDepositInWei), chalk.yellow(answer)));
+          if (utils.toBN(utils.toWei(answer, 'ether')).lt(minimalDepositBn)) {
+            return chalk.red(messages.depositTooSmallError(chalk.yellow(minimalDepositInAmb), chalk.yellow(answer)));
           }
           return true;
         }
