@@ -48,6 +48,6 @@ export default class Store {
   }
 
   async writeFile(contents) {
-    await writeFile(this.storeFilePath, JSON.stringify(contents, null, 2));
+    await writeFile(this.storeFilePath, JSON.stringify(contents, null, 2), {mode: 0o660});
   }
 }
