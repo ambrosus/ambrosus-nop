@@ -1,5 +1,5 @@
 /*
-Copyright: Ambrosus Technologies GmbH
+Copyright: Ambrosus Inc.
 Email: tech@ambrosus.com
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -16,7 +16,7 @@ const getNodeIP = async (stateModel, askForNodeIPDialog) => {
 
   const answers = await askForNodeIPDialog();
   const {nodeIP : providedIP} = answers;
-  stateModel.storeNodeIP(providedIP);
+  await stateModel.storeNodeIP(providedIP);
   return providedIP;
 };
 

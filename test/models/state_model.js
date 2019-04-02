@@ -1,5 +1,5 @@
 /*
-Copyright: Ambrosus Technologies GmbH
+Copyright: Ambrosus Inc.
 Email: tech@ambrosus.com
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -31,10 +31,13 @@ describe('State Model', () => {
   const exampleUrl = 'https://amb-node.com';
   const exampleIP = '10.45.1.1';
   const exampleEmail = 'amb_node_operator@mail.com';
+  const exampleDockerTag = '7fa1ed2';
   const exampleNetwork = {
     rpc: 'localhost:8545',
+    chainspec: 'https://chainspec.ambrosus.com',
     headContractAddress: '0x00000f10',
-    name: 'dev'
+    name: 'dev',
+    dockerTag: exampleDockerTag
   };
   const exampleNetworkFullName = 'AMB-DEV';
   const examplePassword = 'randomBytes';
@@ -58,7 +61,7 @@ describe('State Model', () => {
       createPasswordFile: sinon.stub(),
       createKeyFile: sinon.stub(),
       prepareDockerComposeFile: sinon.stub(),
-      copyChainJson: sinon.stub()
+      fetchChainJson: sinon.stub()
     };
     stateModel = new StateModel(storeStub, cryptoStub, setupCreatorStub);
   });
@@ -236,17 +239,17 @@ describe('State Model', () => {
         .resolves(exampleIP)
         .withArgs('network')
         .resolves(exampleNetwork);
-      setupCreatorStub.copyChainJson.resolves(exampleNetworkFullName);
+      setupCreatorStub.fetchChainJson.resolves(exampleNetworkFullName);
 
       await stateModel.prepareSetupFiles();
       expect(cryptoStub.getRandomPassword).to.have.been.calledOnceWith();
       expect(setupCreatorStub.createPasswordFile).to.have.been.calledOnceWith(examplePassword);
       expect(cryptoStub.getEncryptedWallet).to.have.been.calledOnceWith(examplePrivateKey, examplePassword);
       expect(setupCreatorStub.createKeyFile).to.have.been.calledOnceWith(exampleEncryptedWallet);
-      expect(setupCreatorStub.copyChainJson).to.have.been.calledOnceWith(exampleNetwork.name);
+      expect(setupCreatorStub.fetchChainJson).to.have.been.calledOnceWith(exampleNetwork.chainspec);
       expect(setupCreatorStub.copyParityConfiguration).to.have.been.calledOnceWith('apollo', {address: exampleAddress, ip: exampleIP});
       expect(setupCreatorStub.prepareDockerComposeFile).to.have.been.calledOnceWith(
-        'apollo', examplePrivateKey, exampleNetwork.headContractAddress, exampleNetworkFullName);
+        exampleDockerTag, 'apollo', examplePrivateKey, exampleNetwork.headContractAddress, exampleNetworkFullName);
     });
 
     it('creates files for Hermes and Atlas', async () => {
@@ -255,17 +258,17 @@ describe('State Model', () => {
         .resolves(examplePrivateKey)
         .withArgs('network')
         .resolves(exampleNetwork);
-      setupCreatorStub.copyChainJson.resolves(exampleNetworkFullName);
+      setupCreatorStub.fetchChainJson.resolves(exampleNetworkFullName);
 
       await stateModel.prepareSetupFiles();
       expect(cryptoStub.getRandomPassword).to.have.not.been.called;
       expect(setupCreatorStub.createPasswordFile).to.have.not.been.called;
       expect(cryptoStub.getEncryptedWallet).to.have.not.been.called;
       expect(setupCreatorStub.createKeyFile).to.have.not.been.called;
-      expect(setupCreatorStub.copyChainJson).to.have.been.calledOnceWith(exampleNetwork.name);
+      expect(setupCreatorStub.fetchChainJson).to.have.been.calledOnceWith(exampleNetwork.chainspec);
       expect(setupCreatorStub.copyParityConfiguration).to.have.been.calledOnceWith('hermes', {});
       expect(setupCreatorStub.prepareDockerComposeFile).to.have.been.calledOnceWith(
-        'hermes', examplePrivateKey, exampleNetwork.headContractAddress, exampleNetworkFullName);
+        exampleDockerTag, 'hermes', examplePrivateKey, exampleNetwork.headContractAddress, exampleNetworkFullName);
     });
 
     it('throws if invalid role provided', async () => {

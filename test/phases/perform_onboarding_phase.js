@@ -1,5 +1,5 @@
 /*
-Copyright: Ambrosus Technologies GmbH
+Copyright: Ambrosus Inc.
 Email: tech@ambrosus.com
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -21,6 +21,7 @@ const {expect} = chai;
 describe('Perform onboarding Phase', () => {
   const exampleAddress = '0xc0ffee';
   const exampleUrl = 'http://url';
+  const exampleApolloDeposit = '150';
   let stateModelStub;
   let smartContractsModelStub;
   let notEnoughBalanceDialogStub;
@@ -29,13 +30,14 @@ describe('Perform onboarding Phase', () => {
   let onboardingSuccessfulDialogStub;
   let insufficientFundsDialogStub;
   let genericErrorDialogStub;
+  let askForApolloDepositDialogStub;
 
   const exampleWhitelistingStatus = {
     roleAssigned: 'bar',
     requiredDeposit: '123'
   };
 
-  const call = async (whitelistingStatus) => performOnboardingPhase(stateModelStub, smartContractsModelStub, notEnoughBalanceDialogStub, alreadyOnboardedDialogStub, onboardingConfirmationDialogStub, onboardingSuccessfulDialogStub, insufficientFundsDialogStub, genericErrorDialogStub)(whitelistingStatus);
+  const call = async (whitelistingStatus) => performOnboardingPhase(stateModelStub, smartContractsModelStub, notEnoughBalanceDialogStub, alreadyOnboardedDialogStub, askForApolloDepositDialogStub, onboardingConfirmationDialogStub, onboardingSuccessfulDialogStub, insufficientFundsDialogStub, genericErrorDialogStub)(whitelistingStatus);
 
   beforeEach(async () => {
     stateModelStub = {
@@ -50,6 +52,7 @@ describe('Perform onboarding Phase', () => {
     notEnoughBalanceDialogStub = sinon.stub().returns();
     alreadyOnboardedDialogStub = sinon.stub().returns();
     onboardingConfirmationDialogStub = sinon.stub().resolves({onboardingConfirmation: true});
+    askForApolloDepositDialogStub = sinon.stub().resolves(exampleApolloDeposit);
     onboardingSuccessfulDialogStub = sinon.stub().returns();
     insufficientFundsDialogStub = sinon.stub();
     genericErrorDialogStub = sinon.stub();
@@ -99,5 +102,13 @@ describe('Perform onboarding Phase', () => {
     await call(exampleWhitelistingStatus);
     expect(genericErrorDialogStub).to.be.calledOnce;
     expect(onboardingSuccessfulDialogStub).to.be.not.called;
+  });
+
+  it('asks apollo for a deposit', async () => {
+    await call({...exampleWhitelistingStatus, roleAssigned: 'Apollo'});
+    expect(askForApolloDepositDialogStub).to.be.calledOnceWith(exampleWhitelistingStatus.requiredDeposit);
+    expect(smartContractsModelStub.hasEnoughBalance).to.be.calledOnceWith(exampleAddress, exampleApolloDeposit);
+    expect(onboardingConfirmationDialogStub).to.be.calledOnceWith(exampleAddress, 'Apollo', exampleApolloDeposit);
+    expect(smartContractsModelStub.performOnboarding).to.be.calledOnceWith(exampleAddress, 'Apollo', exampleApolloDeposit, exampleUrl);
   });
 });

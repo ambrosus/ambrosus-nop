@@ -1,5 +1,5 @@
 /*
-Copyright: Ambrosus Technologies GmbH
+Copyright: Ambrosus Inc.
 Email: tech@ambrosus.com
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -37,6 +37,9 @@ const messages = {
   nodeIPInputInstruction: 'Please provide the IP address, which you will be using for your node:',
   nodeIPInputError:  (wrongValue) => `${wrongValue} is not a valid IP address`,
   nodeIPInfo: (ip) => `Node IP defined as ${ip}`,
+  apolloDepositInputInstruction: (minimalDeposit) => `Please provide the deposit (in AMB). Minimal deposit is: ${minimalDeposit}`,
+  depositNumberError: (wrongValue) => `${wrongValue} is not a number`,
+  depositTooSmallError: (minimalDeposit, wrongValue) => `${wrongValue} must be not smaller than ${minimalDeposit}`,
   userEmailInputInstruction: 'Please provide your email address:',
   userEmailInputError: (wrongValue) => `${wrongValue} is not a valid email address`,
   userEmailInfo: (email) => `Your email address is ${email}`,
@@ -48,7 +51,7 @@ const messages = {
   unitAmb: 'AMB',
   notEnoughBalance: (amount) => `Not enough balance 💸  You need at least ${amount} in order to perform onboarding 💸`,
   onboardingInfo: (address, nodeType, warning) => `You will now onboard ${address} as the ${nodeType} node.\n${warning}`,
-  onboardingWarning: (amount) => `⚠️ WARNING!⚠️  This operations will cost ${amount}!`,
+  onboardingWarning: (amount) => `⚠️ WARNING! ⚠️ This operations will cost ${amount}!`,
   continueConfirmation: 'Do you want to continue?',
   onboardingSuccessful: '🎉 You are now successfully onboarded !!! 🎉',
   alreadyOnboarded: (role) => `✅ Onboarded as ${role}`,
@@ -56,13 +59,32 @@ const messages = {
   healthCheckUrl: (url) => `After starting your node, you can check its health by going to: ${url}`,
   dockerComposeInfo: (outputDir, command) => `Your node configuration is ready.\nIn order to start it, enter the ${outputDir} directory from the command line and run ${command}`,
   dockerComposeCommand: 'docker-compose up -d',
+  dockerDownCommand: 'docker-compose down',
   yes: 'Yes',
   no: 'No',
   insufficientFunds: 'You have insufficient funds to perform transaction 💸\n Top up with small amount and retry',
   genericError: (message) => `An error occurred: ${message}`,
   selectActionQuestion: 'You can now perform one of the following actions',
+  changeUrlConfirmation: (oldUrl, newUrl) => `You will now change your node URL from ${oldUrl} to ${newUrl}. Do you wish to continue?`,
+  nectarWarning: '⚠️ WARNING! ⚠️ This operation will cost you some nectar (usually less than 0.05 AMB).',
+  changeUrlSuccessful: (newUrl) => `Success! Node URL changed to ${newUrl}`,
+  availablePayouts: (availableAmount) => `You can withdraw ${availableAmount} AMB`,
+  confirmWithdraw: 'Would you like to withdraw now?',
+  withdrawalSuccessful: (withdrawnAmount) => `Great! 💰 ${withdrawnAmount} AMB (minus small nectar fee) has been transferred to your account.`,
+  confirmRetirement: `After retirement this node will stop being part of the network.
+  You will still be able to onboard it again.
+  Do you want to continue?`,
+  retirementSuccessful: (dockerDownCommand, outputDir) => `
+  Your node has retired. 
+  Don't forget to turn off the node. You can do it by running ${dockerDownCommand} inside the ${outputDir} directory.
+  See you later!`,
+  warningMessage: '⚠️ WARNING! ⚠️',
+  dockerRestartRequired: 'Changes in network have been detected. Please restart the docker containers with',
   actions: {
-    quit: 'Quit'
+    payouts: 'Payouts',
+    changeUrl: 'Change node URL',
+    retire: 'Retire',
+    quit: 'Finish NOP'
   }
 };
 

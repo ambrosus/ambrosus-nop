@@ -1,5 +1,5 @@
 /*
-Copyright: Ambrosus Technologies GmbH
+Copyright: Ambrosus Inc.
 Email: tech@ambrosus.com
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -7,15 +7,22 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-const selectActionPhase = (actions, selectActionDialog) => async () => {
-  const actionSelectionList = Object.keys(actions);
+import {roleToRoleCode} from '../utils/role_converters';
+
+const selectActionPhase = (actions, selectActionDialog, insufficientFundsDialog, genericErrorDialog) => async (nodeRole) => {
+  const actionSelectionList = Object.keys(actions)
+    .filter((key) => actions[key].nodeTypes.includes(roleToRoleCode(nodeRole)));
   let shouldQuit = false;
   while (!shouldQuit) {
     const {action: selectedAction} = await selectActionDialog(actionSelectionList);
     try {
-      shouldQuit = await actions[selectedAction]();
+      shouldQuit = await actions[selectedAction].performAction();
     } catch (err) {
-      console.log(`Error: ${err.message}`);
+      if (err.message.includes('Insufficient funds')) {
+        await insufficientFundsDialog();
+      } else {
+        await genericErrorDialog(err.message);
+      }
     }
   }
 };

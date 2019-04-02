@@ -1,5 +1,5 @@
 /*
-Copyright: Ambrosus Technologies GmbH
+Copyright: Ambrosus Inc.
 Email: tech@ambrosus.com
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -8,6 +8,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 */
 
 import chai from 'chai';
+import nock from 'nock';
 import chaiAsPromised from 'chai-as-promised';
 
 import SetupCreator from '../../src/services/setup_creator';
@@ -67,6 +68,7 @@ describe('Setup Creator', () => {
   });
 
   describe('prepareDockerComposeFile', () => {
+    const tagPlaceholder = '<ENTER_DOCKER_TAG_HERE>';
     const privateKeyPlaceholder = '<ENTER_YOUR_PRIVATE_KEY_HERE>';
     const headAddressPlaceholder = '<ENTER_YOUR_HEAD_CONTRACT_ADDRESS_HERE>';
     const networkNamePlaceholder = '<ENTER_NETWORK_NAME_HERE>';
@@ -74,6 +76,7 @@ describe('Setup Creator', () => {
     const examplePrivateKey = '0xbeefcafe';
     const exampleHeadAddress = '0xdeadface';
     const exampleNetworkName = 'amb-net';
+    const exampleTag = '7654321';
 
     const sampleForm = (arg1, arg2, arg3, arg4) => `${arg1} || ${arg2} || ${arg3} || ${arg4}`;
 
@@ -84,7 +87,7 @@ describe('Setup Creator', () => {
 
     beforeEach(async () => {
       await makeDirectory(`${testInputDir}${nodeTypeName}`);
-      await writeFile(templateFilePath, sampleForm(privateKeyPlaceholder, headAddressPlaceholder, networkNamePlaceholder));
+      await writeFile(templateFilePath, sampleForm(tagPlaceholder, privateKeyPlaceholder, headAddressPlaceholder, networkNamePlaceholder));
     });
 
     afterEach(async () => {
@@ -94,8 +97,8 @@ describe('Setup Creator', () => {
     });
 
     it('creates file correctly', async () => {
-      await setupCreator.prepareDockerComposeFile(nodeTypeName, examplePrivateKey, exampleHeadAddress, exampleNetworkName);
-      expect(await readFile(destinationFilePath)).to.deep.equal(sampleForm(examplePrivateKey, exampleHeadAddress, exampleNetworkName));
+      await setupCreator.prepareDockerComposeFile(exampleTag, nodeTypeName, examplePrivateKey, exampleHeadAddress, exampleNetworkName);
+      expect(await readFile(destinationFilePath)).to.deep.equal(sampleForm(exampleTag, examplePrivateKey, exampleHeadAddress, exampleNetworkName));
     });
   });
 
@@ -134,27 +137,39 @@ describe('Setup Creator', () => {
     });
   });
 
-  describe('copyChainJson', () => {
-    const networkName = 'dev';
-    const chainJsonContents = `{"name": "${networkName}"}`;
-    const srcChainJsonPath = `${testInputDir}chain_files/${networkName}.json`;
+  describe('fetchChainJson', () => {
+    const chainSpecUrl = 'https://chainspec.ambrosus-dev.com/';
+    const chainJsonContent = '{"name": "dev"}';
     const destChainJsonPath = `${testOutputDir}chain.json`;
 
-    beforeEach(async () => {
-      await makeDirectory(`${testInputDir}chain_files`);
-      await writeFile(srcChainJsonPath, chainJsonContents);
+    beforeEach(() => {
+      if (!nock.isActive()) {
+        nock.activate();
+      }
     });
 
     afterEach(async () => {
+      nock.cleanAll();
+      nock.restore();
       await removeFile(destChainJsonPath);
-      await removeFile(srcChainJsonPath);
-      await removeDirectory(`${testInputDir}chain_files`);
     });
 
-    it('copies files correctly', async () => {
-      const result = await setupCreator.copyChainJson(networkName);
-      expect(await readFile(destChainJsonPath)).to.equal(chainJsonContents);
-      expect(result).to.equal(networkName);
+    it('downloads the chainspec from given url', async () => {
+      nock(chainSpecUrl)
+        .get('/')
+        .reply(200, chainJsonContent);
+
+      const result = await setupCreator.fetchChainJson(chainSpecUrl);
+      expect(await readFile(destChainJsonPath)).to.equal(chainJsonContent);
+      expect(result).to.equal('dev');
+    });
+
+    it('throws when the server responds with code different from 200', async () => {
+      nock(chainSpecUrl)
+        .get('/')
+        .reply(500);
+
+      await expect(setupCreator.fetchChainJson(chainSpecUrl)).to.be.rejected;
     });
   });
 });

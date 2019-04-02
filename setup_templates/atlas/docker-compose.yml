@@ -9,7 +9,7 @@ services:
       - ./data/configdb:/data/configdb
 
   parity:
-    image: parity/parity:v2.0.8
+    image: parity/parity:v2.2.9
     entrypoint: /home/parity/bin/parity
     command: --config /app/parity_config.toml
     working_dir: /app
@@ -21,9 +21,10 @@ services:
     volumes:
       - ./chain.json:/app/chain.json
       - ./parity_config.toml:/app/parity_config.toml
+      - ./chains:/app/chains
 
   worker: &atlas-props
-    image: ambrosus/ambrosus-node:latest
+    image: ambrosus/ambrosus-node:<ENTER_DOCKER_TAG_HERE>
     command: sh -c 'yarn migrate && yarn start:atlas'
     restart: unless-stopped
     depends_on:

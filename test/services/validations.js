@@ -1,5 +1,5 @@
 /*
-Copyright: Ambrosus Technologies GmbH
+Copyright: Ambrosus Inc.
 Email: tech@ambrosus.com
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -155,6 +155,36 @@ describe('Validations', () => {
     invalid.forEach((invalidExample) =>
       it(`rejects ${invalidExample}`, () => {
         expect(validations.isValidIP(invalidExample)).to.be.false;
+      })
+    );
+  });
+
+  describe('isValidNumber', () => {
+    const valid = [
+      '0',
+      '5',
+      '123123',
+      '3.14',
+      '1e10',
+      '-123'
+    ];
+
+    const invalid = [
+      '',
+      'test',
+      '1a',
+      'a1'
+    ];
+
+    valid.forEach((validExample) =>
+      it(`accepts ${validExample}`, () => {
+        expect(validations.isValidNumber(validExample)).to.be.true;
+      })
+    );
+
+    invalid.forEach((invalidExample) =>
+      it(`rejects ${invalidExample}`, () => {
+        expect(validations.isValidNumber(invalidExample)).to.be.false;
       })
     );
   });

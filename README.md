@@ -44,6 +44,8 @@ Press select and chose your desired instance type. There is no configuration nee
  - Hermes & Atlas:
     - Port range: 80
         Protocol: **TCP**
+    - Port range: 443
+        Protocol: **TCP**
     - Port range: 30303
         Protocol: **TCP**
     - Port range: 30303
@@ -73,6 +75,8 @@ Now lets setup a firewall for the instance to make sure the instance is accessib
 Add rules for the following ports according to the node you are running:
  - Hermes & Atlas:
     - Port range: 80
+        Protocol: **TCP**
+    - Port range: 443
         Protocol: **TCP**
     - Port range: 30303
         Protocol: **TCP**

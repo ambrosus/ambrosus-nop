@@ -1,5 +1,5 @@
 /*
-Copyright: Ambrosus Technologies GmbH
+Copyright: Ambrosus Inc.
 Email: tech@ambrosus.com
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -111,10 +111,11 @@ export default class StateModel {
 
     const privateKey = await this.getPrivateKey();
 
-    const {name: networkAlias, headContractAddress} = await this.getNetwork();
-    const networkName = await this.setupCreator.copyChainJson(networkAlias);
+    const {headContractAddress, chainspec, dockerTag} = await this.getNetwork();
 
-    await this.setupCreator.prepareDockerComposeFile(nodeTypeName, privateKey, headContractAddress, networkName);
+    const networkName = await this.setupCreator.fetchChainJson(chainspec);
+
+    await this.setupCreator.prepareDockerComposeFile(dockerTag, nodeTypeName, privateKey, headContractAddress, networkName);
 
     if (role === APOLLO) {
       const password = this.crypto.getRandomPassword();

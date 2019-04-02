@@ -1,5 +1,5 @@
 /*
-Copyright: Ambrosus Technologies GmbH
+Copyright: Ambrosus Inc.
 Email: tech@ambrosus.com
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -9,12 +9,12 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 
 import path from 'path';
 import {readFile, writeFile, getPath, makeDirectory} from '../utils/file';
+import fileDownload from '../utils/file_download';
 
 const passwordFileName = 'password.pwds';
 const keyFileName = 'keyfile';
 const dockerFileName = 'docker-compose.yml';
 const parityConfigFileName = 'parity_config.toml';
-const chainTemplateDirectory = 'chain_files';
 const chainDescriptionFileName = 'chain.json';
 
 export default class SetupCreator {
@@ -33,10 +33,11 @@ export default class SetupCreator {
     await writeFile(path.join(this.outputDirectory, keyFileName), JSON.stringify(encryptedWallet, null, 2));
   }
 
-  async prepareDockerComposeFile(nodeTypeName, privateKey, headContractAddress, networkName) {
+  async prepareDockerComposeFile(tag, nodeTypeName, privateKey, headContractAddress, networkName) {
     await this.ensureOutputDirectoryExists();
     let dockerFile = await readFile(path.join(this.templateDirectory, nodeTypeName, dockerFileName));
 
+    dockerFile = dockerFile.replace(/<ENTER_DOCKER_TAG_HERE>/gi, tag);
     dockerFile = dockerFile.replace(/<ENTER_YOUR_PRIVATE_KEY_HERE>/gi, privateKey);
     dockerFile = dockerFile.replace(/<ENTER_YOUR_HEAD_CONTRACT_ADDRESS_HERE>/gi, headContractAddress);
     dockerFile = dockerFile.replace(/<ENTER_NETWORK_NAME_HERE>/gi, networkName);
@@ -59,11 +60,11 @@ export default class SetupCreator {
     await writeFile(path.join(this.outputDirectory, parityConfigFileName), parityConfigFile);
   }
 
-  async copyChainJson(networkName) {
+  async fetchChainJson(chainSpecUrl) {
     await this.ensureOutputDirectoryExists();
-    const chainFile = await readFile(path.join(this.templateDirectory, chainTemplateDirectory, `${networkName}.json`));
-    const parsedChainJson = JSON.parse(chainFile);
-    await writeFile(path.join(this.outputDirectory, chainDescriptionFileName), chainFile);
+    const outputFilePath = path.join(this.outputDirectory, chainDescriptionFileName);
+    await fileDownload(chainSpecUrl, outputFilePath);
+    const parsedChainJson = JSON.parse(await readFile(outputFilePath));
     return parsedChainJson.name;
   }
 

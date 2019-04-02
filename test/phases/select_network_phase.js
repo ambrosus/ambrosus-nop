@@ -1,5 +1,5 @@
 /*
-Copyright: Ambrosus Technologies GmbH
+Copyright: Ambrosus Inc.
 Email: tech@ambrosus.com
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -22,15 +22,20 @@ describe('Select Network Phase', () => {
   let stateModelStub;
   let askForNetworkDialogStub;
   let networkSelectedDialogStub;
+  let dockerRestartReuiredDialogStub;
 
   const exampleAvailableNetworks = {
     test: {
       rpc: 'test',
-      headContractAddress: '0x0'
+      chainspec: 'https://chainspec.ambrosus-test.com',
+      headContractAddress: '0x0',
+      dockerTag: '1'
     },
     dev: {
       rpc: 'dev',
-      headContractAddress: '0x1'
+      chainspec: 'https://chainspec.ambrosus-dev.com',
+      headContractAddress: '0x1',
+      dockerTag: '2'
     }
   };
   const exampleStoredNetwork = {
@@ -38,7 +43,7 @@ describe('Select Network Phase', () => {
     name: 'test'
   };
 
-  const call = async (networks) => selectNetworkPhase(networks, stateModelStub, askForNetworkDialogStub, networkSelectedDialogStub)();
+  const call = async (networks) => selectNetworkPhase(networks, stateModelStub, askForNetworkDialogStub, networkSelectedDialogStub, dockerRestartReuiredDialogStub)();
 
   beforeEach(async () => {
     stateModelStub = {
@@ -49,6 +54,7 @@ describe('Select Network Phase', () => {
       network: exampleStoredNetwork.name
     });
     networkSelectedDialogStub = sinon.stub();
+    dockerRestartReuiredDialogStub = sinon.stub();
   });
 
   it('stores selected network', async () => {
@@ -58,17 +64,70 @@ describe('Select Network Phase', () => {
     expect(askForNetworkDialogStub).to.have.been.calledOnceWith(['test', 'dev']);
     expect(stateModelStub.storeNetwork).to.have.been.calledOnceWith(exampleStoredNetwork);
     expect(networkSelectedDialogStub).to.have.been.calledOnceWith(exampleStoredNetwork.name);
+    expect(dockerRestartReuiredDialogStub).to.be.not.called;
     expect(phaseResult).to.deep.equal(exampleStoredNetwork);
   });
 
-  it('skips selection dialog if network is already in the store', async () => {
+  it('skips selection dialog if correct network is already in the store', async () => {
     stateModelStub.getNetwork.resolves(exampleStoredNetwork);
 
     const phaseResult = await call(exampleAvailableNetworks);
 
     expect(stateModelStub.getNetwork).to.have.been.calledOnce;
     expect(askForNetworkDialogStub).to.not.have.been.called;
+    expect(stateModelStub.storeNetwork).to.not.have.been.called;
     expect(networkSelectedDialogStub).to.have.been.calledOnceWith(exampleStoredNetwork.name);
+    expect(dockerRestartReuiredDialogStub).to.be.not.called;
+    expect(phaseResult).to.deep.equal(exampleStoredNetwork);
+  });
+
+  for (const field of ['rpc', 'chainspec', 'headContractAddress', 'dockerTag']) {
+    // eslint-disable-next-line no-loop-func
+    it(`stores network without showing selection dialog when network without ${field} was stored`, async () => {
+      stateModelStub.getNetwork.resolves({...exampleStoredNetwork, [field]: null});
+      const phaseResult = await call(exampleAvailableNetworks);
+      expect(askForNetworkDialogStub).to.be.not.called;
+      expect(stateModelStub.storeNetwork).to.have.been.calledOnceWith(exampleStoredNetwork);
+      expect(dockerRestartReuiredDialogStub).to.be.calledOnce;
+      expect(phaseResult).to.deep.equal(exampleStoredNetwork);
+    });
+  }
+
+  for (const field of ['rpc', 'chainspec', 'headContractAddress', 'dockerTag']) {
+    // eslint-disable-next-line no-loop-func
+    it(`stores network without showing selection dialog when ${field} has changed in config before`, async () => {
+      stateModelStub.getNetwork.resolves({...exampleStoredNetwork, [field]: 12});
+      const phaseResult = await call(exampleAvailableNetworks);
+      expect(askForNetworkDialogStub).to.be.not.called;
+      expect(dockerRestartReuiredDialogStub).to.be.calledOnce;
+      expect(stateModelStub.storeNetwork).to.have.been.calledOnceWith(exampleStoredNetwork);
+      expect(phaseResult).to.deep.equal(exampleStoredNetwork);
+    });
+  }
+
+  it('shows selection dialog when network with same name as currently stored one is not available anymore', async () => {
+    stateModelStub.getNetwork.resolves({...exampleStoredNetwork, name: 'bar'});
+
+    const phaseResult = await call(exampleAvailableNetworks);
+
+    expect(stateModelStub.getNetwork).to.have.been.calledOnce;
+    expect(askForNetworkDialogStub).to.have.been.calledOnceWith(['test', 'dev']);
+    expect(stateModelStub.storeNetwork).to.have.been.calledOnceWith(exampleStoredNetwork);
+    expect(networkSelectedDialogStub).to.have.been.calledOnceWith(exampleStoredNetwork.name);
+    expect(dockerRestartReuiredDialogStub).to.be.calledOnce;
+    expect(phaseResult).to.deep.equal(exampleStoredNetwork);
+  });
+
+  it('shows selection dialog when network with missing name was stored', async () => {
+    stateModelStub.getNetwork.resolves({...exampleStoredNetwork, name: undefined});
+
+    const phaseResult = await call(exampleAvailableNetworks);
+
+    expect(stateModelStub.getNetwork).to.have.been.calledOnce;
+    expect(askForNetworkDialogStub).to.have.been.calledOnceWith(['test', 'dev']);
+    expect(stateModelStub.storeNetwork).to.have.been.calledOnceWith(exampleStoredNetwork);
+    expect(networkSelectedDialogStub).to.have.been.calledOnceWith(exampleStoredNetwork.name);
+    expect(dockerRestartReuiredDialogStub).to.be.calledOnce;
     expect(phaseResult).to.deep.equal(exampleStoredNetwork);
   });
 
@@ -78,6 +137,7 @@ describe('Select Network Phase', () => {
     expect(stateModelStub.getNetwork).to.have.been.calledOnce;
     expect(askForNetworkDialogStub).to.not.have.been.called;
     expect(stateModelStub.storeNetwork).to.have.been.calledOnceWith(exampleStoredNetwork);
+    expect(dockerRestartReuiredDialogStub).to.be.not.called;
     expect(networkSelectedDialogStub).to.have.been.calledOnceWith(exampleStoredNetwork.name);
     expect(phaseResult).to.deep.equal(exampleStoredNetwork);
   });

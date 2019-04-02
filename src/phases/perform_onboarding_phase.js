@@ -1,5 +1,5 @@
 /*
-Copyright: Ambrosus Technologies GmbH
+Copyright: Ambrosus Inc.
 Email: tech@ambrosus.com
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -7,37 +7,42 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
+import {APOLLO} from '../consts';
+
 const performOnboardingPhase = (
-  stateModel, smartContractsModel, notEnoughBalanceDialog, alreadyOnboardedDialog, onboardingConfirmationDialog, onboardingSuccessfulDialog, insufficientFundsDialog, genericErrorDialog) =>
+  stateModel, smartContractsModel, notEnoughBalanceDialog, alreadyOnboardedDialog, askForApolloDepositDialog, onboardingConfirmationDialog, onboardingSuccessfulDialog, insufficientFundsDialog, genericErrorDialog) =>
   async (whitelistingStatus) => {
     const userAddress = await stateModel.getAddress();
     const onboardedRole = await smartContractsModel.getOnboardedRole(userAddress);
     if (onboardedRole) {
-      alreadyOnboardedDialog(onboardedRole);
+      await alreadyOnboardedDialog(onboardedRole);
       return true;
     }
-    if (!await smartContractsModel.hasEnoughBalance(userAddress, whitelistingStatus.requiredDeposit)) {
-      notEnoughBalanceDialog(whitelistingStatus.requiredDeposit);
+    const onboardDeposit = whitelistingStatus.roleAssigned === APOLLO ?
+      await askForApolloDepositDialog(whitelistingStatus.requiredDeposit) :
+      whitelistingStatus.requiredDeposit;
+    if (!await smartContractsModel.hasEnoughBalance(userAddress, onboardDeposit)) {
+      await notEnoughBalanceDialog(onboardDeposit);
       return false;
     }
-    const dialogResult = await onboardingConfirmationDialog(userAddress, whitelistingStatus.roleAssigned, whitelistingStatus.requiredDeposit);
+    const dialogResult = await onboardingConfirmationDialog(userAddress, whitelistingStatus.roleAssigned, onboardDeposit);
     if (!dialogResult.onboardingConfirmation) {
       return false;
     }
 
     try {
       await smartContractsModel.performOnboarding(userAddress, whitelistingStatus.roleAssigned,
-        whitelistingStatus.requiredDeposit, await stateModel.getNodeUrl());
+        onboardDeposit, await stateModel.getNodeUrl());
     } catch (error) {
       if (error.message.includes('Insufficient funds')) {
-        insufficientFundsDialog();
+        await insufficientFundsDialog();
       } else {
-        genericErrorDialog(error.message);
+        await genericErrorDialog(error.message);
       }
       return false;
     }
 
-    onboardingSuccessfulDialog();
+    await onboardingSuccessfulDialog();
     return true;
   };
 
