@@ -10,5 +10,11 @@
     "chainspec": "https://chainspec.ambrosus-dev.com",
     "headContractAddress": "0x0000000000000000000000000000000000000F10",
     "dockerTag": "057061c"
+  },
+  "main": {
+    "rpc": "https://network.ambrosus.com",
+    "chainspec": "https://chainspec.ambrosus.com",
+    "headContractAddress": "0x0000000000000000000000000000000000000F10",
+    "dockerTag": "057061c"
   }
 }
