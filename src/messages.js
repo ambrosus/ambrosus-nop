@@ -43,7 +43,9 @@ const messages = {
   userEmailInputInstruction: 'Please provide your email address:',
   userEmailInputError: (wrongValue) => `${wrongValue} is not a valid email address`,
   userEmailInfo: (email) => `Your email address is ${email}`,
-  submissionInfo: (submissionMail, teamMember) => `To finish requesting process, copy following form and mail it to ${submissionMail} or send to ${teamMember} via Slack`,
+  submissionInfo: (submissionMail, teamMember, tosFilePath) => `To finish requesting process, copy following form and mail it to ${submissionMail} or send to ${teamMember} via Slack.
+  Additionally attach your signed Terms of Service file (${tosFilePath})`,
+  tosFilePath: 'output/TOS.txt',
   submissionMail: 'tech@ambrosus.com',
   teamMember: 'VladT',
   addressNotWhitelisted: 'Address is not whitelisted yet',
@@ -80,6 +82,9 @@ const messages = {
   See you later!`,
   warningMessage: '⚠️ WARNING! ⚠️',
   dockerRestartRequired: 'Changes in network have been detected. Please restart the docker containers with',
+  acceptTos: 'In order to get whitelisted you must accept the Terms of Service',
+  tosConfirmationInputInstruction: 'Please write the following sentence: "I, <FIRST_NAME> <LAST_NAME>, have read and accept the legal agreement."',
+  tosConfirmationInputError: (wrongValue) => `${wrongValue} is not a valid confirmation`,
   actions: {
     payouts: 'Payouts',
     changeUrl: 'Change node URL',

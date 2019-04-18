@@ -80,6 +80,8 @@ import execCmd from './utils/execCmd';
 import messages from './messages';
 import networks from '../config/networks';
 import Web3 from 'web3';
+import acceptTosPhase from './phases/accept_tos_phase';
+import acceptTosDialog from './dialogs/accept_tos_dialog';
 
 class Builder {
   static buildStage1(config) {
@@ -133,6 +135,7 @@ class Builder {
     objects.confirmRetirementDialog = confirmRetirementDialog(messages);
     objects.retirementSuccessfulDialog = retirementSuccessfulDialog(messages, config.outputDirectory);
     objects.askForApolloDepositDialog = askForApolloDepositDialog(objects.validations, messages);
+    objects.acceptTosDialog = acceptTosDialog(objects.validations, messages);
 
     objects.selectNetworkPhase = selectNetworkPhase(networks, objects.stateModel, objects.askForNetworkDialog, objects.networkSelectedDialog, objects.dockerRestartRequiredDialog);
     objects.checkDockerAvailablePhase = checkDockerAvailablePhase(objects.systemModel, objects.dockerDetectedDialog, objects.dockerMissingDialog);
@@ -174,6 +177,7 @@ class Builder {
       objects.notEnoughBalanceDialog, objects.alreadyOnboardedDialog, objects.askForApolloDepositDialog, objects.onboardingConfirmationDialog,
       objects.onboardingSuccessfulDialog, objects.insufficientFundsDialog, objects.genericErrorDialog);
     objects.prepareDockerPhase = prepareDockerPhase(objects.stateModel, objects.healthCheckUrlDialog, objects.dockerComposeCommandDialog);
+    objects.acceptTosPhase = acceptTosPhase(objects.stateModel, objects.smartContractsModel, objects.acceptTosDialog);
 
     objects.actions = {
       [messages.actions.changeUrl]: prepareAction(changeUrlAction(

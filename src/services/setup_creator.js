@@ -16,6 +16,8 @@ const keyFileName = 'keyfile';
 const dockerFileName = 'docker-compose.yml';
 const parityConfigFileName = 'parity_config.toml';
 const chainDescriptionFileName = 'chain.json';
+const tosFileName = 'TOS.txt';
+const tosTextFileName = 'tos.md';
 
 export default class SetupCreator {
   constructor(templateDirectory, outputDirectory) {
@@ -31,6 +33,14 @@ export default class SetupCreator {
   async createKeyFile(encryptedWallet) {
     await this.ensureOutputDirectoryExists();
     await writeFile(path.join(this.outputDirectory, keyFileName), JSON.stringify(encryptedWallet, null, 2));
+  }
+
+  async readTosText() {
+    return readFile(tosTextFileName);
+  }
+
+  async createTosFile(termsOfServiceText) {
+    await writeFile(path.join(this.outputDirectory, tosFileName), termsOfServiceText);
   }
 
   async prepareDockerComposeFile(tag, nodeTypeName, privateKey, headContractAddress, networkName) {

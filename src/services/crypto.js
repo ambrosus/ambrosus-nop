@@ -33,4 +33,8 @@ export default class Crypto {
   getRandomPassword() {
     return this.web3.utils.randomHex(32);
   }
+
+  sign(data, privateKey) {
+    return this.web3.eth.accounts.sign(data, privateKey);
+  }
 }

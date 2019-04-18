@@ -78,6 +78,14 @@ export default class StateModel {
     await this.store.write('email', email);
   }
 
+  async getSignedTos() {
+    return  this.store.safeRead('signedTermsOfService');
+  }
+
+  async storeSignedTos(signedTos) {
+    await this.store.write('signedTermsOfService', signedTos);
+  }
+
   async assembleSubmission() {
     const privateKey = await this.getPrivateKey();
     const submissionForm = {
@@ -93,6 +101,14 @@ export default class StateModel {
       submissionForm.ip = await this.getNodeIP();
     }
     return submissionForm;
+  }
+
+  async readTosText() {
+    return this.setupCreator.readTosText();
+  }
+
+  async createTosFile(termsOfServiceText) {
+    await this.setupCreator.createTosFile(termsOfServiceText);
   }
 
   async prepareSetupFiles() {
