@@ -44,6 +44,15 @@ export default class SmartContractsModel {
     return roleCodeToRole(roleCode, deposit);
   }
 
+  hashData(data) {
+    return this.crypto.hashData(data);
+  }
+
+  signMessage(data, privateKey) {
+    const {signature} = this.crypto.sign(data, privateKey);
+    return signature;
+  }
+
   async performOnboarding(address, role, deposit, url) {
     switch (role) {
       case HERMES:
