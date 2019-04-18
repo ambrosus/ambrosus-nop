@@ -18,8 +18,8 @@ const acceptTosPhase = (stateModel, smartContractsModel, acceptTosDialog) => asy
   const tosTextHash = smartContractsModel.hashData(tosText);
   await stateModel.storeTosHash(tosTextHash);
   const privateKey = await stateModel.getPrivateKey();
-  const signedTos = smartContractsModel.signMessage(acceptedTosText, privateKey);
-  await stateModel.storeSignedTos(signedTos);
+  const tosSignature = smartContractsModel.signMessage(acceptedTosText, privateKey);
+  await stateModel.storeSignedTos(tosSignature);
 };
 
 export default acceptTosPhase;

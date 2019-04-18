@@ -79,11 +79,11 @@ export default class StateModel {
   }
 
   async getSignedTos() {
-    return  this.store.safeRead('signedTermsOfService');
+    return  this.store.safeRead('termsOfServiceSignature');
   }
 
-  async storeSignedTos(signedTos) {
-    await this.store.write('signedTermsOfService', signedTos);
+  async storeSignedTos(tosSignature) {
+    await this.store.write('termsOfServiceSignature', tosSignature);
   }
 
   async storeTosHash(tosHash) {
