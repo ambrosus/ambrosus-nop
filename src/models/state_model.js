@@ -85,6 +85,22 @@ export default class StateModel {
   async storeApolloMinimalDeposit(deposit) {
     await this.store.write('apolloMinimalDeposit', deposit);
   }
+  
+  async getSignedTos() {
+    return  this.store.safeRead('termsOfServiceSignature');
+  }
+
+  async storeSignedTos(tosSignature) {
+    await this.store.write('termsOfServiceSignature', tosSignature);
+  }
+
+  async storeTosHash(tosHash) {
+    await this.store.write('termsOfServiceHash', tosHash);
+  }
+
+  async getTosHash() {
+    return this.store.safeRead('termsOfServiceHash');
+  }
 
   async assembleSubmission() {
     const privateKey = await this.getPrivateKey();
@@ -92,7 +108,9 @@ export default class StateModel {
       network: (await this.getNetwork()).name,
       address: await this.crypto.addressForPrivateKey(privateKey),
       role: await this.getRole(),
-      email: await this.getUserEmail()
+      email: await this.getUserEmail(),
+      termsOfServiceHash: await this.getTosHash(),
+      termsOfServiceSignature: await this.getSignedTos()
     };
     if (await this.getNodeUrl()) {
       submissionForm.url = await this.getNodeUrl();
@@ -104,6 +122,14 @@ export default class StateModel {
       submissionForm.depositInAMB = await this.getApolloMinimalDeposit();
     }
     return submissionForm;
+  }
+
+  async readTosText() {
+    return this.setupCreator.readTosText();
+  }
+
+  async createTosFile(termsOfServiceText) {
+    await this.setupCreator.createTosFile(termsOfServiceText);
   }
 
   async prepareSetupFiles() {
