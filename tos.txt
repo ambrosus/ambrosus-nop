@@ -17,9 +17,9 @@ Terms to "you" or "user" are to such entity and these Terms are entered into bet
 and that entity.
 
 We reserve the right to modify these Terms at any time without notice. It is your
-responsibility to review these terms prior to operating of masternodeI as your use of the
-ABI constitutes your acceptance of the Terms as modified from time to time. All references
-to these "Terms" are to the latest version of them.
+responsibility to review these terms prior to operating of masternode. Usage of any software
+provided by Ambrosus Inc. constitutes your acceptance of the Terms as modified from time to time.
+All references to these "Terms" are to the latest version of them.
 
     1. Use of the Masternodes
 
