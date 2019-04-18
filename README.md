@@ -179,6 +179,8 @@ NOP performs two key steps: 1. whitelisting of your address, and 2. onboarding o
 
 ![Alt text](docs/nop-output.png?raw=true "NOP Output")
 
+Please also include the file ```output/TOS.txt``` (you can attach it to your email). It contains the terms of service plus your consent sentence. Ambrosus will verify contents of this file against signature included in node details.
+
 **This first step will generate a file called ```state.json```, which contains your private key (you can see the contents with this command ```less ~/ambrosus-nop/state.json```). Please save that private key somewhere safe (outside the virtual machine) and DO NOT send this file to anyone!**
 
 If you have been invited in one of the waves, we will rapidly whitelist your address (and send you test token if you're on test-net) and confirm you're ready to onboard.
