@@ -69,6 +69,7 @@ import retirementSuccessfulDialog from './dialogs/retirement_successful_dialog';
 import confirmRetirementDialog from './dialogs/confirm_retirement_dialog';
 import askForApolloDepositDialog from './dialogs/ask_for_apollo_deposit_dialog';
 import nectarWarningDialog from './dialogs/nectar_warning_dialog';
+import askForApolloMinimalDepositDialog from './dialogs/ask_for_apollo_minimal_deposit_dialog';
 
 import prepareAction from './menu_actions/prepare_action';
 import payoutAction from './menu_actions/payout_action';
@@ -135,6 +136,7 @@ class Builder {
     objects.confirmRetirementDialog = confirmRetirementDialog(messages);
     objects.retirementSuccessfulDialog = retirementSuccessfulDialog(messages, config.outputDirectory);
     objects.askForApolloDepositDialog = askForApolloDepositDialog(objects.validations, messages);
+    objects.askForApolloMinimalDepositDialog = askForApolloMinimalDepositDialog(objects.validations, messages);
     objects.acceptTosDialog = acceptTosDialog(objects.validations, messages);
 
     objects.selectNetworkPhase = selectNetworkPhase(networks, objects.stateModel, objects.askForNetworkDialog, objects.networkSelectedDialog, objects.dockerRestartRequiredDialog);
@@ -167,7 +169,7 @@ class Builder {
     objects.stateModel = new StateModel(objects.store, objects.crypto, objects.setupCreator);
     objects.smartContractsModel = new SmartContractsModel(objects.crypto, objects.kycWhitelistWrapper, objects.rolesWrapper);
 
-    objects.selectNodeTypePhase = selectNodeTypePhase(objects.stateModel, objects.askForNodeTypeDialog, objects.roleSelectedDialog);
+    objects.selectNodeTypePhase = selectNodeTypePhase(objects.stateModel, objects.askForNodeTypeDialog, objects.askForApolloMinimalDepositDialog, objects.roleSelectedDialog);
     objects.getNodeUrlPhase = getNodeUrlPhase(objects.stateModel, objects.nodeUrlDetectedDialog, objects.askForNodeUrlDialog);
     objects.getNodeIPPhase = getNodeIPPhase(objects.stateModel, objects.nodeIPDetectedDialog, objects.askForNodeIPDialog);
     objects.getUserEmailPhase = getUserEmailPhase(objects.stateModel, objects.userEmailDetectedDialog, objects.askForUserEmailDialog);

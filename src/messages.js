@@ -38,6 +38,7 @@ const messages = {
   nodeIPInputError:  (wrongValue) => `${wrongValue} is not a valid IP address`,
   nodeIPInfo: (ip) => `Node IP defined as ${ip}`,
   apolloDepositInputInstruction: (minimalDeposit) => `Please provide the deposit (in AMB). Minimal deposit is: ${minimalDeposit}`,
+  apolloMinimalDepositInputInstruction: 'Please provide the amount (in AMB) that you would like to deposit.',
   depositNumberError: (wrongValue) => `${wrongValue} is not a number`,
   depositTooSmallError: (minimalDeposit, wrongValue) => `${wrongValue} must be not smaller than ${minimalDeposit}`,
   userEmailInputInstruction: 'Please provide your email address:',

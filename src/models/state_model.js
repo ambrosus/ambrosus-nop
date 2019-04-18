@@ -78,6 +78,14 @@ export default class StateModel {
     await this.store.write('email', email);
   }
 
+  async getApolloMinimalDeposit() {
+    return this.store.safeRead('apolloMinimalDeposit');
+  }
+
+  async storeApolloMinimalDeposit(deposit) {
+    await this.store.write('apolloMinimalDeposit', deposit);
+  }
+
   async getSignedTos() {
     return  this.store.safeRead('termsOfServiceSignature');
   }
@@ -109,6 +117,9 @@ export default class StateModel {
     }
     if (await this.getNodeIP()) {
       submissionForm.ip = await this.getNodeIP();
+    }
+    if (await this.getApolloMinimalDeposit()) {
+      submissionForm.depositInAMB = await this.getApolloMinimalDeposit();
     }
     return submissionForm;
   }
