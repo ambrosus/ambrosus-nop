@@ -15,6 +15,8 @@ const acceptTosPhase = (stateModel, smartContractsModel, acceptTosDialog) => asy
   const {acceptanceSentence} = await acceptTosDialog(tosText);
   const acceptedTosText = `${tosText}\n${acceptanceSentence}`;
   await stateModel.createTosFile(acceptedTosText);
+  const tosTextHash = smartContractsModel.hashData(tosText);
+  await stateModel.storeTosHash(tosTextHash);
   const privateKey = await stateModel.getPrivateKey();
   const signedTos = smartContractsModel.signMessage(acceptedTosText, privateKey);
   await stateModel.storeSignedTos(signedTos);

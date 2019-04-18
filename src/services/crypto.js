@@ -37,4 +37,8 @@ export default class Crypto {
   sign(data, privateKey) {
     return this.web3.eth.accounts.sign(data, privateKey);
   }
+
+  hashData(data) {
+    return this.web3.utils.sha3(data);
+  }
 }
