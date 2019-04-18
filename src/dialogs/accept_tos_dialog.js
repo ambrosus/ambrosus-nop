@@ -14,7 +14,10 @@ import inquirer from 'inquirer';
 
 marked.setOptions({
   // Define custom renderer
-  renderer: new TerminalRenderer()
+  renderer: new TerminalRenderer({
+    width: 90,
+    reflowText: true,
+  })
 });
 
 const acceptTosDialog = (validations, messages) => async (tosText) => {
