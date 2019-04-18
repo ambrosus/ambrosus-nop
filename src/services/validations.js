@@ -34,7 +34,7 @@ export default class Validations {
   }
 
   isValidTosConfirmation(confirmation) {
-    const tosConfirmationRegex = /^I, .+, have read and accept the legal agreement\.$/;
+    const tosConfirmationRegex = /^I, .+, read and agreed with the terms and conditions above\.$/;
     return tosConfirmationRegex.exec(confirmation) !== null;
   }
 }
