@@ -85,7 +85,7 @@ export default class StateModel {
   async storeApolloMinimalDeposit(deposit) {
     await this.store.write('apolloMinimalDeposit', deposit);
   }
-  
+
   async getSignedTos() {
     return  this.store.safeRead('termsOfServiceSignature');
   }

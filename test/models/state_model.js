@@ -226,8 +226,7 @@ describe('State Model', () => {
       role: exampleRole,
       url: exampleUrl,
       ip: exampleIP,
-      email: exampleEmail,
-      depositInAMB: exampleApolloDeposit
+      depositInAMB: exampleApolloDeposit,
       termsOfServiceHash: exampleTermsOfServiceHash,
       termsOfServiceSignature: exampleTermsOfServiceSignature,
       email: exampleEmail
