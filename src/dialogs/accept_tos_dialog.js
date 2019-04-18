@@ -8,21 +8,11 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 */
 
 import chalk from 'chalk';
-import marked from 'marked';
-import TerminalRenderer from 'marked-terminal'
 import inquirer from 'inquirer';
-
-marked.setOptions({
-  // Define custom renderer
-  renderer: new TerminalRenderer({
-    width: 90,
-    reflowText: true,
-  })
-});
 
 const acceptTosDialog = (validations, messages) => async (tosText) => {
   console.log(chalk.red(messages.acceptTos));
-  console.log(marked(tosText));
+  console.log(tosText);
   return inquirer.prompt(
     [
       {

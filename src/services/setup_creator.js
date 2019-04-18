@@ -17,7 +17,7 @@ const dockerFileName = 'docker-compose.yml';
 const parityConfigFileName = 'parity_config.toml';
 const chainDescriptionFileName = 'chain.json';
 const tosFileName = 'TOS.txt';
-const tosTextFileName = 'tos.md';
+const tosTextFileName = 'tos.txt';
 
 export default class SetupCreator {
   constructor(templateDirectory, outputDirectory) {
