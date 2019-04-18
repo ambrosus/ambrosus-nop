@@ -13,7 +13,7 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
 import selectNodeTypePhase from '../../src/phases/select_node_type_phase';
-import {ATLAS_1} from '../../src/consts';
+import {APOLLO, ATLAS_1} from '../../src/consts';
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
@@ -23,17 +23,20 @@ describe('Select Node Type Phase', () => {
   let stateModelStub;
   let askForNodeTypeDialogStub;
   let roleSelectedDialogStub;
-
+  let askForApolloDepositDialogStub;
   const exampleRole = ATLAS_1;
+  const exampleDeposit = '123';
 
-  const call = async () => selectNodeTypePhase(stateModelStub, askForNodeTypeDialogStub, roleSelectedDialogStub)();
+  const call = async () => selectNodeTypePhase(stateModelStub, askForNodeTypeDialogStub, askForApolloDepositDialogStub, roleSelectedDialogStub)();
 
   beforeEach(async () => {
     stateModelStub = {
       storeRole: sinon.stub(),
-      getRole: sinon.stub()
+      getRole: sinon.stub(),
+      storeApolloMinimalDeposit: sinon.stub()
     };
     askForNodeTypeDialogStub = sinon.stub();
+    askForApolloDepositDialogStub = sinon.stub().resolves(exampleDeposit);
     roleSelectedDialogStub = sinon.stub();
   });
 
@@ -46,6 +49,17 @@ describe('Select Node Type Phase', () => {
     expect(askForNodeTypeDialogStub).to.not.have.been.called;
     expect(roleSelectedDialogStub).to.have.been.calledOnceWith(exampleRole);
     expect(ret).to.equal(exampleRole);
+  });
+
+  it('asks and saves deposit value when selected APOLLO', async () => {
+    stateModelStub.getRole.resolves(null);
+    askForNodeTypeDialogStub.resolves({
+      nodeType: APOLLO
+    });
+
+    await call();
+    expect(askForApolloDepositDialogStub).to.be.calledOnce;
+    expect(stateModelStub.storeApolloMinimalDeposit).to.be.calledOnceWith(exampleDeposit);
   });
 
   it('stores correctly selected role', async () => {

@@ -7,20 +7,25 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-const selectRole = async (stateModel, askForNodeTypeDialog) => {
+import {APOLLO} from '../consts';
+
+const selectRole = async (stateModel, askForNodeTypeDialog, askForApolloMinimalDepositDialog) => {
   const existingRole = await stateModel.getRole();
   if (existingRole !== null) {
     return existingRole;
   }
 
-  const answers = await askForNodeTypeDialog();
-  const {nodeType} = answers;
+  const {nodeType} = await askForNodeTypeDialog();
+  if (nodeType === APOLLO) {
+    const deposit = await askForApolloMinimalDepositDialog();
+    await stateModel.storeApolloMinimalDeposit(deposit);
+  }
   await stateModel.storeRole(nodeType);
   return nodeType;
 };
 
-const selectNodeTypePhase = (stateModel, askForNodeTypeDialog, roleSelectedDialog) => async () => {
-  const selectedRole = await selectRole(stateModel, askForNodeTypeDialog);
+const selectNodeTypePhase = (stateModel, askForNodeTypeDialog, askForApolloMinimalDepositDialog, roleSelectedDialog) => async () => {
+  const selectedRole = await selectRole(stateModel, askForNodeTypeDialog, askForApolloMinimalDepositDialog);
   await roleSelectedDialog(selectedRole);
   return selectedRole;
 };
