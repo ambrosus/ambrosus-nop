@@ -32,4 +32,9 @@ export default class Validations {
   isValidNumber(candidate) {
     return candidate.length > 0 && !isNaN(candidate);
   }
+
+  isValidTosConfirmation(confirmation) {
+    const tosConfirmationRegex = /^I, .+, read and agreed with the terms and conditions above\.$/;
+    return tosConfirmationRegex.exec(confirmation) !== null;
+  }
 }

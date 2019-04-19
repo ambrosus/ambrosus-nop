@@ -30,6 +30,8 @@ describe('State Model', () => {
   const exampleRole = APOLLO;
   const exampleUrl = 'https://amb-node.com';
   const exampleIP = '10.45.1.1';
+  const exampleTermsOfServiceSignature = '0x55286140307098aa9d43f05b3b390d2b535d456d83478272c60f6fa66ecb833316a812090589245fcfb9f7b1b0d2ad3b2a8c357a7e0f7bf113db597cdd7245861b';
+  const exampleTermsOfServiceHash = '0x8c0b3508387a7c5f93a0e89b5df17f131def6c499138d8ca76fc9c9e0ff7d9f7';
   const exampleEmail = 'amb_node_operator@mail.com';
   const exampleDockerTag = '7fa1ed2';
   const exampleNetwork = {
@@ -42,6 +44,7 @@ describe('State Model', () => {
   const exampleNetworkFullName = 'AMB-DEV';
   const examplePassword = 'randomBytes';
   const exampleEncryptedWallet = {foo: 'bar'};
+  const exampleApolloDeposit = '300000';
 
   beforeEach(async () => {
     storeStub = {
@@ -198,6 +201,24 @@ describe('State Model', () => {
     });
   });
 
+  describe('storeApolloMinimalDeposit', () => {
+    it('stores apollo minimal deposit', async () => {
+      await expect(stateModel.storeApolloMinimalDeposit(exampleApolloDeposit)).to.be.eventually.fulfilled;
+      expect(storeStub.write).to.have.been.calledOnceWith('apolloMinimalDeposit', exampleApolloDeposit);
+    });
+  });
+
+  describe('getApolloMinimalDeposit', () => {
+    beforeEach(async () => {
+      storeStub.safeRead.resolves(exampleApolloDeposit);
+    });
+
+    it('gets apollo minimal deposit', async () => {
+      expect(await stateModel.getApolloMinimalDeposit()).to.equal(exampleApolloDeposit);
+      expect(storeStub.safeRead).to.have.been.calledOnceWith('apolloMinimalDeposit');
+    });
+  });
+
   describe('assembleSubmission', () => {
     const assembledSubmission = {
       network: exampleNetwork.name,
@@ -205,6 +226,9 @@ describe('State Model', () => {
       role: exampleRole,
       url: exampleUrl,
       ip: exampleIP,
+      depositInAMB: exampleApolloDeposit,
+      termsOfServiceHash: exampleTermsOfServiceHash,
+      termsOfServiceSignature: exampleTermsOfServiceSignature,
       email: exampleEmail
     };
 
@@ -215,17 +239,23 @@ describe('State Model', () => {
       storeStub.safeRead.withArgs('ip').resolves(exampleIP);
       storeStub.safeRead.withArgs('email').resolves(exampleEmail);
       storeStub.safeRead.withArgs('network').resolves(exampleNetwork);
+      storeStub.safeRead.withArgs('apolloMinimalDeposit').resolves(exampleApolloDeposit);
+      storeStub.safeRead.withArgs('termsOfServiceHash').resolves(exampleTermsOfServiceHash);
+      storeStub.safeRead.withArgs('termsOfServiceSignature').resolves(exampleTermsOfServiceSignature);
     });
 
     it('assembles submission', async () => {
       expect(await stateModel.assembleSubmission()).to.deep.equal(assembledSubmission);
-      expect(storeStub.safeRead).to.have.callCount(8);
+      expect(storeStub.safeRead).to.have.callCount(12);
       expect(storeStub.safeRead).to.have.been.calledWith('privateKey');
       expect(storeStub.safeRead).to.have.been.calledWith('role');
       expect(storeStub.safeRead).to.have.been.calledWith('url');
       expect(storeStub.safeRead).to.have.been.calledWith('ip');
       expect(storeStub.safeRead).to.have.been.calledWith('email');
       expect(storeStub.safeRead).to.have.been.calledWith('network');
+      expect(storeStub.safeRead).to.have.been.calledWith('apolloMinimalDeposit');
+      expect(storeStub.safeRead).to.have.been.calledWith('termsOfServiceHash');
+      expect(storeStub.safeRead).to.have.been.calledWith('termsOfServiceSignature');
       expect(cryptoStub.addressForPrivateKey).to.have.been.calledOnceWith(examplePrivateKey);
     });
   });
