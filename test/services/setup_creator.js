@@ -50,6 +50,20 @@ describe('Setup Creator', () => {
     });
   });
 
+  describe('createTosFile', () => {
+    const exampleTosText = '0x1234deadface';
+    const tosFilePath = `${testOutputDir}TOS.txt`;
+
+    afterEach(async () => {
+      await removeFile(tosFilePath);
+    });
+
+    it('creates file correctly', async () => {
+      await setupCreator.createTosFile(exampleTosText);
+      expect(await readFile(tosFilePath)).to.equal(exampleTosText);
+    });
+  });
+
   describe('createKeyFile', () => {
     const exampleEncryptedWallet = {
       fo: 'o',
