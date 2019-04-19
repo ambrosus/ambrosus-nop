@@ -40,6 +40,7 @@ export default class SetupCreator {
   }
 
   async createTosFile(termsOfServiceText) {
+    await this.ensureOutputDirectoryExists();
     await writeFile(path.join(this.outputDirectory, tosFileName), termsOfServiceText);
   }
 
