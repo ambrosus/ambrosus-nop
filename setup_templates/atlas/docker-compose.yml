@@ -9,8 +9,7 @@ services:
       - ./data/configdb:/data/configdb
 
   parity:
-    image: parity/parity:v2.2.9
-    entrypoint: /home/parity/bin/parity
+    image: parity/parity:v2.3.3
     command: --config /app/parity_config.toml
     working_dir: /app
     user: root
