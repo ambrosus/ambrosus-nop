@@ -3,18 +3,18 @@
     "rpc": "https://network.ambrosus-test.com",
     "chainspec": "https://chainspec.ambrosus-test.com",
     "headContractAddress": "0x0000000000000000000000000000000000000F10",
-    "dockerTag": "057061c"
+    "dockerTag": "v1.0.1"
   },
   "dev": {
     "rpc": "https://network.ambrosus-dev.com",
     "chainspec": "https://chainspec.ambrosus-dev.com",
     "headContractAddress": "0x0000000000000000000000000000000000000F10",
-    "dockerTag": "057061c"
+    "dockerTag": "v1.0.1"
   },
   "main": {
     "rpc": "https://network.ambrosus.com",
     "chainspec": "https://chainspec.ambrosus.com",
     "headContractAddress": "0x0000000000000000000000000000000000000F10",
-    "dockerTag": "057061c"
+    "dockerTag": "v1.0.1"
   }
 }
