@@ -11,7 +11,7 @@ import Builder from './builder';
 import config from '../config/config';
 import {APOLLO} from './consts';
 
-const start = async () => {
+const start = async (isInteractive) => {
   const stage1Objects = Builder.buildStage1(config);
   const {checkDockerAvailablePhase, selectNetworkPhase, getPrivateKeyPhase, logoDialog} = stage1Objects;
 
@@ -43,15 +43,19 @@ const start = async () => {
   }
 
   const isOnboarded = await performOnboardingPhase(whitelistingStatus);
+  if (!isOnboarded) {
+    return;
+  }
 
-  if (isOnboarded) {
-    await prepareDockerPhase();
+  await prepareDockerPhase();
+  if (isInteractive) {
     await selectActionPhase(role);
   }
 };
 
+const isInteractive = process.argv[2] !== 'update';
 
-start()
+start(isInteractive)
   .catch((err) => {
     console.error(err);
     process.exit(1);
