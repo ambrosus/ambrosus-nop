@@ -2,7 +2,7 @@
 version: '2.4'
 services:
   parity:
-    image: parity/parity:v2.3.3
+    image: parity/parity:v2.4.6
     command: --config /app/parity_config.toml
     working_dir: /app
     user: root
