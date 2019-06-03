@@ -2,7 +2,7 @@
 version: '2.4'
 services:
   mongodb:
-    image: mongo:4.1
+    image: mongo:4.0.10
     restart: unless-stopped
     volumes:
       - ./data/db:/data/db
