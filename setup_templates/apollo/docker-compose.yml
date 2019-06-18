@@ -3,6 +3,7 @@ version: '2.4'
 services:
   parity:
     image: ambrosus/parity:v2.2.10
+    container_name: parity
     command: --config /app/parity_config.toml
     working_dir: /app
     user: root

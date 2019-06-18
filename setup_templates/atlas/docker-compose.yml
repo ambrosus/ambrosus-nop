@@ -3,6 +3,7 @@ version: '2.4'
 services:
   mongodb:
     image: mongo:4.0.10
+    container_name: mongod
     restart: unless-stopped
     volumes:
       - ./data/db:/data/db
@@ -10,6 +11,7 @@ services:
 
   parity:
     image: ambrosus/parity:v2.2.10
+    container_name: parity
     command: --config /app/parity_config.toml
     working_dir: /app
     user: root
@@ -24,6 +26,7 @@ services:
 
   worker: &atlas-props
     image: ambrosus/ambrosus-node:<ENTER_DOCKER_TAG_HERE>
+    container_name: atlas_worker
     command: sh -c 'yarn migrate && yarn start:atlas'
     restart: unless-stopped
     depends_on:
@@ -39,6 +42,7 @@ services:
       - NODE_ENV=production
 
   server:
+    container_name: atlas_server
     <<: *atlas-props
     command: sh -c 'yarn start:server'
     depends_on:
