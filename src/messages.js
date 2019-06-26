@@ -44,11 +44,11 @@ const messages = {
   userEmailInputInstruction: 'Please provide your email address:',
   userEmailInputError: (wrongValue) => `${wrongValue} is not a valid email address`,
   userEmailInfo: (email) => `Your email address is ${email}`,
-  submissionInfo: (submissionMail, teamMember, tosFilePath) => `To finish requesting process, copy following form and mail it to ${submissionMail} or send to ${teamMember} via Slack.
+  submissionInfo: (submissionMail, onboardChannel, tosFilePath) => `To finish requesting process, copy following form and mail it to ${submissionMail} or send to ${onboardChannel} in Slack.
   Additionally attach your signed Terms of Service file (${tosFilePath})`,
   tosFilePath: 'output/TOS.txt',
   submissionMail: 'tech@ambrosus.com',
-  teamMember: 'VladT',
+  onboardChannel: '#onboarding',
   addressNotWhitelisted: 'Address is not whitelisted yet',
   addressWhitelisted: (roleAssigned, requiredDeposit) => `✅ Address is whitelisted as ${roleAssigned}. Required deposit is: ${requiredDeposit}`,
   unitAmb: 'AMB',

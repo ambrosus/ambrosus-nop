@@ -128,136 +128,35 @@ You will need to run a few commands (see below) to install the various tools, pa
 
 Once you're logged in on your virtual machine, run the following commands (1 line per command):
 ```
-sudo apt-get update
-curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
-sudo apt-get install build-essential
-sudo apt-get install -y nodejs
-sudo apt install git
-sudo apt install apt-transport-https ca-certificates curl software-properties-common
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-npm install -g yarn
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
-sudo apt update
-sudo apt install docker-ce
-sudo curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
-```
-If you've made it until here, your environment should be ready to run NOP. You can now run ```sudo systemctl status docker``` to check if docker is running fine. Your should see something like this:
+wget https://nop.ambrosus.com/setup.sh
 
+chmod +x setup.sh
 ```
-root@ubuntu-s-1vcpu-1gb-ams3-01:~# systemctl status docker
-● docker.service - Docker Application Container Engine
-   Loaded: loaded (/lib/systemd/system/docker.service; enabled;
-   Active: active (running) since Mon 2018-10-08 11:30:21 UTC;
-     Docs: https://docs.docker.com
- Main PID: 9496 (dockerd)
-    Tasks: 18
-   CGroup: /system.slice/docker.service
-           ├─9496 /usr/bin/dockerd -H fd://
-           └─9517 docker-containerd --config /var/run/docker/co
-```
+1. 
+Run ./setup.sh 
 
-## Using the NOP
+Choose the necessary options:
+- network (main);
+- input already existing private key or create a new one;
+- add IP URL of your droplet (Atlas only)
+- enter your email
+Enter manually the required sentence with your name in it (don’t forget to add period in the end of the sentence).
+Choose “Finish NOP” on menu.
 
-Now your environment is ready, you can clone the NOP repo and build it using the following commands:
+Afterwards wait till you get whitelisted
 ```
-git clone https://github.com/ambrosus/ambrosus-nop.git
-cd ambrosus-nop
-yarn install
-yarn build
-```
-Now, you can run NOP using the following commands:
+2. 
+Once your node whitelisted
+
+
+Run ./setup2.sh
+
+Choose the necessary options on the menu;
+Choose “Finish NOP” on menu.
+
+You are successfully onboarded.
 
 ```
-cd ~/ambrosus-nop
-yarn start
-```
-
-*Note: the location can vary depending on where you cloned the repository.*
-
-NOP performs two key steps: 1. whitelisting of your address, and 2. onboarding of your node. The aim of the first step is to whitelist your node, which is done manually by the Ambrosus team, and for that you will have to send your node details to us (the text displayed in your terminal when your run NOP the first time), which looks like this:
-
-![Alt text](docs/nop-output.png?raw=true "NOP Output")
-
-Please also include the file ```output/TOS.txt``` (you can attach it to your email). It contains the terms of service plus your consent sentence. Ambrosus will verify contents of this file against signature included in node details.
-
-**This first step will generate a file called ```state.json```, which contains your private key (you can see the contents with this command ```less ~/ambrosus-nop/state.json```). Please save that private key somewhere safe (outside the virtual machine) and DO NOT send this file to anyone!**
-
-If you have been invited in one of the waves, we will rapidly whitelist your address (and send you test token if you're on test-net) and confirm you're ready to onboard.
-
-The aim of the second step is to onboard your node so you can actually run it. This can only be done once your address has been whitelisted and the address of your node has sufficient Amber Tokens required for the node type. For this, all you need to do is to run again NOP using ```yarn start```.
-
-When the onboarding is complete, the NOP will fill out variables in the docker-compose file specific to your onboarded node, and you'll be able to run it.
-
-If you want to reset the process you will have to type the following command.
-
-```
-cd ~/ambrosus-nop
-rm state.json
-```
-
-**Warning: this deletes state.json and the private key generated! Make sure you have stored your private key somewhere safe before**.
-
-##### Ambrosus prebuilt machine image
-If you're using a ready-made machine image, you can run NOP simply with ```ambrosus-nop```.
-
-If you want to restart the process run ```ambrosus-nop-reset``` .
-
-**Warning: this deletes state.json and the private key generated! Make sure you have stored your private key somewhere safe before**.
-
-## Running the Masternode
-
-Now that your machine has been successfully setup and NOP has completed, you're now finally able to start the masternode application.
-
-### Ambrosus pre-built machine image
-You can run the following command for starting your node:
--  ```start-node```
-
-And stopping the node with
-- ```stop-node```
-
-### Custom image
-Enter the directory where you cloned the repository, we will assume you followed this guide and it is in the home directory.
-``` cd ~/ambrosus-nop```.
-Run ```docker-compose up -d``` to start the node you onboarded.
-
-You can run ```docker-compose stop``` to stop the node.
-
-## Insight and statistics of the node
-To check statistics and get insights of the node you are running you will be able in the future to visit the Ambrosus dashboard.
-
-For further details of what is happening within the docker containers you can use ```docker ps``` to find container IDs and then write ```docker logs <container id>``` to see the logs.
-
-## Running tests and linting
-
-Install the dependencies
-```sh
-yarn install
-```
-
-Run the tests
-```sh
-yarn test
-```
-
-Run the linter:
-```sh
-yarn dev:lint
-```
-
-## Building an clean-up
-Building consists of transpiling the source code. It is performed by running:
-```sh
-yarn build
-```
-
-## Running in development mode
-
-Running in development mode (transpiled on the run with debugging enabled):
-```sh
-yarn dev:start
-```
-
 ## Contribution
 We will accept contributions of good code that we can use from anyone.
 Please see [CONTRIBUTION.md](CONTRIBUTION.md)
