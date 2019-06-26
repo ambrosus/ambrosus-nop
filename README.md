@@ -100,40 +100,13 @@ Now enter the password that you received by Email from digital ocean.
 ###### With SSH key
 ```ssh -i <The SSH key you specified> root@<The IP address>```
 
-##### Linux User Setup
-It would be recommeneded that you create an user account with sudo privileges instead of running from root. Enter the following commands in your terminal:
-```
-adduser <your desired username>
-```
-Fill in your details and then continue with:
-```
-usermod -aG sudo <your username>
-su - <your username>
-```
-Test if you can run sudo commands from the user you created
-```
-sudo ls -la /root
-````
-If you have the correct permission and a directory gets listed everything went fine. If it did not work you can check [this guide](https://www.digitalocean.com/community/tutorials/how-to-create-a-sudo-user-on-ubuntu-quickstart).
-
-If you have created an user it would be advised to add the user to a docker group to not have to use sudo. Enter the following commands in your terminal:
-```
-sudo groupadd docker
-sudo usermod -aG docker $USER
-```
-Restart your virtual machine to make sure the changes take effect. When you have restarted run ```docker run hello-world``` and it should work without sudo.
-##### Installing the required packages
-
-You will need to run a few commands (see below) to install the various tools, packages, and dependencies to execute NOP and we have put a [video online that show how it should look like](https://www.youtube.com/watch?v=VCVwLIoiti8).
-
 Once you're logged in on your virtual machine, run the following commands (1 line per command):
 ```
 wget https://nop.ambrosus.com/setup.sh
 
 chmod +x setup.sh
 ```
-1. 
-Run ./setup.sh 
+1. Run ./setup.sh 
 
 Choose the necessary options:
 - network (main);
@@ -145,9 +118,7 @@ Choose “Finish NOP” on menu.
 
 Afterwards wait till you get whitelisted
 ```
-2. 
-Once your node whitelisted
-
+2. Once your node whitelisted
 
 Run ./setup2.sh
 
