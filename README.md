@@ -11,11 +11,9 @@ The Ambrosus Node Onboarding Package (NOP) is a command-line tool which makes it
     - **[Prebuilt Machine Images](#prebuilt-machine-images)**
         - **[Amazon Web Services](#amazon-web-services)**
     - **[Custom Machine Image](#custom-machine-image)**
-  - **[Using the NOP](#using-the-nop)**
-  - **[Running the Masternode](#running-the-masternode)**
-  - **[Insight and Statistics of the node](#insight-and-statistics-of-the-node)**
+  - **[Setting up the NOP](#setting-up-the-nop)**
   - **[Troubleshooting](#troubleshooting)**
-  - **[Developing and contributing](#running-tests-and-linting)**
+  - **[Contribution](#contribution)**
 
 ## Overview
 
@@ -63,7 +61,7 @@ A sample below for hermes/atlas:
 Now you can proceed and launch the instance. A prompt should pop up asking you for a key pair. This is used to access the instance through ssh, either create a new on or use a existing one if you have used ssh previously. If you create a new PEM file, store it somewhere securely and do not lose it as it is needed to access the instance.
 You can access the instance by typing ```ssh -i <Location of your PEM file> ubuntu@<The public ip address of the instance>```
 
-Now a instance should be created and you can carry on to the **[Using the NOP](#using-the-nop)** section.
+Now a instance should be created and you can carry on to the **[Setting up the NOP](setting-up-the-nop)** section.
 
 ### Custom Machine Image
 You can launch an Ambrosus node from any cloud provider but you will have to install the prerequisites yourself. We will go through a clean installation on a DigitalOcean machine image.
@@ -91,6 +89,8 @@ Add rules for the following ports according to the node you are running:
 The source can have the default values. When you have added the ports apply them to your droplet and then create the firewall.
 
 Every cloud should have a similar setup.
+
+## Setting up the NOP
 
 ##### Accessing the Virtual Machine
 To access the instance type the following command:
