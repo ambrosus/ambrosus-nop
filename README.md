@@ -92,6 +92,10 @@ Every cloud should have a similar setup.
 
 ## Setting up the NOP
 
+##### Important notice
+
+To avoid issues with installation process, we strongly encourage you to use PC (not android or similar terminals) to install NOP.
+
 ##### Accessing the Virtual Machine
 To access the instance type the following command:
 ###### Without SSH key
@@ -114,7 +118,6 @@ Choose the necessary options:
 - add IP URL of your droplet (Atlas only)
 - enter your email
 Enter manually the required sentence with your name in it (don’t forget to add period in the end of the sentence).
-Choose “Finish NOP” on menu.
 
 Afterwards wait till you get whitelisted
 ```
