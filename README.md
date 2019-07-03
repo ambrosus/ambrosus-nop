@@ -135,7 +135,7 @@ Amount to transfer = X AMB (your desired stake amount)
 + 100 AMB (bridge fee) 
 + 5 AMB (for challenge before first 28 days period) 
 + 0.1 ETH (fee for ETH-Net >> AMB-Net transfer)
-
+```
 
 ```
 3. Once your node whitelisted
