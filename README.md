@@ -122,7 +122,6 @@ Choose the necessary options:
 Enter manually the required sentence with your name in it (don’t forget to add period in the end of the sentence).
 
 Afterwards wait till you get whitelisted
-```
 
 ```
 2. Please note that you need to complete AMB transfer for your stake before proceeding with step 3. 
