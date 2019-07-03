@@ -14,7 +14,7 @@ The Ambrosus Node Onboarding Package (NOP) is a command-line tool which makes it
   - **[Setting up the NOP](#setting-up-the-nop)**
   - **[Troubleshooting](#troubleshooting)**
   - **[Contribution](#contribution)**
-  - **[Alternative community guide](alternative-community-guide)**
+  - **[Alternative community guide](#alternative-community-guide)**
 
 ## Overview
 
