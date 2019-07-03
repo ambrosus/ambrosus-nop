@@ -59,7 +59,7 @@ const messages = {
   onboardingSuccessful: '🎉 You are now successfully onboarded !!! 🎉',
   alreadyOnboarded: (role) => `✅ Onboarded as ${role}`,
   networkSelected: (network) => `Network: ${network}`,
-  healthCheckUrl: `After starting your node, you can check its health by going to Explorer: https://explorer.ambrosus.com/`,
+  healthCheckUrl: (url) => `After starting your node, you can check its health by going to Explorer: https://explorer.ambrosus.com/`,
   dockerComposeInfo: (outputDir, command) => `Your node configuration is ready.\nIn order to start it, enter the ${outputDir} directory from the command line and run ${command}`,
   dockerComposeCommand: 'docker-compose up -d',
   dockerDownCommand: 'docker-compose down',
