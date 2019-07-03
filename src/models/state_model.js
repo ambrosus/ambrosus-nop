@@ -46,6 +46,10 @@ export default class StateModel {
     return null;
   }
 
+  async storeAddress(address) {
+    await this.store.write('address', address);
+  }
+
   async getRole() {
     return this.store.safeRead('role');
   }
