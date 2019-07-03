@@ -14,6 +14,7 @@ The Ambrosus Node Onboarding Package (NOP) is a command-line tool which makes it
   - **[Setting up the NOP](#setting-up-the-nop)**
   - **[Troubleshooting](#troubleshooting)**
   - **[Contribution](#contribution)**
+  - **[Alternative community guide](#alternative-community-guide)**
 
 ## Overview
 
@@ -117,11 +118,31 @@ Choose the necessary options:
 - input already existing private key or create a new one;
 - add IP URL of your droplet (Atlas only)
 - enter your email
+
 Enter manually the required sentence with your name in it (don’t forget to add period in the end of the sentence).
 
 Afterwards wait till you get whitelisted
+
 ```
-2. Once your node whitelisted
+2. NB! Please note that you need to complete AMB transfer for your stake to get whitelisted. 
+
+First you need to connect Metamask to AMB-Net. Instructions are here 
+https://medium.com/@vladtrifa/how-to-connect-to-amb-net-with-metamask-6964c71e217e.
+Your address in ETH network = your address in AMB network.
+Then you go to https://bridge.ambrosus.com (https://bridge.ambrosus.com/) 
+and click "Transfer AMBs between networks”.
+Afterwards click “Metamask”, tick acknowledge and complete transfer.
+
+Amount to transfer = X AMB (your desired stake amount) 
++ 100 AMB (bridge fee) 
++ 5 AMB (for challenge before first 28 days period) 
++ 0.1 ETH (fee for ETH-Net >> AMB-Net transfer)
+
+You will be notified once your node gets whitelisted and afterwards you may proceed to step 3.
+```
+
+```
+3. Once your node whitelisted
 
 Run ./setup2.sh
 
@@ -141,3 +162,7 @@ Before you issue pull request:
 
 ## Troubleshooting
 If you are having docker issues [DigitalOcean has a indepth guide for installing docker](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04).
+
+## Alternative community guide
+
+There also detailed alternative intructions made by our community: https://www.reddit.com/r/ambrosus/comments/c8lnrf/mainnet_onboarding_guide/
