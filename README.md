@@ -118,17 +118,21 @@ Choose the necessary options:
 - input already existing private key or create a new one;
 - add IP URL of your droplet (Atlas only)
 - enter your email
+
 Enter manually the required sentence with your name in it (don’t forget to add period in the end of the sentence).
 
 Afterwards wait till you get whitelisted
+```
 
 ```
 2. Please note that you need to complete AMB transfer for your stake before proceeding with step 3. 
 
 First you need to connect Metamask to AMB-Net. Instructions are here 
-https://medium.com/@vladtrifa/how-to-connect-to-amb-net-with-metamask-6964c71e217e (https://medium.com/@vladtrifa/how-to-connect-to-amb-net-with-metamask-6964c71e217e).
+https://medium.com/@vladtrifa/how-to-connect-to-amb-net-with-metamask-6964c71e217e 
+(https://medium.com/@vladtrifa/how-to-connect-to-amb-net-with-metamask-6964c71e217e).
 Your address in ETH network = your address in AMB network.
-Then you go to https://bridge.ambrosus.com (https://bridge.ambrosus.com/) and click "Transfer AMBs between networks”.
+Then you go to https://bridge.ambrosus.com (https://bridge.ambrosus.com/) 
+and click "Transfer AMBs between networks”.
 Afterwards click “Metamask”, tick acknowledge and complete transfer.
 
 Amount to transfer = X AMB (your desired stake amount) 
