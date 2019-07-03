@@ -19,10 +19,15 @@ const getPrivateKey = async (stateModel, askForPrivateKeyDialog) => {
     case 'manual': {
       const {privateKey} = answers;
       await stateModel.storePrivateKey(privateKey);
+      const address = await stateModel.getAddress();
+      await stateModel.storeAddress(address);
       return privateKey;
     }
     case 'generate': {
-      return await stateModel.generateAndStoreNewPrivateKey();
+      const privateKey = await stateModel.generateAndStoreNewPrivateKey();
+      const address = await stateModel.getAddress();
+      await stateModel.storeAddress(address);
+      return privateKey;
     }
     default:
       throw new Error('Unexpected source');

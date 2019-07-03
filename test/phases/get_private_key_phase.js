@@ -33,6 +33,8 @@ describe('Get Private Key Phase', () => {
       addressForPrivateKey: sinon.stub().resolves(exampleAddress)
     };
     stateModelStub = {
+      getAddress: sinon.stub(),
+      storeAddress: sinon.stub(),
       getPrivateKey: sinon.stub(),
       storePrivateKey: sinon.stub(),
       generateAndStoreNewPrivateKey: sinon.stub()
