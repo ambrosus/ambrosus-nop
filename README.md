@@ -62,7 +62,7 @@ A sample below for hermes/atlas:
 Now you can proceed and launch the instance. A prompt should pop up asking you for a key pair. This is used to access the instance through ssh, either create a new on or use a existing one if you have used ssh previously. If you create a new PEM file, store it somewhere securely and do not lose it as it is needed to access the instance.
 You can access the instance by typing ```ssh -i <Location of your PEM file> ubuntu@<The public ip address of the instance>```
 
-Now a instance should be created and you can carry on to the **[Setting up the NOP](setting-up-the-nop)** section.
+Now a instance should be created and you can carry on to the **[Setting up the NOP](#setting-up-the-nop)** section.
 
 ### Custom Machine Image
 You can launch an Ambrosus node from any cloud provider but you will have to install the prerequisites yourself. We will go through a clean installation on a DigitalOcean machine image.
@@ -127,9 +127,9 @@ Afterwards wait till you get whitelisted
 2. NB! Please note that you need to complete AMB transfer for your stake to get whitelisted. 
 
 First you need to connect Metamask to AMB-Net. Instructions are here 
-https://medium.com/@vladtrifa/how-to-connect-to-amb-net-with-metamask-6964c71e217e.
+[https://medium.com/@vladtrifa/how-to-connect-to-amb-net-with-metamask-6964c71e217e](https://medium.com/@vladtrifa/how-to-connect-to-amb-net-with-metamask-6964c71e217e).
 Your address in ETH network = your address in AMB network.
-Then you go to https://bridge.ambrosus.com (https://bridge.ambrosus.com/) 
+Then you go to [https://bridge.ambrosus.com](https://bridge.ambrosus.com/) 
 and click "Transfer AMBs between networks”.
 Afterwards click “Metamask”, tick acknowledge and complete transfer.
 
