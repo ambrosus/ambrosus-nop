@@ -127,9 +127,9 @@ Afterwards wait till you get whitelisted
 2. NB! Please note that you need to complete AMB transfer for your stake to get whitelisted. 
 
 First you need to connect Metamask to AMB-Net. Instructions are here 
-[https://medium.com/@vladtrifa/how-to-connect-to-amb-net-with-metamask-6964c71e217e](https://medium.com/@vladtrifa/how-to-connect-to-amb-net-with-metamask-6964c71e217e).
+**[https://medium.com/@vladtrifa/how-to-connect-to-amb-net-with-metamask-6964c71e217e](https://medium.com/@vladtrifa/how-to-connect-to-amb-net-with-metamask-6964c71e217e)**.
 Your address in ETH network = your address in AMB network.
-Then you go to [https://bridge.ambrosus.com](https://bridge.ambrosus.com/) 
+Then you go to **[https://bridge.ambrosus.com](https://bridge.ambrosus.com/)**
 and click "Transfer AMBs between networks”.
 Afterwards click “Metamask”, tick acknowledge and complete transfer.
 
