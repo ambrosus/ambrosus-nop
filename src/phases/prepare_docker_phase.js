@@ -19,7 +19,7 @@ const prepareDockerPhase = (stateModel, healthCheckUrlDialog, dockerComposeComma
   if (role === HERMES || role === ATLAS_1 || role === ATLAS_2 || role === ATLAS_3) {
     const url = await stateModel.getNodeUrl();
     if (url) {
-      healthCheckUrlDialog(`${url}/health`);
+      healthCheckUrlDialog();
     }
   }
 };

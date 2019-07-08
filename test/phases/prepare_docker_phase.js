@@ -52,7 +52,7 @@ describe('Prepare Docker Phase', () => {
 
   it('shows node health url after successful installation', async () => {
     await call();
-    expect(healthCheckUrlDialogStub).to.be.calledOnceWith(`${exampleUrl}/health`);
+    expect(healthCheckUrlDialogStub).to.be.calledOnce;
   });
 
   it('does not show health url if url has not been set', async () => {
