@@ -9,8 +9,8 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 
 import chalk from 'chalk';
 
-const healthCheckUrlDialog = (messages) => (url) => {
-  console.log(chalk.green(messages.healthCheckUrl(chalk.yellow(url))));
+const healthCheckUrlDialog = (messages) => () => {
+  console.log(chalk.green(messages.healthCheckUrl()));
 };
 
 export default healthCheckUrlDialog;
