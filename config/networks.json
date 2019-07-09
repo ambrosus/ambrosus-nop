@@ -15,6 +15,6 @@
     "rpc": "https://network.ambrosus.com",
     "chainspec": "https://chainspec.ambrosus.com",
     "headContractAddress": "0x0000000000000000000000000000000000000F10",
-    "dockerTag": "v1.0.10"
+    "dockerTag": "v1.0.11"
   }
 }
