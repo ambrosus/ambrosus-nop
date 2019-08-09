@@ -84,7 +84,7 @@ const messages = {
   warningMessage: '⚠️ WARNING! ⚠️',
   dockerRestartRequired: 'Changes in network have been detected. Please restart the docker containers with',
   acceptTos: 'In order to get whitelisted you must accept the Terms of Service',
-  tosConfirmationInputInstruction: 'Please write the following sentence: "I, [lastname firstname], read and agreed with the terms and conditions above."',
+  tosConfirmationInputInstruction: 'Please write the following sentence: "I, [firstname lastname], read and agreed with the terms and conditions above."',
   tosConfirmationInputError: (wrongValue) => `${wrongValue} is not a valid confirmation`,
   actions: {
     payouts: 'Payouts',
