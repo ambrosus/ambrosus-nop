@@ -18,6 +18,7 @@ import {HeadWrapper, KycWhitelistWrapper, RolesWrapper, PayoutsWrapper, TimeWrap
 import StateModel from './models/state_model';
 import SystemModel from './models/system_model';
 import SmartContractsModel from './models/smart_contracts_model';
+import AtlasModeModel from './models/atlas_mode_model';
 
 import checkDockerAvailablePhase from './phases/check_docker_available_phase';
 import getPrivateKeyPhase from './phases/get_private_key_phase';
@@ -70,6 +71,10 @@ import confirmRetirementDialog from './dialogs/confirm_retirement_dialog';
 import askForApolloDepositDialog from './dialogs/ask_for_apollo_deposit_dialog';
 import nectarWarningDialog from './dialogs/nectar_warning_dialog';
 import askForApolloMinimalDepositDialog from './dialogs/ask_for_apollo_minimal_deposit_dialog';
+import continueAtlasRetirementDialog from './dialogs/continue_atlas_retirement_dialog';
+import retirementStartSuccessfulDialog from './dialogs/retirement_start_successful_dialog';
+import retirementContinueDialog from './dialogs/retirement_continue_dialog';
+import retirementStopDialog from './dialogs/retirement_stop_dialog';
 
 import prepareAction from './menu_actions/prepare_action';
 import payoutAction from './menu_actions/payout_action';
@@ -78,6 +83,7 @@ import retireAction from './menu_actions/retire_action';
 import quitAction from './menu_actions/quit_action';
 
 import execCmd from './utils/execCmd';
+import HttpUtils from './utils/http_utils';
 import messages from './messages';
 import networks from '../config/networks';
 import Web3 from 'web3';
@@ -89,6 +95,8 @@ class Builder {
     const objects = {};
 
     objects.web3 = new Web3();
+
+    objects.httpUtils = new HttpUtils();
 
     objects.store = new Store(config.storePath);
     objects.system = new System(execCmd);
@@ -138,6 +146,10 @@ class Builder {
     objects.askForApolloDepositDialog = askForApolloDepositDialog(objects.validations, messages);
     objects.askForApolloMinimalDepositDialog = askForApolloMinimalDepositDialog(objects.validations, messages);
     objects.acceptTosDialog = acceptTosDialog(objects.validations, messages);
+    objects.continueAtlasRetirementDialog = continueAtlasRetirementDialog(messages);
+    objects.retirementStartSuccessfulDialog = retirementStartSuccessfulDialog(messages);
+    objects.retirementContinueDialog = retirementContinueDialog(messages);
+    objects.retirementStopDialog = retirementStopDialog(messages);
 
     objects.selectNetworkPhase = selectNetworkPhase(networks, objects.stateModel, objects.askForNetworkDialog, objects.networkSelectedDialog, objects.dockerRestartRequiredDialog);
     objects.checkDockerAvailablePhase = checkDockerAvailablePhase(objects.systemModel, objects.dockerDetectedDialog, objects.dockerMissingDialog);
@@ -168,6 +180,7 @@ class Builder {
 
     objects.stateModel = new StateModel(objects.store, objects.crypto, objects.setupCreator);
     objects.smartContractsModel = new SmartContractsModel(objects.crypto, objects.kycWhitelistWrapper, objects.rolesWrapper);
+    objects.atlasModeModel = new AtlasModeModel(objects.httpUtils, account, objects.stateModel);
 
     objects.selectNodeTypePhase = selectNodeTypePhase(objects.stateModel, objects.askForNodeTypeDialog, objects.askForApolloMinimalDepositDialog, objects.roleSelectedDialog);
     objects.getNodeUrlPhase = getNodeUrlPhase(objects.stateModel, objects.nodeUrlDetectedDialog, objects.askForNodeUrlDialog);
@@ -199,9 +212,15 @@ class Builder {
       [constants.ATLAS]
       ),
       [messages.actions.retire]: prepareAction(retireAction(
+        objects.atlasModeModel,
         objects.onboardActions,
         objects.confirmRetirementDialog,
-        objects.retirementSuccessfulDialog
+        objects.retirementSuccessfulDialog,
+        objects.continueAtlasRetirementDialog,
+        objects.retirementStartSuccessfulDialog,
+        objects.retirementContinueDialog,
+        objects.retirementStopDialog,
+        objects.genericErrorDialog
       )),
       [messages.actions.quit]: prepareAction(quitAction())
     };
