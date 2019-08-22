@@ -65,6 +65,9 @@ const messages = {
   dockerDownCommand: 'docker-compose down',
   yes: 'Yes',
   no: 'No',
+  continue: 'Continue',
+  continueAtlasRetirement: 'Do you want to continue retarement?',
+  retirementContinues: 'Retirement continues.',
   insufficientFunds: 'You have insufficient funds to perform transaction 💸\n Top up with small amount and retry',
   genericError: (message) => `An error occurred: ${message}`,
   selectActionQuestion: 'You can now perform one of the following actions',
@@ -74,6 +77,8 @@ const messages = {
   availablePayouts: (availableAmount) => `You can withdraw ${availableAmount} AMB`,
   confirmWithdraw: 'Would you like to withdraw now?',
   withdrawalSuccessful: (withdrawnAmount) => `Great! 💰 ${withdrawnAmount} AMB (minus small nectar fee) has been transferred to your account.`,
+  retirementStartSuccessful: 'Retirement process for you Atlas was started.',
+  retirementStop: 'You Atlas was switched to normal operational mode.',
   confirmRetirement: `After retirement this node will stop being part of the network.
   You will still be able to onboard it again.
   Do you want to continue?`,
