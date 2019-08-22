@@ -147,9 +147,9 @@ describe('Atlas Mode Model', () => {
 
   describe('serializeForHashing', () => {
     it('check serialize', async () => {
-      expect(atlasModeModel.serializeForHashing({ mode: 'normal',
+      expect(atlasModeModel.serializeForHashing({mode: 'normal',
         createdBy: '0x00a329c0648769A73afAc7F9381E08FB43dBEA72',
-        validUntil: 1500010 })).to.be.equal('{"createdBy":"0x00a329c0648769A73afAc7F9381E08FB43dBEA72","mode":"normal","validUntil":1500010}');
+        validUntil: 1500010})).to.be.equal('{"createdBy":"0x00a329c0648769A73afAc7F9381E08FB43dBEA72","mode":"normal","validUntil":1500010}');
     });
   });
 
