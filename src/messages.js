@@ -66,7 +66,7 @@ const messages = {
   yes: 'Yes',
   no: 'No',
   continue: 'Continue',
-  continueAtlasRetirement: 'Do you want to continue retarement?',
+  continueAtlasRetirement: 'Do you want to continue retirement?',
   retirementContinues: 'Retirement continues.',
   insufficientFunds: 'You have insufficient funds to perform transaction 💸\n Top up with small amount and retry',
   genericError: (message) => `An error occurred: ${message}`,
