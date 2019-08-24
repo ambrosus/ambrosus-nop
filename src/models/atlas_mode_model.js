@@ -50,6 +50,7 @@ export default class AtlasModeModel {
       }
       return false;
     } catch (err) {
+      console.log('I/O error:', err);
       return false;
     }
   }
