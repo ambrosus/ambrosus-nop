@@ -36,8 +36,7 @@ async function readConfig() {
   return undefined;
 }
 
-async function getUrl()
-{
+async function getUrl() {
   try {
     const config = await readConfig();
     if (config === undefined) {
