@@ -1,3 +1,12 @@
+/*
+Copyright: Ambrosus Inc.
+Email: tech@ambrosus.com
+
+This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
+*/
+
 const Web3 = require('web3');
 const fs = require('fs');
 const {
@@ -39,7 +48,7 @@ async function getUrl()
     const account = web3.eth.accounts.privateKeyToAccount(config.privateKey);
     web3.eth.accounts.wallet.add(account);
     web3.eth.defaultAccount = account.address;
-    //console.log('Default address:', web3.eth.defaultAccount);
+    // console.log('Default address:', web3.eth.defaultAccount);
     const headWrapper = new HeadWrapper(headContractAddress, web3, web3.eth.defaultAccount);
     const rolesWrapper = new RolesWrapper(headWrapper, web3, web3.eth.defaultAccount);
     const url = await rolesWrapper.nodeUrl(account.address);
