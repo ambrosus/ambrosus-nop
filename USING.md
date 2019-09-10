@@ -36,7 +36,7 @@ To update Ambrosus node software, run script:
 - **output/docker-compose.yml** - Docker Compose config. Each part of Ambrosus
   node run in its own docker container. This file defines what and how will be
   run.
-- **output/chain.json** - Ambrosus Network blockchain specification. Please do
+- **output/chain.json** - AMB-NET blockchain specification. Please do
   not change this file.
 - **output/chains** (directory) - Blockchain data.
 - **output/data** (directory) - Mongo DB data.
@@ -98,8 +98,7 @@ There are several components (for Atlas):
 - atlas\_worker - download and store bundles
 - atlas\_server - provide public API, shows /nodeinfo
 - mongod - Mongo database store bundles and other data for Atlas
-- parity - blockchain node, atlas\_worker use it to interact with Ambrosus
-  Network
+- parity - blockchain node, atlas\_worker use it to interact with AMB-NET
 
 Let's talk about Parity logs.
 
@@ -175,11 +174,12 @@ always online.
 
 ## Terminology
 
-- Ambrosus Node
-- Atlas
-- Hermes
-- Apollo
-- Bundle
-- Challenge
-
-## FAQ
+- **Ambrosus Node** - Ambrosus Atlas, Hermes or Apollo
+- **Atlas** - node that store bundles and earns ambers.
+- **Hermes** - node that generate bundles and spend ambers.
+- **Apollo** - validator nodes, it creates blocks
+- **Bundle** - pack of Assets and Events, produced by Hermes
+- **Asset** - objects, for example product
+- **Events** - events that happened to Assets
+- **Challenge** - Atlas "request" to store a bundle, if smart contract confirms
+  that request, challenge called "resolved".
