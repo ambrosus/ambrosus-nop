@@ -76,7 +76,7 @@ If it fails to open or return some error - your node is not working. Example
       "bundleId": "0x85f430add511074c7a1cb341eadbc5dfdb123f9956237cf9feaa610f894cbd42",
       "count": 1
     },
-    <more log messages>
+    "more messages.."
   ]
 }
 ```
