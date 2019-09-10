@@ -51,7 +51,7 @@ instructions.
 In order to see diagnostics and try to solve problems by yourself, you can use
 following:
 
-### nodeinfo
+### Nodeinfo
 
 **/nodeinfo** URL (for Atlas and Hermes nodes) is a first source of information.
 If it fails to open or return some error - your node is not working. Example
