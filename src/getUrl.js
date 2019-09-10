@@ -7,6 +7,8 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
+import Web3 from 'web3';
+
 const Web3 = require('web3');
 const fs = require('fs');
 const {
