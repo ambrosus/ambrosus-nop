@@ -169,11 +169,12 @@ You can't access /nodeinfo url or login via ssh - restart instance.
 
 Atlas: first check that Parity in sync (see above)
 Apollo: also check Parity. If it's fine, wait for reward to appear (it could
-take up 24 hours). Don't stop and try not to restart Apollo, it have to be
+take up 24 hours). Don't stop and try not to restart Apollo, it has to be
 always online.
 
 ## Terminology
 
+- Ambrosus Node
 - Atlas
 - Hermes
 - Apollo
