@@ -157,8 +157,8 @@ Recreate containers (safe, but do it if sure that you need it):
 
 ### Out of memory
 
-Logs contains messages about "memory issues", that's mean that your instance or
-server have not enough memory. Try to add some memory. We recommend at least
+Logs contains messages about memory issues, that's mean that your instance or
+server have not enough memory. Try to increase it. We recommend at least
 2GB of memory to run Ambrosus Node.
 
 ### Instance not respond
