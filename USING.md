@@ -13,14 +13,14 @@ And run configuration script:
 Script will checks basic node stuff, shows notification if something wrong and
 propose you several options:
 - **Change node URL** - if you have Atlas, you can change its URL
-- **Payouts** - also for Atlas, request ambers (TODO) pay out
+- **Payouts** - request Atlas reward pay out
 - **Retire** - retire Node
 - **Finish NOP** - exit configuration console
 
 Current status of Node can be viewed at /nodeinfo URL (if you have Atlas or
 Hermes), for example https://my-cool-amb-node.com/nodeinfo
 
-To update Ambrosus node, run script:
+To update Ambrosus node software, run script:
 
     cd ~/ambrosus-nop
     ./update.sh
@@ -41,7 +41,7 @@ To update Ambrosus node, run script:
 - **output/chains** (directory) - Blockchain data.
 - **output/data** (directory) - Mongo DB data.
 
-## Diagnostic
+## Diagnostics
 
 We provided a script to diagnose common problems. Run it and follow its
 instructions.
@@ -128,6 +128,33 @@ at least several minutes), do this:
     rm -rf chains
     curl -s https://backup.ambrosus.com/blockchain.tgz | tar zxpf -
     docker start parity
+
+### Useful docker-compose commands
+
+Show containers status:
+
+    docker-compose ps
+
+Show container logs:
+
+    docker-compose logs parity
+
+Watch logs:
+
+    docker-compose logs -f
+
+Restart all containers:
+
+    docker-compose restart
+
+Restart specific container:
+
+    docker-compose restart parity
+
+Recreate containers (safe, but do it if sure that you need it):
+
+    docker-compose down
+    docker-compose up -d
 
 ### Out of memory
 
