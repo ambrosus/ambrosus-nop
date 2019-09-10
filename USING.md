@@ -82,9 +82,7 @@ If it fails to open or return some error - your node is not working. Example
 ```
 
 **commit** - git commit hash of Ambrosus Node software
-
 **version** - Ambrosus Node version
-
 **workerLogs** - latest log messages. _Please note_, errors in this log don't mean that something is wrong, this log is mainly for developers.
 
 ### Logs
