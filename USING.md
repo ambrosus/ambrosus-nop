@@ -1,26 +1,26 @@
 # Using Ambrosus NOP
 
-After successfully installed Ambrosus Node you have `ambrosus-nop` directory
-that contains all files related to the Node. To run configuration script you
-have to change directory:
+After having successfully installed Ambrosus Node, you have an `ambrosus-nop`
+directory that contains all files related to the Node. To run configuration
+script you have to change the directory first:
 
     cd ~/ambrosus-nop
 
-And run configuration script:
+and then run configuration script:
 
     yarn start
 
-Script will checks basic node stuff, shows notification if something wrong and
-propose you several options:
-- **Change node URL** - if you have Atlas, you can change its URL
-- **Payouts** - request Atlas reward pay out
+The script checks basic node details, shows notifications if something is wrong
+and offers several options:
+- **Change node URL** - if you hold an Atlas, you can change its URL
+- **Payouts** - request Atlas reward payout
 - **Retire** - retire Node
 - **Finish NOP** - exit configuration console
 
-Current status of Node can be viewed at /nodeinfo URL (if you have Atlas or
-Hermes), for example https://my-cool-amb-node.com/nodeinfo
+Current status of the Node can be viewed at /nodeinfo URL (if you hold an Atlas
+or Hermes), for example https://my-cool-amb-node.com/nodeinfo
 
-To update Ambrosus node software, run script:
+To update Ambrosus node software, run the script:
 
     cd ~/ambrosus-nop
     ./update.sh
@@ -29,14 +29,14 @@ To update Ambrosus node software, run script:
 
 - **state.json** - this file contains all your node configuration, including
   private key, _do not share this file with anyone_.
-- **output** (directory) - contains files were created during the installation
-  process.
-- **output/parity\_config.toml** - Parity config. Please change this file only
-  if you know what are you doing.
+- **output** (directory) - contains files that were created during the
+  installation process.
+- **output/parity\_config.toml** - Parity config. NB! Please change this file
+  only if you know what you're doing.
 - **output/docker-compose.yml** - Docker Compose config. Each part of Ambrosus
-  node run in its own docker container. This file defines what and how will be
+  Node runs in its own docker container. This file defines what and how will be
   run.
-- **output/chain.json** - AMB-NET blockchain specification. Please do
+- **output/chain.json** - AMB-NET blockchain specification. NB! Please do
   not change this file.
 - **output/chains** (directory) - Blockchain data.
 - **output/data** (directory) - Mongo DB data.
@@ -48,14 +48,14 @@ instructions.
 
     source <(curl -s https://nop.ambrosus.com/check.sh)
 
-In order to see diagnostics and try to solve problems by yourself, you can use
-following:
+In order to see diagnostics results and try to solve problems by oneself, one
+can use the following:
 
 ### Nodeinfo
 
-**/nodeinfo** URL (for Atlas and Hermes nodes) is a first source of information.
-If it fails to open or return some error - your node is not working. Example
-/nodeinfo output:
+**/nodeinfo** URL (for Atlas and Hermes nodes) is the primary source of
+information.  If it fails to open or returns some error - the Node is not
+operating properly. Example /nodeinfo output:
 
 ```json
 {
@@ -91,13 +91,14 @@ mean that something is wrong, this log is mainly for developers.
     cd ~/ambrosus-nop/output
     docker-compose logs --tail 25
 
-This command shows logs of all components. You can specify number of log messages to output in **--tail** argument.
+This command shows logs of all components. You can specify number of log
+messages to output in **--tail** argument.
 
 There are several components (for Atlas):
 
-- atlas\_worker - download and store bundles
-- atlas\_server - provide public API, shows /nodeinfo
-- mongod - Mongo database store bundles and other data for Atlas
+- atlas\_worker - downloads and stores bundles
+- atlas\_server - provides public API, shows /nodeinfo
+- mongod - Mongo database stores bundles and other data for Atlas
 - parity - blockchain node, atlas\_worker use it to interact with AMB-NET
 
 Let's talk about Parity logs.
@@ -105,21 +106,21 @@ Let's talk about Parity logs.
     parity     | 2019-09-10 12:32:05 UTC Verifier #0 INFO import  Imported #1912475 0xdaf2…be13 (1 txs, 0.02 Mgas, 2 ms, 0.67 KiB)
     parity     | 2019-09-10 12:32:10 UTC Verifier #0 INFO import  Imported #1912476 0x3871…6230 (0 txs, 0.00 Mgas, 4 ms, 0.56 KiB)
 
-As you can see Parity logs imports of blocks from blockchain. If everything
-goes fine you should see new block every 5 seconds. And latest block have to
-correspond with block number you in
-[Ambrosus Explorer](https://explorer.ambrosus.com/). If it is not, your Parity
-not in sync and node in total will not work.
+As you can see Parity imports blocks from network. If everything goes fine, you
+should see new block every 5 seconds. And the latest block number in your
+Parotu logs should match the one in
+[Ambrosus Explorer](https://explorer.ambrosus.com/).
+If it doesn't - your Parity is not in sync and the Node is not operating.
 
 ## Problems and their fixes
 
-First of all **check.sh** script provide some fixes. If it doesn't help or you
-want to try manual fixes, you can try following:
+First of all **check.sh** script provides some fixes. If it doesn't help or you
+want to try manual fixes, you can try the following:
 
 ### Parity not in sync
 
-When you see in Parity logs that it stop syncing (the same block number repeat
-at least several minutes), do this:
+When you see in Parity logs that it stoped syncing (the same block number
+repeats at least for several minutes), run the following:
 
     cd ~/ambrosus-nop/output
     docker stop parity
@@ -129,7 +130,7 @@ at least several minutes), do this:
 
 ### Useful docker-compose commands
 
-Show containers status:
+Show container status:
 
     docker-compose ps
 
@@ -149,37 +150,37 @@ Restart specific container:
 
     docker-compose restart parity
 
-Recreate containers (safe, but do it if sure that you need it):
+Recreate containers (safe, but do it if you're sure that you need it):
 
     docker-compose down
     docker-compose up -d
 
 ### Out of memory
 
-Logs contains messages about memory issues, that's mean that your instance or
-server have not enough memory. Try to increase it. We recommend at least
-2GB of memory to run Ambrosus Node.
+If logs contain messages about memory issues, it means that your instance or
+server don't hold enough memory. Try to increase it. We recommend at least 2GB
+of memory to run an Ambrosus Node.
 
-### Instance not respond
+### Instance not responding
 
-You can't access /nodeinfo url or login via ssh - restart instance.
+You can't access /nodeinfo url or login via ssh - restart your instance.
 
 ### No challenge resolution on Atlas, no block reward on Apollo
 
-Atlas: first check that Parity in sync (see above)
+Atlas: first check if Parity is in sync (see above)
 
 Apollo: also check Parity. If it's fine, wait for reward to appear (it could
-take up 24 hours). Don't stop and try not to restart Apollo, it has to be
+take up to 24 hours). Don't stop and try not to restart Apollo, it has to be
 always online.
 
 ## Terminology
 
-- **Ambrosus Node** - Ambrosus Atlas, Hermes or Apollo
-- **Atlas** - node that store bundles and earns ambers.
-- **Hermes** - node that generate bundles and spend ambers.
-- **Apollo** - validator nodes, it creates blocks
+- **Ambrosus Node** - Ambrosus Atlas, Hermes or Apollo.
+- **Atlas** - node that stores bundles and earns ambers.
+- **Hermes** - node that generates bundles and spends ambers.
+- **Apollo** - validator node, it creates blocks.
 - **Bundle** - pack of Assets and Events, produced by Hermes
-- **Asset** - objects, for example product
-- **Events** - events that happened to Assets
-- **Challenge** - Atlas "request" to store a bundle, if smart contract confirms
-  that request, challenge called "resolved".
+- **Asset** - object, for example product
+- **Events** - events that happen to Assets
+- **Challenge** - Atlas "request" to store a bundle, if smart-contract confirms
+  this request, challenge turns into "resolved".
