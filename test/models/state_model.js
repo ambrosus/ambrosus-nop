@@ -69,8 +69,6 @@ describe('State Model', () => {
       fetchChainJson: sinon.stub()
     };
     stateModel = new StateModel(storeStub, cryptoStub, setupCreatorStub);
-
-    getExtraDataStub = sinon.stub(stateModel, 'getExtraData').returns(exampleExtraData);
   });
 
   describe('getNetwork', () => {
@@ -265,6 +263,10 @@ describe('State Model', () => {
   });
 
   describe('prepareSetupFiles', async () => {
+    beforeEach(async () => {
+      getExtraDataStub = sinon.stub(stateModel, 'getExtraData').returns(exampleExtraData);
+    });
+
     it('creates files for Apollo', async () => {
       storeStub.safeRead.withArgs('role').resolves(APOLLO)
         .withArgs('privateKey')
@@ -310,9 +312,9 @@ describe('State Model', () => {
       storeStub.safeRead.resolves(null);
       await expect(() => stateModel.prepareSetupFiles()).to.throw;
     });
-  });
 
-  after(() => {
-    getExtraDataStub.restore();
+    after(() => {
+      getExtraDataStub.restore();
+    });
   });
 });
