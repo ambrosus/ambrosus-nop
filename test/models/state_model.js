@@ -24,6 +24,7 @@ describe('State Model', () => {
   let storeStub;
   let setupCreatorStub;
   let stateModel;
+  let getExtraDataStub;
 
   const examplePrivateKey = '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709';
   const exampleAddress = '0xB1D28124D5771dD347a0BDECbC72CFb2BFf4B2D7';
@@ -45,6 +46,7 @@ describe('State Model', () => {
   const examplePassword = 'randomBytes';
   const exampleEncryptedWallet = {foo: 'bar'};
   const exampleApolloDeposit = '300000';
+  const exampleExtraData = 'Apollo v2.2.10';
 
   beforeEach(async () => {
     storeStub = {
@@ -261,6 +263,10 @@ describe('State Model', () => {
   });
 
   describe('prepareSetupFiles', async () => {
+    beforeEach(async () => {
+      getExtraDataStub = sinon.stub(stateModel, 'getExtraData').returns(exampleExtraData);
+    });
+
     it('creates files for Apollo', async () => {
       storeStub.safeRead.withArgs('role').resolves(APOLLO)
         .withArgs('privateKey')
@@ -272,12 +278,13 @@ describe('State Model', () => {
       setupCreatorStub.fetchChainJson.resolves(exampleNetworkFullName);
 
       await stateModel.prepareSetupFiles();
+
       expect(cryptoStub.getRandomPassword).to.have.been.calledOnceWith();
       expect(setupCreatorStub.createPasswordFile).to.have.been.calledOnceWith(examplePassword);
       expect(cryptoStub.getEncryptedWallet).to.have.been.calledOnceWith(examplePrivateKey, examplePassword);
       expect(setupCreatorStub.createKeyFile).to.have.been.calledOnceWith(exampleEncryptedWallet);
       expect(setupCreatorStub.fetchChainJson).to.have.been.calledOnceWith(exampleNetwork.chainspec);
-      expect(setupCreatorStub.copyParityConfiguration).to.have.been.calledOnceWith('apollo', {address: exampleAddress, ip: exampleIP});
+      expect(setupCreatorStub.copyParityConfiguration).to.have.been.calledOnceWith('apollo', {address: exampleAddress, ip: exampleIP, extraData: exampleExtraData});
       expect(setupCreatorStub.prepareDockerComposeFile).to.have.been.calledOnceWith(
         exampleDockerTag, 'apollo', examplePrivateKey, exampleNetwork.headContractAddress, exampleNetworkFullName);
     });
@@ -304,6 +311,10 @@ describe('State Model', () => {
     it('throws if invalid role provided', async () => {
       storeStub.safeRead.resolves(null);
       await expect(() => stateModel.prepareSetupFiles()).to.throw;
+    });
+
+    after(() => {
+      getExtraDataStub.restore();
     });
   });
 });

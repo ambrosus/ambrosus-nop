@@ -17,6 +17,7 @@ disable = true
 password = ["/app/password.pwds"]
 
 [mining]
+extra_data = "<TYPE_EXTRA_DATA_HERE>"
 engine_signer = "<TYPE_YOUR_ADDRESS_HERE>"
 reseal_on_txs = "none"
 force_sealing = true
