@@ -7,7 +7,12 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
+import path from 'path';
+import {readFile} from '../utils/file';
 import {HERMES, APOLLO, ATLAS_1, ATLAS_2, ATLAS_3} from '../consts';
+import jsyaml from 'js-yaml';
+
+const dockerFileName = 'docker-compose.yml';
 
 export default class StateModel {
   constructor(store, crypto, setupCreator) {
@@ -106,6 +111,16 @@ export default class StateModel {
     return this.store.safeRead('termsOfServiceHash');
   }
 
+  async getExtraData(templateDirectory, nodeTypeName, dockerFileName) {
+    const dockerFile = await readFile(path.join(templateDirectory, nodeTypeName, dockerFileName));
+
+    const dockertYaml = await jsyaml.load(dockerFile);
+
+    const parityVersion = dockertYaml.services.parity.image.split(':');
+
+    return `Apollo ${parityVersion[1]}`;
+  }
+
   async assembleSubmission() {
     const privateKey = await this.getPrivateKey();
     const submissionForm = {
@@ -167,7 +182,8 @@ export default class StateModel {
 
       const address = await this.getAddress();
       const nodeIp = await this.getNodeIP();
-      await this.setupCreator.copyParityConfiguration(nodeTypeName, {address, ip: nodeIp});
+      const extraData = await this.getExtraData(this.setupCreator.templateDirectory, nodeTypeName, dockerFileName);
+      await this.setupCreator.copyParityConfiguration(nodeTypeName, {address, ip: nodeIp, extraData});
     } else {
       await this.setupCreator.copyParityConfiguration(nodeTypeName, {});
     }

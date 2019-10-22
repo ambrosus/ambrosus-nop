@@ -68,6 +68,10 @@ export default class SetupCreator {
       parityConfigFile = parityConfigFile.replace(/<TYPE_YOUR_IP_HERE>/gi, values.ip);
     }
 
+    if (values.extraData !== undefined) {
+      parityConfigFile = parityConfigFile.replace(/<TYPE_EXTRA_DATA_HERE>/gi, values.extraData);
+    }
+
     await writeFile(path.join(this.outputDirectory, parityConfigFileName), parityConfigFile);
   }
 
