@@ -41,12 +41,15 @@ services:
       - MONGO_DB_NAME=ambrosus
       - AUTHORIZATION_WITH_SECRET_KEY_ENABLED=false
       - NODE_ENV=production
+    healthcheck:
+      test: 'yarn migrate'
 
   server:
     container_name: hermes_server
     <<: *hermes-props
     command: sh -c 'yarn start:server'
     depends_on:
-      - worker
+      worker:
+        condition: service_healthy
     ports:
       - 80:9876
