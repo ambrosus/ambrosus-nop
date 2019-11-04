@@ -30,6 +30,10 @@ services:
     container_name: atlas_worker
     command: sh -c 'yarn migrate && yarn start:atlas'
     restart: unless-stopped
+    logging:
+      options:
+        max-size: '100m'
+        max-file: '3'
     depends_on:
       - mongodb
       - parity
@@ -46,6 +50,10 @@ services:
     container_name: atlas_server
     <<: *atlas-props
     command: sh -c 'yarn start:server'
+    logging:
+      options:
+        max-size: '100m'
+        max-file: '3'
     depends_on:
       - worker
     ports:
