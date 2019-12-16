@@ -58,4 +58,4 @@ services:
     depends_on:
       - worker
     ports:
-      - 80:9876
+      - 80:3000
