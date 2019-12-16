@@ -47,9 +47,10 @@ services:
       - NODE_ENV=production
 
   server:
+    image: quay.io/ambrosus/ambrosus-node-extended:latest
     container_name: hermes_server
     <<: *hermes-props
-    command: sh -c 'yarn start:server'
+    command: yarn start:server
     logging:
       options:
         max-size: '100m'
@@ -57,4 +58,4 @@ services:
     depends_on:
       - worker
     ports:
-      - 80:9876
+      - 80:3000
