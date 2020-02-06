@@ -47,7 +47,7 @@ services:
       - NODE_ENV=production
 
   server:
-    image: quay.io/ambrosus/ambrosus-node-extended:latest
+    image: quay.io/ambrosus/ambrosus-node-extended
     container_name: hermes_server
     <<: *hermes-props
     command: yarn start:server
