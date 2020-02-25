@@ -18,3 +18,18 @@ services:
       - ./parity_config.toml:/app/parity_config.toml
       - ./keyfile:/app/keys/<ENTER_NETWORK_NAME_HERE>/keyfile
       - ./chains:/app/chains
+
+  ethstats-client:
+    image: quay.io/ambrosus/ethstats-client
+    container_name: ethstats_client
+    restart: unless-stopped
+    logging:
+      options:
+        max-size: '100m'
+        max-file: '3'
+    depends_on:
+      - parity
+    environment:
+      RPC_HOST: parity
+      WS_SERVER: wss://stats.<ENTER_DOMAIN_HERE>
+      WS_SECRET: Z2hTiWBUfTNc5o9BAm
