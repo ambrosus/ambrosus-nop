@@ -70,7 +70,14 @@ services:
       options:
         max-size: '100m'
         max-file: '3'
+    volumes_from:
+      - dashboard
     depends_on:
       - worker
+      - dashboard
     ports:
       - 80:3000
+
+  dashboard:
+    image: quay.io/ambrosus/dashboard
+    container_name: dashboard
