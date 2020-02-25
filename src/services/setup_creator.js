@@ -44,7 +44,7 @@ export default class SetupCreator {
     await writeFile(path.join(this.outputDirectory, tosFileName), termsOfServiceText);
   }
 
-  async prepareDockerComposeFile(tag, nodeTypeName, privateKey, headContractAddress, networkName) {
+  async prepareDockerComposeFile(tag, nodeTypeName, privateKey, headContractAddress, networkName, domain) {
     await this.ensureOutputDirectoryExists();
     let dockerFile = await readFile(path.join(this.templateDirectory, nodeTypeName, dockerFileName));
 
@@ -52,6 +52,7 @@ export default class SetupCreator {
     dockerFile = dockerFile.replace(/<ENTER_YOUR_PRIVATE_KEY_HERE>/gi, privateKey);
     dockerFile = dockerFile.replace(/<ENTER_YOUR_HEAD_CONTRACT_ADDRESS_HERE>/gi, headContractAddress);
     dockerFile = dockerFile.replace(/<ENTER_NETWORK_NAME_HERE>/gi, networkName);
+    dockerFile = dockerFile.replace(/<ENTER_DOMAIN_HERE>/gi, domain);
 
     await writeFile(path.join(this.outputDirectory, dockerFileName), dockerFile);
   }
