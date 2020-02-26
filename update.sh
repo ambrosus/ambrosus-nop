@@ -3,7 +3,7 @@ set -ex
 
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 if [[ -d /etc/cron.daily ]]; then
-  cronfile=/etc/cron.daily/ambrorus-nop
+  cronfile=/etc/cron.daily/ambrosus-nop
   cat > $cronfile <<-END
 	#!/bin/sh
 	~/ambrosus-nop/update.sh
