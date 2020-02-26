@@ -5,9 +5,9 @@ cd "$( dirname "${BASH_SOURCE[0]}" )"
 if [[ -d /etc/cron.daily ]]; then
   cronfile=/etc/cron.daily/ambrorus-nop
   cat > $cronfile <<-END
-        #!/bin/sh
-        ~/ambrosus-nop/update.sh
-        END
+	#!/bin/sh
+	~/ambrosus-nop/update.sh
+	END
   chmod +x $cronfile
 fi
 git pull origin master
