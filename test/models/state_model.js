@@ -28,6 +28,7 @@ describe('State Model', () => {
 
   const examplePrivateKey = '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709';
   const exampleAddress = '0xB1D28124D5771dD347a0BDECbC72CFb2BFf4B2D7';
+  const exampleDomain = 'ambrosus-dev.com';
   const exampleRole = APOLLO;
   const exampleUrl = 'https://amb-node.com';
   const exampleIP = '10.45.1.1';
@@ -36,6 +37,7 @@ describe('State Model', () => {
   const exampleEmail = 'amb_node_operator@mail.com';
   const exampleDockerTag = '7fa1ed2';
   const exampleNetwork = {
+    domain: 'ambrosus-dev.com',
     rpc: 'localhost:8545',
     chainspec: 'https://chainspec.ambrosus.com',
     headContractAddress: '0x00000f10',
@@ -286,7 +288,7 @@ describe('State Model', () => {
       expect(setupCreatorStub.fetchChainJson).to.have.been.calledOnceWith(exampleNetwork.chainspec);
       expect(setupCreatorStub.copyParityConfiguration).to.have.been.calledOnceWith('apollo', {address: exampleAddress, ip: exampleIP, extraData: exampleExtraData});
       expect(setupCreatorStub.prepareDockerComposeFile).to.have.been.calledOnceWith(
-        exampleDockerTag, 'apollo', examplePrivateKey, exampleNetwork.headContractAddress, exampleNetworkFullName);
+        exampleDockerTag, 'apollo', exampleAddress, examplePrivateKey, exampleNetwork.headContractAddress, exampleNetworkFullName, exampleDomain);
     });
 
     it('creates files for Hermes and Atlas', async () => {
@@ -305,7 +307,7 @@ describe('State Model', () => {
       expect(setupCreatorStub.fetchChainJson).to.have.been.calledOnceWith(exampleNetwork.chainspec);
       expect(setupCreatorStub.copyParityConfiguration).to.have.been.calledOnceWith('hermes', {});
       expect(setupCreatorStub.prepareDockerComposeFile).to.have.been.calledOnceWith(
-        exampleDockerTag, 'hermes', examplePrivateKey, exampleNetwork.headContractAddress, exampleNetworkFullName);
+        exampleDockerTag, 'hermes', exampleAddress, examplePrivateKey, exampleNetwork.headContractAddress, exampleNetworkFullName, exampleDomain);
     });
 
     it('throws if invalid role provided', async () => {

@@ -165,13 +165,14 @@ export default class StateModel {
       throw new Error('Invalid role');
     }
 
+    const address = await this.getAddress();
     const privateKey = await this.getPrivateKey();
 
     const {headContractAddress, chainspec, dockerTag, domain} = await this.getNetwork();
 
     const networkName = await this.setupCreator.fetchChainJson(chainspec);
 
-    await this.setupCreator.prepareDockerComposeFile(dockerTag, nodeTypeName, privateKey, headContractAddress, networkName, domain);
+    await this.setupCreator.prepareDockerComposeFile(dockerTag, nodeTypeName, address, privateKey, headContractAddress, networkName, domain);
 
     if (role === APOLLO) {
       const password = this.crypto.getRandomPassword();
@@ -180,7 +181,6 @@ export default class StateModel {
       const encryptedWallet = this.crypto.getEncryptedWallet(privateKey, password);
       await this.setupCreator.createKeyFile(encryptedWallet);
 
-      const address = await this.getAddress();
       const nodeIp = await this.getNodeIP();
       const extraData = await this.getExtraData(this.setupCreator.templateDirectory, nodeTypeName, dockerFileName);
       await this.setupCreator.copyParityConfiguration(nodeTypeName, {address, ip: nodeIp, extraData});

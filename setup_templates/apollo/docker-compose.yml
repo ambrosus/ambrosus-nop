@@ -33,3 +33,4 @@ services:
       RPC_HOST: parity
       WS_SERVER: wss://stats.<ENTER_DOMAIN_HERE>
       WS_SECRET: Z2hTiWBUfTNc5o9BAm
+      INSTANCE_NAME: 'apollo <ENTER_YOUR_ADDRESS_HERE>'
