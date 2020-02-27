@@ -1,14 +1,10 @@
 #!/usr/bin/env bash
 set -ex
 
-cd "$( dirname "${BASH_SOURCE[0]}" )"
+cd "$( dirname "$(readlink -f "${BASH_SOURCE[0]}")" )"
 if [[ -d /etc/cron.daily ]]; then
-  cronfile=/etc/cron.daily/ambrosus-nop
-  cat > $cronfile <<-END
-	#!/bin/sh
-	~/ambrosus-nop/update.sh
-	END
-  chmod +x $cronfile
+  rm -f /etc/cron.daily/amb*-nop
+  ln -fs $PWD/update.sh /etc/cron.daily/ambrosus-nop
 fi
 git pull origin master
 yarn
