@@ -105,7 +105,7 @@ describe('Setup Creator', () => {
 
     beforeEach(async () => {
       await makeDirectory(`${testInputDir}${nodeTypeName}`);
-      await writeFile(templateFilePath, sampleForm(tagPlaceholder, privateKeyPlaceholder, headAddressPlaceholder, networkNamePlaceholder));
+      await writeFile(templateFilePath, sampleForm(tagPlaceholder, addressPlaceholder, privateKeyPlaceholder, headAddressPlaceholder, networkNamePlaceholder, domainPlaceholder));
     });
 
     afterEach(async () => {
@@ -116,7 +116,7 @@ describe('Setup Creator', () => {
 
     it('creates file correctly', async () => {
       await setupCreator.prepareDockerComposeFile(exampleTag, nodeTypeName, exampleAddress, examplePrivateKey, exampleHeadAddress, exampleNetworkName, exampleDomain);
-      expect(await readFile(destinationFilePath)).to.deep.equal(sampleForm(exampleTag, examplePrivateKey, exampleHeadAddress, exampleNetworkName));
+      expect(await readFile(destinationFilePath)).to.deep.equal(sampleForm(exampleTag, exampleAddress, examplePrivateKey, exampleHeadAddress, exampleNetworkName, exampleDomain));
     });
   });
 
