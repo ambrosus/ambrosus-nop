@@ -61,6 +61,14 @@ services:
       - MONGO_DB_NAME=ambrosus
       - AUTHORIZATION_WITH_SECRET_KEY_ENABLED=false
       - NODE_ENV=production
+      - DASHBOARD_URL=<ENTER_YOUR_DASHBOARD_URL>
+      - EMAIL_FROM=<ENTER_YOUR_EMAIL_FROM>
+      - EMAIL_ORGREQ_TO=<ENTER_YOUR_EMAIL_ORGREQ_TO>
+      - EMAIL_API_KEY=<ENTER_YOUR_EMAIL_API_KEY>
+      - EMAIL_TMPL_ID_INVITE=<ENTER_YOUR_EMAIL_TMPL_ID_INVITE>
+      - EMAIL_TMPL_ID_ORGREQ=<ENTER_YOUR_EMAIL_TMPL_ID_ORGREQ>
+      - EMAIL_TMPL_ID_ORGREQ_APPROVE=<ENTER_YOUR_EMAIL_TMPL_ID_ORGREQ_APPROVE>
+      - EMAIL_TMPL_ID_ORGREQ_REFUSE=<ENTER_YOUR_EMAIL_TMPL_ID_ORGREQ_REFUSE>
 
   server:
     image: quay.io/ambrosus/ambrosus-node-extended
@@ -71,6 +79,8 @@ services:
       options:
         max-size: '100m'
         max-file: '3'
+    volumes:
+      - ~/ambrosus-nop:/opt/hermes
     volumes_from:
       - dashboard
     depends_on:
