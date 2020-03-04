@@ -111,6 +111,10 @@ export default class StateModel {
     return this.store.safeRead('termsOfServiceHash');
   }
 
+  async getMailInfo() {
+    return this.store.safeRead('mailInfo');
+  }
+
   async getExtraData(templateDirectory, nodeTypeName, dockerFileName) {
     const dockerFile = await readFile(path.join(templateDirectory, nodeTypeName, dockerFileName));
 
@@ -172,7 +176,16 @@ export default class StateModel {
 
     const networkName = await this.setupCreator.fetchChainJson(chainspec);
 
-    await this.setupCreator.prepareDockerComposeFile(dockerTag, nodeTypeName, address, privateKey, headContractAddress, networkName, domain);
+    await this.setupCreator.prepareDockerComposeFile(
+      dockerTag, 
+      nodeTypeName, 
+      address, 
+      privateKey, 
+      headContractAddress, 
+      networkName, 
+      domain, 
+      this.getMailInfo()
+    );
 
     if (role === APOLLO) {
       const password = this.crypto.getRandomPassword();
