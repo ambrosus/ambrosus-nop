@@ -20,7 +20,7 @@ export default class StateModel {
   constructor(store, crypto, setupCreator) {
     this.store = store;
     this.crypto = crypto;
-    this.setupCreator = setupCreator;    
+    this.setupCreator = setupCreator;
   }
 
   async checkMailInfo() {
@@ -37,7 +37,7 @@ export default class StateModel {
           orgReqApprove: 'orgReqApprove',
           orgReqRefuse: 'orgReqRefuse'
         }
-      }
+      };
 
       await this.store.write(mailInfo, mail);
     }

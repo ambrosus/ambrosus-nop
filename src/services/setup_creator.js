@@ -58,7 +58,7 @@ export default class SetupCreator {
     const dashboardUrl = `${url}/dashboard`;
 
     dockerFile = dockerFile.replace(/<ENTER_YOUR_DASHBOARD_URL>/gi, dashboardUrl);
-    
+
     if (mailInfo) {
       dockerFile = dockerFile.replace(/<ENTER_YOUR_EMAIL_FROM>/gi, mailInfo.from);
       dockerFile = dockerFile.replace(/<ENTER_YOUR_EMAIL_ORGREQ_TO>/gi, mailInfo.orgRegTo);
