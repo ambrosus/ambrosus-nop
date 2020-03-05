@@ -14,11 +14,33 @@ import jsyaml from 'js-yaml';
 
 const dockerFileName = 'docker-compose.yml';
 
+const mailInfo = 'mailInfo';
+
 export default class StateModel {
   constructor(store, crypto, setupCreator) {
     this.store = store;
     this.crypto = crypto;
     this.setupCreator = setupCreator;
+  }
+
+  async checkMailInfo() {
+    const probe = await this.store.safeRead(mailInfo);
+
+    if (!probe) {
+      const mail = {
+        from: 'from',
+        orgRegTo: 'orgRegTo',
+        apiKey: 'apiKey',
+        templateIds: {
+          invite: 'invite',
+          orgReq: 'orgReq',
+          orgReqApprove: 'orgReqApprove',
+          orgReqRefuse: 'orgReqRefuse'
+        }
+      };
+
+      await this.store.write(mailInfo, mail);
+    }
   }
 
   async getNetwork() {
@@ -111,6 +133,10 @@ export default class StateModel {
     return this.store.safeRead('termsOfServiceHash');
   }
 
+  async getMailInfo() {
+    return this.store.safeRead(mailInfo);
+  }
+
   async getExtraData(templateDirectory, nodeTypeName, dockerFileName) {
     const dockerFile = await readFile(path.join(templateDirectory, nodeTypeName, dockerFileName));
 
@@ -172,7 +198,17 @@ export default class StateModel {
 
     const networkName = await this.setupCreator.fetchChainJson(chainspec);
 
-    await this.setupCreator.prepareDockerComposeFile(dockerTag, nodeTypeName, address, privateKey, headContractAddress, networkName, domain);
+    await this.setupCreator.prepareDockerComposeFile(
+      dockerTag,
+      nodeTypeName,
+      address,
+      privateKey,
+      headContractAddress,
+      networkName,
+      domain,
+      await this.getNodeUrl(),
+      await this.getMailInfo()
+    );
 
     if (role === APOLLO) {
       const password = this.crypto.getRandomPassword();

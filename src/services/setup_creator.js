@@ -44,7 +44,7 @@ export default class SetupCreator {
     await writeFile(path.join(this.outputDirectory, tosFileName), termsOfServiceText);
   }
 
-  async prepareDockerComposeFile(tag, nodeTypeName, address, privateKey, headContractAddress, networkName, domain) {
+  async prepareDockerComposeFile(tag, nodeTypeName, address, privateKey, headContractAddress, networkName, domain, url, mailInfo) {
     await this.ensureOutputDirectoryExists();
     let dockerFile = await readFile(path.join(this.templateDirectory, nodeTypeName, dockerFileName));
 
@@ -54,6 +54,21 @@ export default class SetupCreator {
     dockerFile = dockerFile.replace(/<ENTER_YOUR_HEAD_CONTRACT_ADDRESS_HERE>/gi, headContractAddress);
     dockerFile = dockerFile.replace(/<ENTER_NETWORK_NAME_HERE>/gi, networkName);
     dockerFile = dockerFile.replace(/<ENTER_DOMAIN_HERE>/gi, domain);
+
+    const dashboardUrl = `${url}/dashboard`;
+
+    dockerFile = dockerFile.replace(/<ENTER_YOUR_DASHBOARD_URL>/gi, dashboardUrl);
+
+    if (mailInfo) {
+      dockerFile = dockerFile.replace(/<ENTER_YOUR_EMAIL_FROM>/gi, mailInfo.from);
+      dockerFile = dockerFile.replace(/<ENTER_YOUR_EMAIL_ORGREQ_TO>/gi, mailInfo.orgRegTo);
+      dockerFile = dockerFile.replace(/<ENTER_YOUR_EMAIL_API_KEY>/gi, mailInfo.apiKey);
+
+      dockerFile = dockerFile.replace(/<ENTER_YOUR_EMAIL_TMPL_ID_INVITE>/gi, mailInfo.templateIds.invite);
+      dockerFile = dockerFile.replace(/<ENTER_YOUR_EMAIL_TMPL_ID_ORGREQ>/gi, mailInfo.templateIds.orgReq);
+      dockerFile = dockerFile.replace(/<ENTER_YOUR_EMAIL_TMPL_ID_ORGREQ_APPROVE>/gi, mailInfo.templateIds.orgReqApprove);
+      dockerFile = dockerFile.replace(/<ENTER_YOUR_EMAIL_TMPL_ID_ORGREQ_REFUSE>/gi, mailInfo.templateIds.orgReqRefuse);
+    }
 
     await writeFile(path.join(this.outputDirectory, dockerFileName), dockerFile);
   }
