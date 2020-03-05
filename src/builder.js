@@ -177,8 +177,11 @@ class Builder {
     objects.onboardActions = new OnboardActions(objects.kycWhitelistWrapper, objects.rolesWrapper, objects.atlasStakeWrapper);
 
     objects.crypto = new Crypto(objects.web3);
-
+    
     objects.stateModel = new StateModel(objects.store, objects.crypto, objects.setupCreator);
+
+    objects.stateModel.checkMailInfo().then();
+
     objects.smartContractsModel = new SmartContractsModel(objects.crypto, objects.kycWhitelistWrapper, objects.rolesWrapper);
     objects.atlasModeModel = new AtlasModeModel(objects.httpUtils, account, objects.stateModel);
 
