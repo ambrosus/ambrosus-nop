@@ -3,7 +3,7 @@
 # The Ambrosus Node Onboarding Package
 The Ambrosus Node Onboarding Package (NOP) is a command-line tool which makes it easier for Ambrosus Masternodes operators to register, onboard and operate new nodes on AMB-NET (Apollo, Atlas and Hermes nodes).
 
-**ATTENTION:** Although anyone will be able to setup a virtual environment and run NOP, the last step (running the masternode application) will require your node to have been whitelisted. For this, you must have first [applied via our official form](http://tech.ambrosus.com/apply) and then be formally invited to join an onboarding wave per email. Sending us your whitelisting details before you have applied and been invited will simply be ignored at this stage.
+**ATTENTION:** Although anyone will be able to setup a virtual environment and run NOP, the last step (running the masternode application) will require your node to have been whitelisted. Request will be send automatically at the end of setup script.
 
 ## Table of Contents
   - **[Overview](#overview)**
@@ -30,6 +30,8 @@ There are two ways to seup your virtual machine environment to run an Ambrosus m
 The first option is simpler as it requires less technical experience. However, for obvious security reasons setting a machine from scratch is a more secure approach.
 
 ##### Creating a Droplet
+
+Typical DigitalOcean node (2 GB / 2 CPUs, 60 GB SSD disk, 3 TB transfer) should be good for any type of node
 
 There is detailed step by step information how to setup droplet on digitalocean https://www.digitalocean.com/docs/droplets/how-to/create/
 
