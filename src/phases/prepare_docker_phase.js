@@ -10,10 +10,8 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 
 import {ATLAS_1, ATLAS_2, ATLAS_3, HERMES} from '../consts';
 
-const prepareDockerPhase = (stateModel, healthCheckUrlDialog, dockerComposeCommandDialog) => async () => {
+const prepareDockerPhase = (stateModel, healthCheckUrlDialog) => async () => {
   await stateModel.prepareSetupFiles();
-
-  dockerComposeCommandDialog();
 
   const role = await stateModel.getRole();
   if (role === HERMES || role === ATLAS_1 || role === ATLAS_2 || role === ATLAS_3) {
