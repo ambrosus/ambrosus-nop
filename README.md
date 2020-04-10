@@ -117,7 +117,6 @@ Choose “Finish NOP” on menu.
 
 You are successfully onboarded.
 
-```
 ## Contribution
 We will accept contributions of good code that we can use from anyone.
 Please see [CONTRIBUTION.md](CONTRIBUTION.md)
