@@ -10,7 +10,7 @@ services:
       - ./data/configdb:/data/configdb
 
   parity:
-    image: parity/parity:v2.5.13-stable
+    image: parity/parity:v2.7.1-stable
     container_name: parity
     command: --config /app/parity_config.toml
     working_dir: /app
