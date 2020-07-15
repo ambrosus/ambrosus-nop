@@ -29,10 +29,6 @@ services:
     image: quay.io/ambrosus/ethstats-client
     container_name: ethstats_client
     restart: unless-stopped
-    logging:
-      options:
-        max-size: '100m'
-        max-file: '3'
     depends_on:
       - parity
     environment:
