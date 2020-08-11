@@ -144,10 +144,10 @@ ajv@^5.1.0, ajv@^5.2.3, ajv@^5.3.0:
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.3.0"
 
-ambrosus-node-contracts@0.0.64:
-  version "0.0.64"
-  resolved "https://registry.yarnpkg.com/ambrosus-node-contracts/-/ambrosus-node-contracts-0.0.64.tgz#26ba2b7ce4ae518a52664335e0e3a49b76e37bc2"
-  integrity sha512-PMJekpDGv0v/jdAQ7zaUqDi7DEnMCmhBpymCM5NfT0ReaoK57oBoJC9iWLdTl9rKZ+GTStGAvAgPQm6PXkvShA==
+ambrosus-node-contracts@0.0.72:
+  version "0.0.72"
+  resolved "https://registry.yarnpkg.com/ambrosus-node-contracts/-/ambrosus-node-contracts-0.0.72.tgz#4b52852f97548ee4f5cf5bfb2af45ea0b77a0185"
+  integrity sha512-cUA9TtmK61mLI8dCh26MDkVMGnri5kYQ7OQE/ZREepMBnDlKHsQm+TLqutixWSiD+Vzz6ToEGqS1aYA6vcGgcg==
   dependencies:
     babel-runtime "^6.26.0"
     bignumber.js "^8.1.1"
@@ -3148,9 +3148,9 @@ lodash.get@^4.4.2:
   integrity sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk=
 
 lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.0, lodash@^4.3.0:
-  version "4.17.15"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
-  integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
+  version "4.17.19"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
+  integrity sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
 
 lolex@^2.3.2, lolex@^2.7.1:
   version "2.7.1"
