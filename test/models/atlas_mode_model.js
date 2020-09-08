@@ -1,6 +1,6 @@
 /*
 Copyright: Ambrosus Inc.
-Email: tech@ambrosus.com
+Email: tech@ambrosus.io
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
@@ -62,7 +62,7 @@ describe('Atlas Mode Model', () => {
 
     it('returns empty for APOLLO', async () => {
       stateModelStub.getRole.resolves(APOLLO);
-      stateModelStub.getNodeUrl.resolves('http://atlas.ambrosus.com');
+      stateModelStub.getNodeUrl.resolves('http://atlas.ambrosus.io');
       const mode = await atlasModeModel.getMode();
       expect(mode).to.be.deep.equal({});
       expect(httpUtilsMock.getJsonHttp).to.not.be.called;
@@ -71,7 +71,7 @@ describe('Atlas Mode Model', () => {
 
     it('returns empty for HERMES', async () => {
       stateModelStub.getRole.resolves(HERMES);
-      stateModelStub.getNodeUrl.resolves('http://atlas.ambrosus.com');
+      stateModelStub.getNodeUrl.resolves('http://atlas.ambrosus.io');
       const mode = await atlasModeModel.getMode();
       expect(mode).to.be.deep.equal({});
       expect(httpUtilsMock.getJsonHttp).to.not.be.called;
@@ -80,7 +80,7 @@ describe('Atlas Mode Model', () => {
 
     it('returns "normal" mode by http', async () => {
       stateModelStub.getRole.resolves(ATLAS_1);
-      stateModelStub.getNodeUrl.resolves('http://atlas.ambrosus.com');
+      stateModelStub.getNodeUrl.resolves('http://atlas.ambrosus.io');
       httpUtilsMock.getJsonHttp.resolves(JSON.parse('{"mode":{"mode":"normal"}}'));
       const mode = await atlasModeModel.getMode();
       expect(mode).to.be.deep.equal({mode:'normal'});
@@ -88,7 +88,7 @@ describe('Atlas Mode Model', () => {
 
     it('returns "normal" mode by https', async () => {
       stateModelStub.getRole.resolves(ATLAS_1);
-      stateModelStub.getNodeUrl.resolves('https://atlas.ambrosus.com');
+      stateModelStub.getNodeUrl.resolves('https://atlas.ambrosus.io');
       httpUtilsMock.getJsonHttps.resolves(JSON.parse('{"mode":{"mode":"normal"}}'));
       const mode = await atlasModeModel.getMode();
       expect(mode).to.be.deep.equal({mode:'normal'});
@@ -96,7 +96,7 @@ describe('Atlas Mode Model', () => {
 
     it('returns {} by error', async () => {
       stateModelStub.getRole.resolves(ATLAS_1);
-      stateModelStub.getNodeUrl.resolves('https://atlas.ambrosus.com');
+      stateModelStub.getNodeUrl.resolves('https://atlas.ambrosus.io');
       httpUtilsMock.getJsonHttps.throws();
       const mode = await atlasModeModel.getMode();
       expect(mode).to.be.deep.equal({});
@@ -114,7 +114,7 @@ describe('Atlas Mode Model', () => {
 
     it('returns false for APOLLO', async () => {
       stateModelStub.getRole.resolves(APOLLO);
-      stateModelStub.getNodeUrl.resolves('http://atlas.ambrosus.com');
+      stateModelStub.getNodeUrl.resolves('http://atlas.ambrosus.io');
       expect(await atlasModeModel.setMode()).to.be.false;
       expect(httpUtilsMock.getJsonHttp).to.not.be.called;
       expect(httpUtilsMock.getJsonHttps).to.not.be.called;
@@ -122,7 +122,7 @@ describe('Atlas Mode Model', () => {
 
     it('returns false for HERMES', async () => {
       stateModelStub.getRole.resolves(HERMES);
-      stateModelStub.getNodeUrl.resolves('http://atlas.ambrosus.com');
+      stateModelStub.getNodeUrl.resolves('http://atlas.ambrosus.io');
       expect(await atlasModeModel.setMode()).to.be.false;
       expect(httpUtilsMock.getJsonHttp).to.not.be.called;
       expect(httpUtilsMock.getJsonHttps).to.not.be.called;
@@ -130,7 +130,7 @@ describe('Atlas Mode Model', () => {
 
     it('returns false by http error', async () => {
       stateModelStub.getRole.resolves(ATLAS_1);
-      stateModelStub.getNodeUrl.resolves('http://atlas.ambrosus.com');
+      stateModelStub.getNodeUrl.resolves('http://atlas.ambrosus.io');
       httpUtilsMock.httpPost.resolves(false);
       expect(await atlasModeModel.setMode('normal')).to.be.false;
       expect(httpUtilsMock.httpsPost).to.not.be.called;
@@ -138,7 +138,7 @@ describe('Atlas Mode Model', () => {
 
     it('returns false by https error', async () => {
       stateModelStub.getRole.resolves(ATLAS_1);
-      stateModelStub.getNodeUrl.resolves('https://atlas.ambrosus.com');
+      stateModelStub.getNodeUrl.resolves('https://atlas.ambrosus.io');
       httpUtilsMock.httpsPost.resolves(false);
       expect(await atlasModeModel.setMode('normal')).to.be.false;
       expect(httpUtilsMock.httpPost).to.not.be.called;

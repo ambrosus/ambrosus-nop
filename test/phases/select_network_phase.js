@@ -1,6 +1,6 @@
 /*
 Copyright: Ambrosus Inc.
-Email: tech@ambrosus.com
+Email: tech@ambrosus.io
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
@@ -27,13 +27,13 @@ describe('Select Network Phase', () => {
   const exampleAvailableNetworks = {
     test: {
       rpc: 'test',
-      chainspec: 'https://chainspec.ambrosus-test.com',
+      chainspec: 'https://chainspec.ambrosus-test.io',
       headContractAddress: '0x0',
       dockerTag: '1'
     },
     dev: {
       rpc: 'dev',
-      chainspec: 'https://chainspec.ambrosus-dev.com',
+      chainspec: 'https://chainspec.ambrosus-dev.io',
       headContractAddress: '0x1',
       dockerTag: '2'
     }

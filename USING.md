@@ -46,7 +46,7 @@ To update Ambrosus node software, run the script:
 We provided a script to diagnose common problems. Run it and follow its
 instructions.
 
-    source <(curl -s https://nop.ambrosus.com/check.sh)
+    source <(curl -s https://nop.ambrosus.io/check.sh)
 
 In order to see diagnostics results and try to solve problems by oneself, one
 can use the following:
@@ -109,7 +109,7 @@ Let's talk about Parity logs.
 As you can see Parity imports blocks from network. If everything goes fine, you
 should see new block every 5 seconds. And the latest block number in your
 Parotu logs should match the one in
-[Ambrosus Explorer](https://explorer.ambrosus.com/).
+[Ambrosus Explorer](https://explorer.ambrosus.io/).
 If it doesn't - your Parity is not in sync and the Node is not operating.
 
 ## Problems and their fixes
@@ -125,7 +125,7 @@ repeats at least for several minutes), run the following:
     cd ~/ambrosus-nop/output
     docker stop parity
     rm -rf chains
-    curl -s https://backup.ambrosus.com/blockchain.tgz | tar zxpf -
+    curl -s https://backup.ambrosus.io/blockchain.tgz | tar zxpf -
     docker start parity
 
 ### Useful docker-compose commands

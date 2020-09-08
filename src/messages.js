@@ -1,6 +1,6 @@
 /*
 Copyright: Ambrosus Inc.
-Email: tech@ambrosus.com
+Email: tech@ambrosus.io
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
@@ -47,7 +47,7 @@ const messages = {
   submissionInfo: (submissionMail, onboardChannel, tosFilePath) => `To finish requesting process, copy following form and mail it to ${submissionMail} or send to ${onboardChannel} in Slack.
   Additionally attach your signed Terms of Service file (${tosFilePath})`,
   tosFilePath: 'output/TOS.txt',
-  submissionMail: 'tech@ambrosus.com',
+  submissionMail: 'tech@ambrosus.io',
   onboardChannel: '#onboarding',
   addressNotWhitelisted: 'Address is not whitelisted yet',
   addressWhitelisted: (roleAssigned, requiredDeposit) => `✅ Address is whitelisted as ${roleAssigned}. Required deposit is: ${requiredDeposit}`,
@@ -59,7 +59,7 @@ const messages = {
   onboardingSuccessful: '🎉 You are now successfully onboarded !!! 🎉',
   alreadyOnboarded: (role) => `✅ Onboarded as ${role}`,
   networkSelected: (network) => `Network: ${network}`,
-  healthCheckUrl: () => `After starting your node, you can check its health by going to Explorer: https://explorer.ambrosus.com/`,
+  healthCheckUrl: () => `After starting your node, you can check its health by going to Explorer: https://explorer.ambrosus.io/`,
   dockerComposeInfo: (outputDir, command) => `Your node configuration is ready.\nIn order to start it, enter the ${outputDir} directory from the command line and run ${command}`,
   dockerComposeCommand: 'docker-compose up -d',
   dockerDownCommand: 'docker-compose down',
