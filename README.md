@@ -78,7 +78,7 @@ Once you're logged in on your virtual machine, run the following commands (1 lin
 ```
 
 ```
-1. source <(curl -s https://nop.ambrosus.com/setup.sh)
+1. source <(curl -s https://nop.ambrosus.io/setup.sh)
 
 Choose the necessary options:
 - network (main);
@@ -96,7 +96,7 @@ Afterwards wait till you get whitelisted
 First you need to connect Metamask to AMB-Net. Instructions are here 
 https://medium.com/@vladtrifa/how-to-connect-to-amb-net-with-metamask-6964c71e217e.
 Your address in ETH network = your address in AMB network.
-Then you go to https://bridge.ambrosus.com
+Then you go to https://bridge.ambrosus.io
 and click "Transfer AMBs between networks”.
 Afterwards click “Metamask”, tick acknowledge and complete transfer.
 
