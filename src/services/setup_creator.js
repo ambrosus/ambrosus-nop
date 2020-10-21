@@ -45,17 +45,17 @@ export default class SetupCreator {
   }
 
   async prepareDockerComposeFile(
-      tag,
-      nodeTypeName,
-      address,
-      privateKey,
-      headContractAddress,
-      networkName,
-      domain,
-      url,
-      mailInfo,
-      workerInterval
-    ) {
+    tag,
+    nodeTypeName,
+    address,
+    privateKey,
+    headContractAddress,
+    networkName,
+    domain,
+    url,
+    mailInfo,
+    workerInterval
+  ) {
     await this.ensureOutputDirectoryExists();
     let dockerFile = await readFile(path.join(this.templateDirectory, nodeTypeName, dockerFileName));
 

@@ -46,7 +46,7 @@ export default class StateModel {
   async checkWorkerInterval() {
     const probe = await this.store.safeRead('workerInterval');
 
-    if (!probe) {      
+    if (!probe) {
       await this.store.write('workerInterval', 300); // default 300 seconds
     }
   }
