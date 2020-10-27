@@ -180,6 +180,8 @@ class Builder {
 
     objects.stateModel.checkMailInfo().then();
 
+    objects.stateModel.checkWorkerInterval().then();
+
     objects.smartContractsModel = new SmartContractsModel(objects.crypto, objects.kycWhitelistWrapper, objects.rolesWrapper);
     objects.atlasModeModel = new AtlasModeModel(objects.httpUtils, account, objects.stateModel);
 

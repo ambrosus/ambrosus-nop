@@ -43,6 +43,18 @@ export default class StateModel {
     }
   }
 
+  async checkWorkerInterval() {
+    const probe = await this.store.safeRead('workerInterval');
+
+    if (!probe) {
+      await this.store.write('workerInterval', 300); // default 300 seconds
+    }
+  }
+
+  async getWorkerInterval() {
+    return this.store.safeRead('workerInterval');
+  }
+
   async getNetwork() {
     return this.store.safeRead('network');
   }
@@ -198,6 +210,8 @@ export default class StateModel {
 
     const networkName = await this.setupCreator.fetchChainJson(chainspec);
 
+    const workerInterval = await this.getWorkerInterval();
+
     await this.setupCreator.prepareDockerComposeFile(
       dockerTag,
       nodeTypeName,
@@ -207,7 +221,8 @@ export default class StateModel {
       networkName,
       domain,
       await this.getNodeUrl(),
-      await this.getMailInfo()
+      await this.getMailInfo(),
+      workerInterval
     );
 
     if (role === APOLLO) {
