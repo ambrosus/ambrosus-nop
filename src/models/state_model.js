@@ -52,8 +52,8 @@ export default class StateModel {
   }
 
   async checkStateVariables() {
-    await checkWorkerInterval();
-    await checkMailInfo();
+    await this.checkWorkerInterval();
+    await this.checkMailInfo();
   }
 
   async getWorkerInterval() {

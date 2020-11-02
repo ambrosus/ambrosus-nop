@@ -179,7 +179,7 @@ class Builder {
     objects.stateModel = new StateModel(objects.store, objects.crypto, objects.setupCreator);
 
     objects.stateModel.checkStateVariables().then();
-    
+
     objects.smartContractsModel = new SmartContractsModel(objects.crypto, objects.kycWhitelistWrapper, objects.rolesWrapper);
     objects.atlasModeModel = new AtlasModeModel(objects.httpUtils, account, objects.stateModel);
 
