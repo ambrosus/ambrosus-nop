@@ -51,6 +51,11 @@ export default class StateModel {
     }
   }
 
+  async checkStateVariables() {
+    await this.checkWorkerInterval();
+    await this.checkMailInfo();
+  }
+
   async getWorkerInterval() {
     return this.store.safeRead('workerInterval');
   }
