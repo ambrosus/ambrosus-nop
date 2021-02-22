@@ -10,7 +10,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 import inquirer from 'inquirer';
 import chalk from 'chalk';
 
-const MINIMAL_DEPOSIT = 1000000;
+const MINIMAL_DEPOSIT = 250000;
 
 const askForApolloMinimalDepositDialog = (validations, messages) => async () => {
   const {deposit} = await inquirer.prompt(
