@@ -91,21 +91,17 @@ Enter manually the required sentence with your name in it (don’t forget to add
 Afterwards wait till you get whitelisted
 
 ```
-2. NB! Please note that you need to complete AMB transfer for your stake to get whitelisted. 
+2. NB! Please note that you need to have successfully transferred your stake in AMB for it to get whitelisted. 
 
 First you need to connect Metamask to AMB-Net. Instructions are here 
-https://medium.com/@vladtrifa/how-to-connect-to-amb-net-with-metamask-6964c71e217e.
+https://blog.ambrosus.io/how-to-connect-to-amb-net-9e4d6d002009.
 Your address in ETH network = your address in AMB network.
-Then you go to https://bridge.ambrosus.io
-and click "Transfer AMBs between networks”.
-Afterwards click “Metamask”, tick acknowledge and complete transfer.
 
 Amount to transfer = X AMB (your desired stake amount) 
-+ 100 AMB (bridge fee) 
-+ 5 AMB (for challenge before first 28 days period) 
-+ 0.1 ETH (fee for ETH-Net >> AMB-Net transfer)
++ 100 AMB (for challenge before first 28 days period) 
 
 You will be notified once your node gets whitelisted and afterwards you may proceed to step 3.
+
 
 ```
 3. Once your node whitelisted
