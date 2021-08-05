@@ -10,8 +10,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 const getPrivateKey = async (stateModel, askForPrivateKeyDialog, askForPassphraseDialog, askForPassphraseUnlockDialog) => {
   const storedEncryptedWallet = await stateModel.getEncryptedWallet();
   if (storedEncryptedWallet !== null) {
-    const unlockAnswers = await askForPassphraseUnlockDialog();
-    const {passphraseUnlock} = unlockAnswers;
+    const {passphraseUnlock} = await askForPassphraseUnlockDialog();
     await stateModel.decryptWallet(passphraseUnlock);
     return stateModel.privateKey;
   }

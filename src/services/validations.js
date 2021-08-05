@@ -12,7 +12,7 @@ import ipRegex from 'ip-regex';
 export default class Validations {
   isValidPrivateKey(candidate) {
     const addressRegex = /^0x[0-9a-f]{64}$/i;
-    const zeroedRegex = /^0x0+/;
+    const zeroedRegex = /^0x0+$/;
 
     return (addressRegex.exec(candidate) !== null && zeroedRegex.exec(candidate) === null);
   }

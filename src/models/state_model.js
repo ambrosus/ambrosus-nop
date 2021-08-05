@@ -66,8 +66,7 @@ export default class StateModel {
 
   async storeNewEncryptedWallet(password, generate) {
     if (generate === true) {
-      const privateKey = await this.crypto.generatePrivateKey();
-      this.privateKey = privateKey;
+      this.privateKey = await this.crypto.generatePrivateKey();
     }
 
     const encryptedWallet = await this.crypto.getEncryptedWallet(this.privateKey, password);
