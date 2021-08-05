@@ -64,8 +64,8 @@ export default class StateModel {
     return randomHex.substr(10, 10);
   }
 
-  async storeNewEncryptedWallet(password, generate) {
-    if (generate === true) {
+  async storeNewEncryptedWallet(password, generatePrivateKey = false) {
+    if (generatePrivateKey === true) {
       this.privateKey = await this.crypto.generatePrivateKey();
     }
 

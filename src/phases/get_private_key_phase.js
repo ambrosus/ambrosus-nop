@@ -42,7 +42,7 @@ const getPrivateKey = async (stateModel, askForPrivateKeyDialog, askForPassphras
     case 'manual': {
       const {privateKey} = answers;
       stateModel.privateKey = privateKey;
-      await stateModel.storeNewEncryptedWallet(password, false);
+      await stateModel.storeNewEncryptedWallet(password);
       const address = await stateModel.getAddress();
       await stateModel.storeAddress(address);
       break;
