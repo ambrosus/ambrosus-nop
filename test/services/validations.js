@@ -31,7 +31,8 @@ describe('Validations', () => {
       tooShort: '0x074976a8D5F07dA5DADa1Eb248AD369a764bB373DADa1Eb248AD369a764b373',
       tooLong: '0x074976a8D5F07dA5DADa1Eb248AD369a764bB373DADa1Eb248AD369a764b37311',
       noPrefix: '074976a8D5F07dA5DADa1Eb248AD369a764bB373DADa1Eb248AD369a764bB373',
-      notHex: '0x074976a8D5Y07dA5XADa1Eb248AD369a764bB373DADa1Eb248AD369a764bB37Z'
+      notHex: '0x074976a8D5Y07dA5XADa1Eb248AD369a764bB373DADa1Eb248AD369a764bB37Z',
+      zeroed: '0x0000000000000000000000000000000000000000000000000000000000000000'
     };
 
     it('returns true for valid private key', async () => {
@@ -49,6 +50,10 @@ describe('Validations', () => {
 
     it('returns false if private key is not a hex value', async () => {
       expect(validations.isValidPrivateKey(inputs.notHex)).to.be.false;
+    });
+
+    it('returns false if private key has only zeroes', async () => {
+      expect(validations.isValidPrivateKey(inputs.zeroed)).to.be.false;
     });
   });
 

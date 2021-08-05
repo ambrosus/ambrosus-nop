@@ -30,6 +30,10 @@ export default class Crypto {
     return this.web3.eth.accounts.encrypt(privateKey, password);
   }
 
+  getDecryptedWallet(encryptedWallet, password) {
+    return this.web3.eth.accounts.decrypt(encryptedWallet, password);
+  }
+
   getRandomPassword() {
     return this.web3.utils.randomHex(32);
   }

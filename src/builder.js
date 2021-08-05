@@ -34,6 +34,8 @@ import prepareDockerPhase from './phases/prepare_docker_phase';
 import selectActionPhase from './phases/select_action_phase';
 
 import askForPrivateKeyDialog from './dialogs/ask_for_private_key_dialog';
+import askForPassphraseDialog from './dialogs/ask_for_passphrase_dialog';
+import askForPassphraseUnlockDialog from './dialogs/ask_for_passphrase_unlock_dialog';
 import dockerDetectedDialog from './dialogs/docker_detected_dialog';
 import dockerMissingDialog from './dialogs/docker_missing_dialog';
 import privateKeyDetectedDialog from './dialogs/private_key_detected_dialog';
@@ -108,6 +110,8 @@ class Builder {
 
     objects.privateKeyDetectedDialog = privateKeyDetectedDialog(messages);
     objects.askForPrivateKeyDialog = askForPrivateKeyDialog(objects.validations, messages);
+    objects.askForPassphraseDialog = askForPassphraseDialog(messages);
+    objects.askForPassphraseUnlockDialog = askForPassphraseUnlockDialog(messages);
     objects.dockerDetectedDialog = dockerDetectedDialog(messages);
     objects.dockerMissingDialog = dockerMissingDialog(messages);
     objects.askForNodeTypeDialog = askForNodeTypeDialog(messages);
@@ -151,7 +155,7 @@ class Builder {
 
     objects.selectNetworkPhase = selectNetworkPhase(networks, objects.stateModel, objects.askForNetworkDialog, objects.networkSelectedDialog, objects.dockerRestartRequiredDialog);
     objects.checkDockerAvailablePhase = checkDockerAvailablePhase(objects.systemModel, objects.dockerDetectedDialog, objects.dockerMissingDialog);
-    objects.getPrivateKeyPhase = getPrivateKeyPhase(objects.stateModel, objects.crypto, objects.privateKeyDetectedDialog, objects.askForPrivateKeyDialog);
+    objects.getPrivateKeyPhase = getPrivateKeyPhase(objects.stateModel, objects.crypto, objects.privateKeyDetectedDialog, objects.askForPrivateKeyDialog, objects.askForPassphraseDialog, objects.askForPassphraseUnlockDialog);
 
     return objects;
   }
@@ -176,7 +180,7 @@ class Builder {
 
     objects.crypto = new Crypto(objects.web3);
 
-    objects.stateModel = new StateModel(objects.store, objects.crypto, objects.setupCreator);
+    objects.stateModel = new StateModel(objects.store, objects.crypto, objects.setupCreator, privateKey);
 
     objects.stateModel.checkStateVariables().then();
 

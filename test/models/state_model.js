@@ -91,15 +91,15 @@ describe('State Model', () => {
     });
   });
 
-  describe('generateAndStoreNewPrivateKey', () => {
-    it('generates new private key', async () => {
-      await expect(stateModel.generateAndStoreNewPrivateKey()).to.be.eventually.fulfilled;
+  describe('generateAndStoreNewEncryptedPrivateKey', () => {
+    it('generates new encrypted private key', async () => {
+      await expect(stateModel.generateAndStoreNewEncryptedPrivateKey()).to.be.eventually.fulfilled;
       expect(cryptoStub.generatePrivateKey).to.have.been.calledOnceWith();
     });
 
-    it('stores newly generated private key', async () => {
-      await expect(stateModel.generateAndStoreNewPrivateKey()).to.be.eventually.fulfilled;
-      expect(storeStub.write).to.have.been.calledOnceWith('privateKey', examplePrivateKey);
+    it('stores newly generated encrypted private key', async () => {
+      await expect(stateModel.generateAndStoreNewEncryptedPrivateKey()).to.be.eventually.fulfilled;
+      expect(storeStub.write).to.have.been.calledOnceWith('encryptedWallet', examplePrivateKey);
     });
   });
 

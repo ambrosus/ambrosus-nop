@@ -96,7 +96,11 @@ const messages = {
     changeUrl: 'Change node URL',
     retire: 'Retire',
     quit: 'Finish NOP'
-  }
+  },
+  passphraseTypeQuestion: `WARNING: The private key cannot be stored as is. It will be encrypted after providing a passphrase. Passphrase must be either entered manually or generated automatically. What is your choice?`,
+  passphraseManualAnswer: `Manually enter a passphrase`,
+  passphraseAutoGenerationAnswer: `Generate a new passphrase automatically`,
+  passphraseInputInstruction: `Please provide your passphrase:`
 };
 
 export default messages;

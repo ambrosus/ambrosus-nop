@@ -15,10 +15,11 @@ import jsyaml from 'js-yaml';
 const dockerFileName = 'docker-compose.yml';
 
 export default class StateModel {
-  constructor(store, crypto, setupCreator) {
+  constructor(store, crypto, setupCreator, privateKey) {
     this.store = store;
     this.crypto = crypto;
     this.setupCreator = setupCreator;
+    this.privateKey = privateKey;
   }
 
   async checkMailInfo() {
@@ -58,14 +59,44 @@ export default class StateModel {
     await this.store.write('network', network);
   }
 
-  async generateAndStoreNewPrivateKey() {
-    const privateKey = await this.crypto.generatePrivateKey();
-    await this.storePrivateKey(privateKey);
-    return privateKey;
+  async generatePassword() {
+    const randomHex = this.crypto.getRandomPassword();
+    return randomHex.substr(10, 10);
+  }
+
+  async storeNewEncryptedWallet(password, generate) {
+    if (generate === true) {
+      const privateKey = await this.crypto.generatePrivateKey();
+      this.privateKey = privateKey;
+    }
+
+    const encryptedWallet = await this.crypto.getEncryptedWallet(this.privateKey, password);
+    await this.store.write('encryptedWallet', encryptedWallet);
+  }
+
+  async getEncryptedWallet() {
+    const encryptedWallet = await this.store.safeRead('encryptedWallet');
+    if (!encryptedWallet) {
+      return null;
+    }
+
+    return encryptedWallet;
+  }
+
+  async decryptWallet(password) {
+    const encryptedWallet = await this.store.safeRead('encryptedWallet');
+    const decryptedWallet = this.crypto.getDecryptedWallet(encryptedWallet, password);
+    if (!decryptedWallet) {
+      throw new Error(`Unable to decrypt the wallet`);
+    }
+    this.privateKey = decryptedWallet.privateKey;
   }
 
   async getPrivateKey() {
-    return this.store.safeRead('privateKey');
+    if (this.privateKey) {
+      return this.privateKey;
+    }
+    throw new Error(`Private key has not been initiated yet.`);
   }
 
   async storePrivateKey(privateKey) {
@@ -73,11 +104,12 @@ export default class StateModel {
   }
 
   async getAddress() {
-    const privateKey = await this.getPrivateKey();
-    if (privateKey) {
-      return this.crypto.addressForPrivateKey(privateKey);
+    const address = await this.store.safeRead('address');
+    if (address) {
+      return address;
     }
-    return null;
+    const {privateKey} = this;
+    return await this.crypto.addressForPrivateKey(privateKey);
   }
 
   async storeAddress(address) {
@@ -221,7 +253,7 @@ export default class StateModel {
     );
 
     if (role === APOLLO) {
-      const password = this.crypto.getRandomPassword();
+      const password = this.generatePassword();
       await this.setupCreator.createPasswordFile(password);
 
       const encryptedWallet = this.crypto.getEncryptedWallet(privateKey, password);
