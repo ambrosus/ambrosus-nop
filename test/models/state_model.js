@@ -28,6 +28,7 @@ describe('State Model', () => {
 
   const examplePrivateKey = '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709';
   const exampleAddress = '0xB1D28124D5771dD347a0BDECbC72CFb2BFf4B2D7';
+  const examplePassphrase = '123';
   const exampleDomain = 'ambrosus-dev.com';
   const exampleRole = APOLLO;
   const exampleUrl = 'https://amb-node.com';
@@ -70,7 +71,7 @@ describe('State Model', () => {
       prepareDockerComposeFile: sinon.stub(),
       fetchChainJson: sinon.stub()
     };
-    stateModel = new StateModel(storeStub, cryptoStub, setupCreatorStub);
+    stateModel = new StateModel(storeStub, cryptoStub, setupCreatorStub, examplePrivateKey);
   });
 
   describe('getNetwork', () => {
@@ -93,24 +94,19 @@ describe('State Model', () => {
 
   describe('generateAndStoreNewEncryptedPrivateKey', () => {
     it('generates new encrypted private key', async () => {
-      await expect(stateModel.generateAndStoreNewEncryptedPrivateKey()).to.be.eventually.fulfilled;
+      await expect(stateModel.storeNewEncryptedWallet(examplePassphrase, true)).to.be.eventually.fulfilled;
       expect(cryptoStub.generatePrivateKey).to.have.been.calledOnceWith();
     });
 
     it('stores newly generated encrypted private key', async () => {
-      await expect(stateModel.generateAndStoreNewEncryptedPrivateKey()).to.be.eventually.fulfilled;
-      expect(storeStub.write).to.have.been.calledOnceWith('encryptedWallet', examplePrivateKey);
+      await expect(stateModel.storeNewEncryptedWallet()).to.be.eventually.fulfilled;
+      expect(storeStub.write).to.have.been.calledOnceWith('encryptedWallet', exampleEncryptedWallet);
     });
   });
 
   describe('getPrivateKey', () => {
-    beforeEach(async () => {
-      storeStub.safeRead.resolves(examplePrivateKey);
-    });
-
     it('returns private key if one exists', async () => {
       expect(await stateModel.getPrivateKey()).to.equal(examplePrivateKey);
-      expect(storeStub.safeRead).to.have.been.calledOnceWith('privateKey');
     });
   });
 
@@ -122,13 +118,9 @@ describe('State Model', () => {
   });
 
   describe('getAddress', () => {
-    beforeEach(async () => {
-      storeStub.safeRead.resolves(examplePrivateKey);
-    });
-
     it('converts private key to address if one exists', async () => {
       expect(await stateModel.getAddress()).to.equal(exampleAddress);
-      expect(storeStub.safeRead).to.have.been.calledOnceWith('privateKey');
+      expect(storeStub.safeRead).to.have.been.calledOnceWith('address');
       expect(cryptoStub.addressForPrivateKey).to.have.been.calledOnceWith(examplePrivateKey);
     });
   });
@@ -250,8 +242,7 @@ describe('State Model', () => {
 
     it('assembles submission', async () => {
       expect(await stateModel.assembleSubmission()).to.deep.equal(assembledSubmission);
-      expect(storeStub.safeRead).to.have.callCount(12);
-      expect(storeStub.safeRead).to.have.been.calledWith('privateKey');
+      expect(storeStub.safeRead).to.have.callCount(11);
       expect(storeStub.safeRead).to.have.been.calledWith('role');
       expect(storeStub.safeRead).to.have.been.calledWith('url');
       expect(storeStub.safeRead).to.have.been.calledWith('ip');

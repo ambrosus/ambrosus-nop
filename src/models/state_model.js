@@ -59,9 +59,8 @@ export default class StateModel {
     await this.store.write('network', network);
   }
 
-  async generatePassword() {
-    const randomHex = this.crypto.getRandomPassword();
-    return randomHex.substr(10, 10);
+  generatePassword() {
+    return this.crypto.getRandomPassword();
   }
 
   async storeNewEncryptedWallet(password, generatePrivateKey = false) {
@@ -252,7 +251,7 @@ export default class StateModel {
     );
 
     if (role === APOLLO) {
-      const password = this.generatePassword();
+      const password = await this.generatePassword();
       await this.setupCreator.createPasswordFile(password);
 
       const encryptedWallet = this.crypto.getEncryptedWallet(privateKey, password);

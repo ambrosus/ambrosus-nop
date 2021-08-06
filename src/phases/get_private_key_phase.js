@@ -28,7 +28,7 @@ const getPrivateKey = async (stateModel, askForPrivateKeyDialog, askForPassphras
       break;
     }
     case 'generate': {
-      password = await stateModel.generatePassword();
+      password = stateModel.generatePassword();
       break;
     }
     default: throw new Error('Unexpected passphrase type');
