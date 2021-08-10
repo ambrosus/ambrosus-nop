@@ -72,7 +72,7 @@ export default class Crypto {
     const enc = this.sha256(key);
     const decipher = crypto.createDecipheriv('aes-256-cbc', enc, iv);
 
-    const encrypted = Buffer.concat([decipher.update(Buffer.from(input, 'hex')), decipher.final()]);
-    return `${encrypted.toString()}`;
+    const decrypted = Buffer.concat([decipher.update(Buffer.from(input, 'hex')), decipher.final()]);
+    return `${decrypted.toString()}`;
   }
 }
