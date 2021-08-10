@@ -7,6 +7,8 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
+import * as crypto from 'crypto';
+
 export default class Crypto {
   constructor(web3) {
     this.web3 = web3;
@@ -44,5 +46,33 @@ export default class Crypto {
 
   hashData(data) {
     return this.web3.utils.sha3(data);
+  }
+
+  md5(data) {
+    return crypto.createHash('md5').update(data)
+      .digest();
+  }
+
+  sha256(data) {
+    return crypto.createHash('sha256').update(data)
+      .digest();
+  }
+
+  aesEncrypt(input, key) {
+    const iv = this.md5(key);
+    const enc = this.sha256(key);
+    const cipher = crypto.createCipheriv('aes-256-cbc', enc, iv);
+
+    const encrypted = Buffer.concat([cipher.update(input), cipher.final()]);
+    return `${encrypted.toString('hex')}`;
+  }
+
+  aesDecrypt(input, key) {
+    const iv = this.md5(key);
+    const enc = this.sha256(key);
+    const decipher = crypto.createDecipheriv('aes-256-cbc', enc, iv);
+
+    const encrypted = Buffer.concat([decipher.update(Buffer.from(input, 'hex')), decipher.final()]);
+    return `${encrypted.toString()}`;
   }
 }

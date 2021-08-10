@@ -15,11 +15,12 @@ import jsyaml from 'js-yaml';
 const dockerFileName = 'docker-compose.yml';
 
 export default class StateModel {
-  constructor(store, crypto, setupCreator, privateKey) {
+  constructor(store, crypto, setupCreator, privateKey, passphrase) {
     this.store = store;
     this.crypto = crypto;
     this.setupCreator = setupCreator;
     this.privateKey = privateKey;
+    this.passphrase = passphrase;
   }
 
   async checkMailInfo() {
@@ -59,10 +60,6 @@ export default class StateModel {
     await this.store.write('network', network);
   }
 
-  generatePassword() {
-    return this.crypto.getRandomPassword();
-  }
-
   async storeNewEncryptedWallet(password, generatePrivateKey = false) {
     if (generatePrivateKey === true) {
       this.privateKey = await this.crypto.generatePrivateKey();
@@ -87,14 +84,28 @@ export default class StateModel {
     if (!decryptedWallet) {
       throw new Error(`Unable to decrypt the wallet`);
     }
-    this.privateKey = decryptedWallet.privateKey;
   }
 
-  async getPrivateKey() {
+  generatePassword() {
+    return this.crypto.getRandomPassword();
+  }
+
+  getPrivateKey() {
     if (this.privateKey) {
       return this.privateKey;
     }
     throw new Error(`Private key has not been initiated yet.`);
+  }
+
+  getPassphrase() {
+    if (this.passphrase) {
+      return this.passphrase;
+    }
+    throw new Error(`Passphrase has not been initiated yet.`);
+  }
+
+  getEncryptedKey() {
+    return this.crypto.aesEncrypt(this.getPrivateKey(), this.getPassphrase());
   }
 
   async storePrivateKey(privateKey) {
@@ -155,7 +166,7 @@ export default class StateModel {
   }
 
   async getSignedTos() {
-    return  this.store.safeRead('termsOfServiceSignature');
+    return this.store.safeRead('termsOfServiceSignature');
   }
 
   async storeSignedTos(tosSignature) {
@@ -229,7 +240,7 @@ export default class StateModel {
     }
 
     const address = await this.getAddress();
-    const privateKey = await this.getPrivateKey();
+    const encryptedPrivateKey = this.getEncryptedKey();
 
     const {headContractAddress, chainspec, dockerTag, domain} = await this.getNetwork();
 
@@ -241,7 +252,7 @@ export default class StateModel {
       dockerTag,
       nodeTypeName,
       address,
-      privateKey,
+      encryptedPrivateKey,
       headContractAddress,
       networkName,
       domain,
@@ -254,7 +265,7 @@ export default class StateModel {
       const password = await this.generatePassword();
       await this.setupCreator.createPasswordFile(password);
 
-      const encryptedWallet = this.crypto.getEncryptedWallet(privateKey, password);
+      const encryptedWallet = this.crypto.getEncryptedWallet(this.privateKey, password);
       await this.setupCreator.createKeyFile(encryptedWallet);
 
       const nodeIp = await this.getNodeIP();

@@ -52,14 +52,14 @@ describe('Get Private Key Phase', () => {
   it('ends if a private key is already in the store', async () => {
     stateModelStub.getEncryptedWallet.resolves();
 
-    const ret = await call();
+    const {privateKey} = await call();
 
     expect(stateModelStub.getEncryptedWallet).to.have.been.calledOnce;
     expect(askForPrivateKeyDialogStub).to.not.have.been.called;
     expect(askForPassphraseUnlockDialogStub).to.have.been.called;
     expect(cryptoStub.addressForPrivateKey).to.have.been.calledOnceWith(examplePrivateKey);
     expect(privateKeyDetectedDialogStub).to.have.been.calledOnceWith(exampleAddress);
-    expect(ret).to.equal(examplePrivateKey);
+    expect(privateKey).to.equal(examplePrivateKey);
   });
 
   it('generates and stores a new private key (generate option)', async () => {
@@ -73,14 +73,14 @@ describe('Get Private Key Phase', () => {
     });
     stateModelStub.storeNewEncryptedWallet.resolves();
 
-    const ret = await call();
+    const {privateKey} = await call();
 
     expect(stateModelStub.getEncryptedWallet).to.have.been.calledOnce;
     expect(askForPrivateKeyDialogStub).to.have.been.calledOnce;
     expect(stateModelStub.storeNewEncryptedWallet).to.have.been.calledOnce;
     expect(cryptoStub.addressForPrivateKey).to.have.been.calledOnceWith(examplePrivateKey);
     expect(privateKeyDetectedDialogStub).to.have.been.calledOnceWith(exampleAddress);
-    expect(ret).to.equal(examplePrivateKey);
+    expect(privateKey).to.equal(examplePrivateKey);
   });
 
   it('stores the provided private key (manual option)', async () => {
@@ -94,13 +94,13 @@ describe('Get Private Key Phase', () => {
       passphrase: examplePassphrase
     });
 
-    const ret = await call();
+    const {privateKey} = await call();
 
     expect(stateModelStub.getEncryptedWallet).to.have.been.calledOnce;
     expect(askForPrivateKeyDialogStub).to.have.been.calledOnce;
     expect(stateModelStub.storeAddress).to.have.been.calledOnceWith(exampleAddress);
     expect(cryptoStub.addressForPrivateKey).to.have.been.calledOnceWith(examplePrivateKey);
     expect(privateKeyDetectedDialogStub).to.have.been.calledOnceWith(exampleAddress);
-    expect(ret).to.equal(examplePrivateKey);
+    expect(privateKey).to.equal(examplePrivateKey);
   });
 });

@@ -12,7 +12,7 @@ const getPrivateKey = async (stateModel, askForPrivateKeyDialog, askForPassphras
   if (storedEncryptedWallet !== null) {
     const {passphraseUnlock} = await askForPassphraseUnlockDialog();
     await stateModel.decryptWallet(passphraseUnlock);
-    return stateModel.privateKey;
+    return;
   }
 
   const answers = await askForPrivateKeyDialog();
@@ -55,15 +55,14 @@ const getPrivateKey = async (stateModel, askForPrivateKeyDialog, askForPassphras
     }
     default: throw new Error('Unexpected source');
   }
-
-  return stateModel.privateKey;
 };
 
 const getPrivateKeyPhase = (stateModel, crypto, privateKeyDetectedDialog, askForPrivateKeyDialog, askForPassphraseDialog, askForPassphraseUnlockDialog) => async () => {
-  const privateKey = await getPrivateKey(stateModel, askForPrivateKeyDialog, askForPassphraseDialog, askForPassphraseUnlockDialog);
+  await getPrivateKey(stateModel, askForPrivateKeyDialog, askForPassphraseDialog, askForPassphraseUnlockDialog);
+  const {privateKey, passphrase} = stateModel;
   const address = await crypto.addressForPrivateKey(privateKey);
   await privateKeyDetectedDialog(address);
-  return privateKey;
+  return {privateKey, passphrase};
 };
 
 export default getPrivateKeyPhase;

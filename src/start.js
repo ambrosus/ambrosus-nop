@@ -21,9 +21,9 @@ const start = async (isInteractive) => {
     return;
   }
   const network = await selectNetworkPhase();
-  const privateKey = await getPrivateKeyPhase();
+  const {privateKey, passphrase} = await getPrivateKeyPhase();
 
-  const stage2Objects = Builder.buildStage2(stage1Objects, network, privateKey);
+  const stage2Objects = Builder.buildStage2(stage1Objects, network, privateKey, passphrase);
   const {checkAddressWhitelistingStatusPhase, selectNodeTypePhase, getNodeIPPhase, getNodeUrlPhase, getUserEmailPhase, manualSubmissionPhase, performOnboardingPhase, prepareDockerPhase, selectActionPhase, acceptTosPhase} = stage2Objects;
 
   const whitelistingStatus = await checkAddressWhitelistingStatusPhase();

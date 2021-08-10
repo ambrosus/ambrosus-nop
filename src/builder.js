@@ -160,7 +160,7 @@ class Builder {
     return objects;
   }
 
-  static buildStage2(stage1Objects, network, privateKey) {
+  static buildStage2(stage1Objects, network, privateKey, passphrase) {
     const objects = {...stage1Objects};
 
     objects.web3 = new Web3(network.rpc);
@@ -180,7 +180,7 @@ class Builder {
 
     objects.crypto = new Crypto(objects.web3);
 
-    objects.stateModel = new StateModel(objects.store, objects.crypto, objects.setupCreator, privateKey);
+    objects.stateModel = new StateModel(objects.store, objects.crypto, objects.setupCreator, privateKey, passphrase);
 
     objects.stateModel.checkStateVariables().then();
 

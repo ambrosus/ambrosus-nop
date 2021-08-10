@@ -42,6 +42,14 @@ describe('Crypto', () => {
     crypto = new Crypto(web3Stub);
   });
 
+  describe('AES encryption', () => {
+    it('works', async () => {
+      const ret1 = crypto.aesEncrypt(examplePrivateKey, 'bb');
+      const ret2 = crypto.aesDecrypt(ret1, 'bb');
+      expect(ret2).to.equal(examplePrivateKey);
+    });
+  });
+
   describe('generatePrivateKey', () => {
     const call = async () => crypto.generatePrivateKey();
 

@@ -48,7 +48,7 @@ export default class SetupCreator {
     tag,
     nodeTypeName,
     address,
-    privateKey,
+    encryptedPrivateKey,
     headContractAddress,
     networkName,
     domain,
@@ -57,11 +57,11 @@ export default class SetupCreator {
     workerInterval
   ) {
     await this.ensureOutputDirectoryExists();
-    let dockerFile = await readFile(path.join(this.templateDirectory, nodeTypeName, dockerFileName));
+    let dockerFile = String(await readFile(path.join(this.templateDirectory, nodeTypeName, dockerFileName)));
 
     dockerFile = dockerFile.replace(/<ENTER_DOCKER_TAG_HERE>/gi, tag);
     dockerFile = dockerFile.replace(/<ENTER_YOUR_ADDRESS_HERE>/gi, address);
-    dockerFile = dockerFile.replace(/<ENTER_YOUR_PRIVATE_KEY_HERE>/gi, privateKey);
+    dockerFile = dockerFile.replace(/<ENTER_YOUR_PRIVATE_KEY_HERE>/gi, encryptedPrivateKey);
     dockerFile = dockerFile.replace(/<ENTER_YOUR_HEAD_CONTRACT_ADDRESS_HERE>/gi, headContractAddress);
     dockerFile = dockerFile.replace(/<ENTER_NETWORK_NAME_HERE>/gi, networkName);
     dockerFile = dockerFile.replace(/<ENTER_DOMAIN_HERE>/gi, domain);

@@ -29,6 +29,7 @@ describe('State Model', () => {
   const examplePrivateKey = '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709';
   const exampleAddress = '0xB1D28124D5771dD347a0BDECbC72CFb2BFf4B2D7';
   const examplePassphrase = '123';
+  const exampleEncryptedPrivateKey = 'a757c0c9885f2fae8c26ed5853f75a30d33182589b64b48a4c9b5524efec968d61063e82e0eaf55d37dcf1c2f1e139412a95dc5b70b53c3deb471f61dd1b11dfde3903e0e48894f0d20087583500bdbf';
   const exampleDomain = 'ambrosus-dev.com';
   const exampleRole = APOLLO;
   const exampleUrl = 'https://amb-node.com';
@@ -62,7 +63,9 @@ describe('State Model', () => {
         .resolves(exampleAddress),
       getRandomPassword: sinon.stub().returns(examplePassword),
       getEncryptedWallet: sinon.stub().withArgs(examplePrivateKey, examplePassword)
-        .returns(exampleEncryptedWallet)
+        .returns(exampleEncryptedWallet),
+      aesEncrypt: sinon.stub().withArgs(examplePrivateKey, examplePassword)
+        .returns(exampleEncryptedPrivateKey)
     };
     setupCreatorStub = {
       copyParityConfiguration: sinon.stub(),
@@ -71,7 +74,7 @@ describe('State Model', () => {
       prepareDockerComposeFile: sinon.stub(),
       fetchChainJson: sinon.stub()
     };
-    stateModel = new StateModel(storeStub, cryptoStub, setupCreatorStub, examplePrivateKey);
+    stateModel = new StateModel(storeStub, cryptoStub, setupCreatorStub, examplePrivateKey, examplePassphrase);
   });
 
   describe('getNetwork', () => {
@@ -279,7 +282,7 @@ describe('State Model', () => {
       expect(setupCreatorStub.fetchChainJson).to.have.been.calledOnceWith(exampleNetwork.chainspec);
       expect(setupCreatorStub.copyParityConfiguration).to.have.been.calledOnceWith('apollo', {address: exampleAddress, ip: exampleIP, extraData: exampleExtraData});
       expect(setupCreatorStub.prepareDockerComposeFile).to.have.been.calledOnceWith(
-        exampleDockerTag, 'apollo', exampleAddress, examplePrivateKey, exampleNetwork.headContractAddress, exampleNetworkFullName, exampleDomain);
+        exampleDockerTag, 'apollo', exampleAddress, exampleEncryptedPrivateKey, exampleNetwork.headContractAddress, exampleNetworkFullName, exampleDomain);
     });
 
     it('creates files for Hermes and Atlas', async () => {
@@ -298,7 +301,7 @@ describe('State Model', () => {
       expect(setupCreatorStub.fetchChainJson).to.have.been.calledOnceWith(exampleNetwork.chainspec);
       expect(setupCreatorStub.copyParityConfiguration).to.have.been.calledOnceWith('hermes', {});
       expect(setupCreatorStub.prepareDockerComposeFile).to.have.been.calledOnceWith(
-        exampleDockerTag, 'hermes', exampleAddress, examplePrivateKey, exampleNetwork.headContractAddress, exampleNetworkFullName, exampleDomain);
+        exampleDockerTag, 'hermes', exampleAddress, exampleEncryptedPrivateKey, exampleNetwork.headContractAddress, exampleNetworkFullName, exampleDomain);
     });
 
     it('throws if invalid role provided', async () => {
