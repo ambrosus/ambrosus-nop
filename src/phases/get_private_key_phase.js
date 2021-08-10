@@ -7,6 +7,9 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
+import chalk from 'chalk';
+import messages from '../messages';
+
 const getPrivateKey = async (stateModel, askForPrivateKeyDialog, askForPassphraseDialog, askForPassphraseUnlockDialog) => {
   const storedEncryptedWallet = await stateModel.getEncryptedWallet();
   if (storedEncryptedWallet !== null) {
@@ -29,6 +32,7 @@ const getPrivateKey = async (stateModel, askForPrivateKeyDialog, askForPassphras
     }
     case 'generate': {
       password = stateModel.generatePassword();
+      console.log(chalk.red(messages.passphraseGeneratedWarning(chalk.yellow(password))));
       break;
     }
     default: throw new Error('Unexpected passphrase type');
