@@ -7,38 +7,66 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-const getPrivateKey = async (stateModel, askForPrivateKeyDialog) => {
-  const storedPrivateKey = await stateModel.getPrivateKey();
-  if (storedPrivateKey !== null) {
-    return storedPrivateKey;
+import chalk from 'chalk';
+import messages from '../messages';
+
+const getPrivateKey = async (stateModel, askForPrivateKeyDialog, askForPassphraseDialog, askForPassphraseUnlockDialog) => {
+  const storedEncryptedWallet = await stateModel.getEncryptedWallet();
+  if (storedEncryptedWallet !== null) {
+    const {passphraseUnlock} = await askForPassphraseUnlockDialog();
+    await stateModel.decryptWallet(passphraseUnlock);
+    return;
   }
 
   const answers = await askForPrivateKeyDialog();
   const {source} = answers;
+
+  const passphraseAnswers = await askForPassphraseDialog();
+  const {passphraseType, passphrase} = passphraseAnswers;
+
+  let password;
+  switch (passphraseType) {
+    case 'manual': {
+      password = passphrase;
+      break;
+    }
+    case 'generate': {
+      password = stateModel.generatePassword();
+      console.log(chalk.red(messages.passphraseGeneratedWarning(chalk.yellow(password))));
+      break;
+    }
+    default: throw new Error('Unexpected passphrase type');
+  }
+
+  if (!password) {
+    throw new Error('Passphrase must be defined and cannot be empty.');
+  }
+
   switch (source) {
     case 'manual': {
       const {privateKey} = answers;
-      await stateModel.storePrivateKey(privateKey);
+      stateModel.privateKey = privateKey;
+      await stateModel.storeNewEncryptedWallet(password);
       const address = await stateModel.getAddress();
       await stateModel.storeAddress(address);
-      return privateKey;
+      break;
     }
     case 'generate': {
-      const privateKey = await stateModel.generateAndStoreNewPrivateKey();
+      await stateModel.storeNewEncryptedWallet(password, true);
       const address = await stateModel.getAddress();
       await stateModel.storeAddress(address);
-      return privateKey;
+      break;
     }
-    default:
-      throw new Error('Unexpected source');
+    default: throw new Error('Unexpected source');
   }
 };
 
-const getPrivateKeyPhase = (stateModel, crypto, privateKeyDetectedDialog, askForPrivateKeyDialog) => async () => {
-  const privateKey = await getPrivateKey(stateModel, askForPrivateKeyDialog);
+const getPrivateKeyPhase = (stateModel, crypto, privateKeyDetectedDialog, askForPrivateKeyDialog, askForPassphraseDialog, askForPassphraseUnlockDialog) => async () => {
+  await getPrivateKey(stateModel, askForPrivateKeyDialog, askForPassphraseDialog, askForPassphraseUnlockDialog);
+  const {privateKey, passphrase} = stateModel;
   const address = await crypto.addressForPrivateKey(privateKey);
   await privateKeyDetectedDialog(address);
-  return privateKey;
+  return {privateKey, passphrase};
 };
 
 export default getPrivateKeyPhase;

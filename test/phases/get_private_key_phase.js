@@ -21,72 +21,86 @@ const {expect} = chai;
 describe('Get Private Key Phase', () => {
   const examplePrivateKey = '0x0123456701234567012345670123456701234567012345670123456701234567';
   const exampleAddress = '0x012345670123456701234567012345670123456701234567';
+  const examplePassphrase = '123';
   let stateModelStub;
   let cryptoStub;
   let privateKeyDetectedDialogStub;
   let askForPrivateKeyDialogStub;
+  let askForPassphraseDialogStub;
+  let askForPassphraseUnlockDialogStub;
 
-  const call = async () => getPrivateKeyPhase(stateModelStub, cryptoStub, privateKeyDetectedDialogStub, askForPrivateKeyDialogStub)();
+  const call = async () => getPrivateKeyPhase(stateModelStub, cryptoStub, privateKeyDetectedDialogStub, askForPrivateKeyDialogStub, askForPassphraseDialogStub, askForPassphraseUnlockDialogStub)();
 
   beforeEach(async () => {
     cryptoStub = {
       addressForPrivateKey: sinon.stub().resolves(exampleAddress)
     };
     stateModelStub = {
-      getAddress: sinon.stub(),
+      privateKey: examplePrivateKey,
+      getAddress: sinon.stub().resolves(exampleAddress),
+      getEncryptedWallet: sinon.stub(),
+      storeNewEncryptedWallet: sinon.stub(),
       storeAddress: sinon.stub(),
-      getPrivateKey: sinon.stub(),
-      storePrivateKey: sinon.stub(),
-      generateAndStoreNewPrivateKey: sinon.stub()
+      decryptWallet: sinon.stub()
     };
     privateKeyDetectedDialogStub = sinon.stub().resolves();
     askForPrivateKeyDialogStub = sinon.stub();
+    askForPassphraseDialogStub = sinon.stub();
+    askForPassphraseUnlockDialogStub = sinon.stub().resolves(examplePassphrase);
   });
 
   it('ends if a private key is already in the store', async () => {
-    stateModelStub.getPrivateKey.resolves(examplePrivateKey);
+    stateModelStub.getEncryptedWallet.resolves();
 
-    const ret = await call();
+    const {privateKey} = await call();
 
-    expect(stateModelStub.getPrivateKey).to.have.been.calledOnce;
+    expect(stateModelStub.getEncryptedWallet).to.have.been.calledOnce;
     expect(askForPrivateKeyDialogStub).to.not.have.been.called;
+    expect(askForPassphraseUnlockDialogStub).to.have.been.called;
     expect(cryptoStub.addressForPrivateKey).to.have.been.calledOnceWith(examplePrivateKey);
     expect(privateKeyDetectedDialogStub).to.have.been.calledOnceWith(exampleAddress);
-    expect(ret).to.equal(examplePrivateKey);
+    expect(privateKey).to.equal(examplePrivateKey);
   });
 
   it('generates and stores a new private key (generate option)', async () => {
-    stateModelStub.getPrivateKey.resolves(null);
+    stateModelStub.getEncryptedWallet.resolves(null);
     askForPrivateKeyDialogStub.resolves({
       source: 'generate'
     });
-    stateModelStub.generateAndStoreNewPrivateKey.resolves(examplePrivateKey);
+    askForPassphraseDialogStub.resolves({
+      passphraseType: 'manual',
+      passphrase: examplePassphrase
+    });
+    stateModelStub.storeNewEncryptedWallet.resolves();
 
-    const ret = await call();
+    const {privateKey} = await call();
 
-    expect(stateModelStub.getPrivateKey).to.have.been.calledOnce;
+    expect(stateModelStub.getEncryptedWallet).to.have.been.calledOnce;
     expect(askForPrivateKeyDialogStub).to.have.been.calledOnce;
-    expect(stateModelStub.generateAndStoreNewPrivateKey).to.have.been.calledOnce;
+    expect(stateModelStub.storeNewEncryptedWallet).to.have.been.calledOnce;
     expect(cryptoStub.addressForPrivateKey).to.have.been.calledOnceWith(examplePrivateKey);
     expect(privateKeyDetectedDialogStub).to.have.been.calledOnceWith(exampleAddress);
-    expect(ret).to.equal(examplePrivateKey);
+    expect(privateKey).to.equal(examplePrivateKey);
   });
 
   it('stores the provided private key (manual option)', async () => {
-    stateModelStub.getPrivateKey.resolves(null);
+    stateModelStub.getEncryptedWallet.resolves(null);
     askForPrivateKeyDialogStub.resolves({
       source: 'manual',
       privateKey: examplePrivateKey
     });
-    stateModelStub.storePrivateKey.resolves();
+    askForPassphraseDialogStub.resolves({
+      passphraseType: 'manual',
+      passphrase: examplePassphrase
+    });
 
-    const ret = await call();
+    const {privateKey} = await call();
 
-    expect(stateModelStub.getPrivateKey).to.have.been.calledOnce;
+    expect(stateModelStub.getEncryptedWallet).to.have.been.calledOnce;
     expect(askForPrivateKeyDialogStub).to.have.been.calledOnce;
-    expect(stateModelStub.storePrivateKey).to.have.been.calledOnceWith(examplePrivateKey);
+    expect(stateModelStub.storeAddress).to.have.been.calledOnceWith(exampleAddress);
     expect(cryptoStub.addressForPrivateKey).to.have.been.calledOnceWith(examplePrivateKey);
     expect(privateKeyDetectedDialogStub).to.have.been.calledOnceWith(exampleAddress);
-    expect(ret).to.equal(examplePrivateKey);
+    expect(privateKey).to.equal(examplePrivateKey);
   });
 });

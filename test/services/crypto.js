@@ -21,6 +21,7 @@ const {expect} = chai;
 describe('Crypto', () => {
   const exampleAddress = '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01';
   const examplePrivateKey = '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709';
+  const examplePassphrase = '123';
   let crypto;
   let web3Stub;
 
@@ -40,6 +41,14 @@ describe('Crypto', () => {
       }
     };
     crypto = new Crypto(web3Stub);
+  });
+
+  describe('AES encryption', () => {
+    it('encrypts and decrypts', async () => {
+      const encrypted = crypto.aesEncrypt(examplePrivateKey, examplePassphrase);
+      const decrypted = crypto.aesDecrypt(encrypted, examplePassphrase);
+      expect(decrypted).to.equal(examplePrivateKey);
+    });
   });
 
   describe('generatePrivateKey', () => {

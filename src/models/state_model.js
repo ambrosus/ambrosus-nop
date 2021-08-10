@@ -14,41 +14,33 @@ import jsyaml from 'js-yaml';
 
 const dockerFileName = 'docker-compose.yml';
 
-const mailInfo = 'mailInfo';
-
 export default class StateModel {
-  constructor(store, crypto, setupCreator) {
+  constructor(store, crypto, setupCreator, privateKey, passphrase) {
     this.store = store;
     this.crypto = crypto;
     this.setupCreator = setupCreator;
+    this.privateKey = privateKey;
+    this.passphrase = passphrase;
   }
 
   async checkMailInfo() {
-    const probe = await this.store.safeRead(mailInfo);
-
-    if (!probe) {
-      const mail = {
-        from: 'from',
-        orgRegTo: 'orgRegTo',
-        apiKey: 'apiKey',
-        templateIds: {
-          invite: 'invite',
-          orgReq: 'orgReq',
-          orgReqApprove: 'orgReqApprove',
-          orgReqRefuse: 'orgReqRefuse'
-        }
-      };
-
-      await this.store.write(mailInfo, mail);
-    }
+    // write default 'mailInfo' if it doesn't exist
+    return await this.store.safeRead('mailInfo') || await this.store.write('mailInfo', {
+      from: 'from',
+      orgRegTo: 'orgRegTo',
+      apiKey: 'apiKey',
+      templateIds: {
+        invite: 'invite',
+        orgReq: 'orgReq',
+        orgReqApprove: 'orgReqApprove',
+        orgReqRefuse: 'orgReqRefuse'
+      }
+    });
   }
 
   async checkWorkerInterval() {
-    const probe = await this.store.safeRead('workerInterval');
-
-    if (!probe) {
-      await this.store.write('workerInterval', 300); // default 300 seconds
-    }
+    // write default workerInterval if it doesn't exist
+    return await this.store.safeRead('workerInterval') || await this.store.write('workerInterval', 300);
   }
 
   async checkStateVariables() {
@@ -68,14 +60,52 @@ export default class StateModel {
     await this.store.write('network', network);
   }
 
-  async generateAndStoreNewPrivateKey() {
-    const privateKey = await this.crypto.generatePrivateKey();
-    await this.storePrivateKey(privateKey);
-    return privateKey;
+  async storeNewEncryptedWallet(password, generatePrivateKey = false) {
+    if (generatePrivateKey === true) {
+      this.privateKey = await this.crypto.generatePrivateKey();
+    }
+
+    const encryptedWallet = await this.crypto.getEncryptedWallet(this.privateKey, password);
+    await this.store.write('encryptedWallet', encryptedWallet);
   }
 
-  async getPrivateKey() {
-    return this.store.safeRead('privateKey');
+  async getEncryptedWallet() {
+    const encryptedWallet = await this.store.safeRead('encryptedWallet');
+    if (!encryptedWallet) {
+      return null;
+    }
+
+    return encryptedWallet;
+  }
+
+  async decryptWallet(password) {
+    const encryptedWallet = await this.store.safeRead('encryptedWallet');
+    const decryptedWallet = this.crypto.getDecryptedWallet(encryptedWallet, password);
+    if (!decryptedWallet) {
+      throw new Error(`Unable to decrypt the wallet`);
+    }
+  }
+
+  generatePassword() {
+    return this.crypto.getRandomPassword();
+  }
+
+  getPrivateKey() {
+    if (this.privateKey) {
+      return this.privateKey;
+    }
+    throw new Error(`Private key has not been initiated yet.`);
+  }
+
+  getPassphrase() {
+    if (this.passphrase) {
+      return this.passphrase;
+    }
+    throw new Error(`Passphrase has not been initiated yet.`);
+  }
+
+  getEncryptedKey() {
+    return this.crypto.aesEncrypt(this.getPrivateKey(), this.getPassphrase());
   }
 
   async storePrivateKey(privateKey) {
@@ -83,11 +113,12 @@ export default class StateModel {
   }
 
   async getAddress() {
-    const privateKey = await this.getPrivateKey();
-    if (privateKey) {
-      return this.crypto.addressForPrivateKey(privateKey);
+    const address = await this.store.safeRead('address');
+    if (address) {
+      return address;
     }
-    return null;
+    const {privateKey} = this;
+    return await this.crypto.addressForPrivateKey(privateKey);
   }
 
   async storeAddress(address) {
@@ -135,7 +166,7 @@ export default class StateModel {
   }
 
   async getSignedTos() {
-    return  this.store.safeRead('termsOfServiceSignature');
+    return this.store.safeRead('termsOfServiceSignature');
   }
 
   async storeSignedTos(tosSignature) {
@@ -151,15 +182,15 @@ export default class StateModel {
   }
 
   async getMailInfo() {
-    return this.store.safeRead(mailInfo);
+    return this.store.safeRead('mailInfo');
   }
 
   async getExtraData(templateDirectory, nodeTypeName, dockerFileName) {
     const dockerFile = await readFile(path.join(templateDirectory, nodeTypeName, dockerFileName));
 
-    const dockertYaml = await jsyaml.load(dockerFile);
+    const dockerYaml = await jsyaml.load(dockerFile);
 
-    const parityVersion = dockertYaml.services.parity.image.split(':');
+    const parityVersion = dockerYaml.services.parity.image.split(':');
 
     return `Apollo ${parityVersion[1]}`;
   }
@@ -209,7 +240,7 @@ export default class StateModel {
     }
 
     const address = await this.getAddress();
-    const privateKey = await this.getPrivateKey();
+    const encryptedPrivateKey = this.getEncryptedKey();
 
     const {headContractAddress, chainspec, dockerTag, domain} = await this.getNetwork();
 
@@ -221,7 +252,7 @@ export default class StateModel {
       dockerTag,
       nodeTypeName,
       address,
-      privateKey,
+      encryptedPrivateKey,
       headContractAddress,
       networkName,
       domain,
@@ -231,10 +262,10 @@ export default class StateModel {
     );
 
     if (role === APOLLO) {
-      const password = this.crypto.getRandomPassword();
+      const password = await this.generatePassword();
       await this.setupCreator.createPasswordFile(password);
 
-      const encryptedWallet = this.crypto.getEncryptedWallet(privateKey, password);
+      const encryptedWallet = this.crypto.getEncryptedWallet(this.privateKey, password);
       await this.setupCreator.createKeyFile(encryptedWallet);
 
       const nodeIp = await this.getNodeIP();
