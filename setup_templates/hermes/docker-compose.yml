@@ -55,6 +55,7 @@ services:
         max-size: '100m'
         max-file: '3'
     depends_on:
+      - pkservice
       - mongodb
       - parity
     environment:
