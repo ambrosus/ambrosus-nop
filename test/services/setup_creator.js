@@ -90,7 +90,7 @@ describe('Setup Creator', () => {
     const domainPlaceholder = '<ENTER_DOMAIN_HERE>';
 
     const exampleAddress = '0xadd4eeee';
-    const examplePrivateKey = '0xbeefcafe';
+    const examplePrivateKey = '';
     const exampleHeadAddress = '0xdeadface';
     const exampleNetworkName = 'amb-net';
     const exampleTag = '7654321';
