@@ -44,6 +44,7 @@ services:
     volumes:
       - ~/ambrosus-nop/state.json:/privatekey-service/state.json
       - ~/ambrosus-nop/vault.dat:/privatekey-service/vault.dat
+      - /var/run/docker.sock:/var/run/docker.sock
 
   worker: &atlas-props
     image: ambrosus/ambrosus-node:<ENTER_DOCKER_TAG_HERE>
