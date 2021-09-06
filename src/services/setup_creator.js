@@ -8,7 +8,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 */
 
 import path from 'path';
-import {readFile, writeFile, getPath, makeDirectory} from '../utils/file';
+import {readFile, writeFile, getPath, makeDirectory, checkFileExists} from '../utils/file';
 import fileDownload from '../utils/file_download';
 
 const passwordFileName = 'password.pwds';
@@ -16,6 +16,7 @@ const keyFileName = 'keyfile';
 const dockerFileName = 'docker-compose.yml';
 const parityConfigFileName = 'parity_config.toml';
 const chainDescriptionFileName = 'chain.json';
+const vaultFile = 'vault.dat';
 const tosFileName = 'TOS.txt';
 const tosTextFileName = 'tos.txt';
 
@@ -83,6 +84,9 @@ export default class SetupCreator {
       dockerFile = dockerFile.replace(/<ENTER_YOUR_EMAIL_TMPL_ID_ORGREQ_REFUSE>/gi, mailInfo.templateIds.orgReqRefuse);
     }
 
+    if (!(await checkFileExists(vaultFile))) {
+      await writeFile(vaultFile, '');
+    }
     await writeFile(path.join(this.outputDirectory, dockerFileName), dockerFile);
   }
 
