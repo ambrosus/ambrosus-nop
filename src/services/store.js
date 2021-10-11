@@ -42,7 +42,7 @@ export default class Store {
 
   async readFile() {
     if (await checkFileExists(this.storeFilePath)) {
-      return JSON.parse(await readFile(this.storeFilePath));
+      return JSON.parse(String(await readFile(this.storeFilePath)));
     }
     return {};
   }
