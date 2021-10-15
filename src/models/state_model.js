@@ -14,8 +14,6 @@ import jsyaml from 'js-yaml';
 
 const dockerFileName = 'docker-compose.yml';
 
-const mailInfo = 'mailInfo';
-
 export default class StateModel {
   constructor(store, crypto, setupCreator) {
     this.store = store;
@@ -24,31 +22,23 @@ export default class StateModel {
   }
 
   async checkMailInfo() {
-    const probe = await this.store.safeRead(mailInfo);
-
-    if (!probe) {
-      const mail = {
-        from: 'from',
-        orgRegTo: 'orgRegTo',
-        apiKey: 'apiKey',
-        templateIds: {
-          invite: 'invite',
-          orgReq: 'orgReq',
-          orgReqApprove: 'orgReqApprove',
-          orgReqRefuse: 'orgReqRefuse'
-        }
-      };
-
-      await this.store.write(mailInfo, mail);
-    }
+    // write default 'mailInfo' if it doesn't exist
+    return await this.store.safeRead('mailInfo') || await this.store.write('mailInfo', {
+      from: 'from',
+      orgRegTo: 'orgRegTo',
+      apiKey: 'apiKey',
+      templateIds: {
+        invite: 'invite',
+        orgReq: 'orgReq',
+        orgReqApprove: 'orgReqApprove',
+        orgReqRefuse: 'orgReqRefuse'
+      }
+    });
   }
 
   async checkWorkerInterval() {
-    const probe = await this.store.safeRead('workerInterval');
-
-    if (!probe) {
-      await this.store.write('workerInterval', 300); // default 300 seconds
-    }
+    // write default workerInterval if it doesn't exist
+    return await this.store.safeRead('workerInterval') || await this.store.write('workerInterval', 300);
   }
 
   async checkStateVariables() {
@@ -151,15 +141,15 @@ export default class StateModel {
   }
 
   async getMailInfo() {
-    return this.store.safeRead(mailInfo);
+    return this.store.safeRead('mailInfo');
   }
 
   async getExtraData(templateDirectory, nodeTypeName, dockerFileName) {
     const dockerFile = await readFile(path.join(templateDirectory, nodeTypeName, dockerFileName));
 
-    const dockertYaml = await jsyaml.load(dockerFile);
+    const dockerYaml = await jsyaml.load(dockerFile);
 
-    const parityVersion = dockertYaml.services.parity.image.split(':');
+    const parityVersion = dockerYaml.services.parity.image.split(':');
 
     return `Apollo ${parityVersion[1]}`;
   }
