@@ -108,7 +108,7 @@ Let's talk about Parity logs.
 
 As you can see Parity imports blocks from network. If everything goes fine, you
 should see new block every 5 seconds. And the latest block number in your
-Parotu logs should match the one in
+Parity logs should match the one in
 [Ambrosus Explorer](https://explorer.ambrosus.io/).
 If it doesn't - your Parity is not in sync and the Node is not operating.
 
