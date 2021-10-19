@@ -13,6 +13,25 @@ END
 sysctl -p /etc/sysctl.d/10-ambrosus.conf
 
 git pull origin master
+
+###
+
+DEFAULT_NODE_VERSION="14"
+
+REQUIRED_NODE_VERSION=$(cat $PWD/package.json | grep -Eo '"node": "[^0-9][^0-9]?[0-9]+?' | grep -Eo '[0-9]+')
+if [ "$REQUIRED_NODE_VERSION" = "" ]; then
+    REQUIRED_NODE_VERSION=$DEFAULT_NODE_VERSION
+fi
+
+SYSTEM_NODE_VERSION=$(node -v | grep -Eo 'v[0-9]+' | cut -b 2-3)
+if [ "$SYSTEM_NODE_VERSION" = "" ]; then
+    wget -qO- "https://deb.nodesource.com/setup_$DEFAULT_NODE_VERSION.x" | bash -
+elif [ "$SYSTEM_NODE_VERSION" != "$REQUIRED_NODE_VERSION" ]; then
+    wget -qO- "https://deb.nodesource.com/setup_$REQUIRED_NODE_VERSION.x" | bash -
+fi
+
+###
+
 yarn
 yarn build
 if [[ -f output/docker-compose.yml ]]; then
