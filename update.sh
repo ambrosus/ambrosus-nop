@@ -32,10 +32,13 @@ fi
  # check system wide node.js version
 SYSTEM_NODE_VERSION=$(node -v | grep -Eo 'v[0-9]+' | cut -b 2-3)
 if [ "$SYSTEM_NODE_VERSION" = "" ]; then
-    nvm install "$DEFAULT_NODE_VERSION"
+    nvm install "$REQUIRED_NODE_VERSION"
 elif [ "$SYSTEM_NODE_VERSION" != "$REQUIRED_NODE_VERSION" ]; then
     nvm install "$REQUIRED_NODE_VERSION"
 fi
+
+ # use required version
+nvm use "$REQUIRED_NODE_VERSION"
 
 ###
 
