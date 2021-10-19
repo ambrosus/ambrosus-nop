@@ -16,18 +16,25 @@ git pull origin master
 
 ###
 
+ # install or update nvm
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+source ~/.bashrc
+
+ # set default node.js version
 DEFAULT_NODE_VERSION="14"
 
+ # check required node.js version
 REQUIRED_NODE_VERSION=$(cat $PWD/package.json | grep -Eo '"node": "[^0-9][^0-9]?[0-9]+?' | grep -Eo '[0-9]+')
 if [ "$REQUIRED_NODE_VERSION" = "" ]; then
     REQUIRED_NODE_VERSION=$DEFAULT_NODE_VERSION
 fi
 
+ # check system wide node.js version
 SYSTEM_NODE_VERSION=$(node -v | grep -Eo 'v[0-9]+' | cut -b 2-3)
 if [ "$SYSTEM_NODE_VERSION" = "" ]; then
-    wget -qO- "https://deb.nodesource.com/setup_$DEFAULT_NODE_VERSION.x" | bash -
+    nvm install "$DEFAULT_NODE_VERSION"
 elif [ "$SYSTEM_NODE_VERSION" != "$REQUIRED_NODE_VERSION" ]; then
-    wget -qO- "https://deb.nodesource.com/setup_$REQUIRED_NODE_VERSION.x" | bash -
+    nvm install "$REQUIRED_NODE_VERSION"
 fi
 
 ###
