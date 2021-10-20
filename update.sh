@@ -19,6 +19,7 @@ git pull origin master
  # install or update nvm
 wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
 source $HOME/.nvm/nvm.sh && \. $HOME/.nvm/nvm.sh
+echo "The $(command -v nvm) has been installed."
 
  # set default node.js version
 DEFAULT_NODE_VERSION="14"
