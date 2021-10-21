@@ -23,6 +23,7 @@ REQUIRED_NODE_VERSION=$(cat $PWD/package.json | grep -Eo '"node": "[^0-9][^0-9]?
 if [ "$REQUIRED_NODE_VERSION" = "" ]; then
     REQUIRED_NODE_VERSION=$DEFAULT_NODE_VERSION
 fi
+
 SYSTEM_NODE_VERSION=$(node -v | cut -d '.' -f1 | cut -b2-)
 if [ "$SYSTEM_NODE_VERSION" = "" ] || [ "$SYSTEM_NODE_VERSION" != "$REQUIRED_NODE_VERSION" ]; then
     nvm install "$REQUIRED_NODE_VERSION"
