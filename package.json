@@ -1,7 +1,7 @@
 {
   "name": "ambrosus-nop",
   "description": "",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "author": "Ambrosus",
   "repository": "git@github.com:ambrosus/ambrosus-nop.git",
   "private": true,
