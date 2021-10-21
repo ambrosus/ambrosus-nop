@@ -14,32 +14,20 @@ sysctl -p /etc/sysctl.d/10-ambrosus.conf
 
 git pull origin master
 
-###
-
- # install or update nvm
 wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
 source $HOME/.nvm/nvm.sh && \. $HOME/.nvm/nvm.sh
 echo "The $(command -v nvm) has been installed."
 
- # set default node.js version
 DEFAULT_NODE_VERSION="14"
-
- # check required node.js version
 REQUIRED_NODE_VERSION=$(cat $PWD/package.json | grep -Eo '"node": "[^0-9][^0-9]?[0-9]+?' | grep -Eo '[0-9]+')
 if [ "$REQUIRED_NODE_VERSION" = "" ]; then
     REQUIRED_NODE_VERSION=$DEFAULT_NODE_VERSION
 fi
-
- # check system wide node.js version
-SYSTEM_NODE_VERSION=$(node -v | grep -Eo 'v[0-9]+' | cut -b 2-3)
+SYSTEM_NODE_VERSION=$(node -v | cut -d '.' -f1 | cut -b2-)
 if [ "$SYSTEM_NODE_VERSION" = "" ] || [ "$SYSTEM_NODE_VERSION" != "$REQUIRED_NODE_VERSION" ]; then
     nvm install "$REQUIRED_NODE_VERSION"
 fi
-
- # use required version
 nvm use "$REQUIRED_NODE_VERSION"
-
-###
 
 yarn
 yarn build
