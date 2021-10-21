@@ -15,7 +15,7 @@ sysctl -p /etc/sysctl.d/10-ambrosus.conf
 git pull origin master
 
 wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-source $HOME/.nvm/nvm.sh && \. $HOME/.nvm/nvm.sh
+source $HOME/.nvm/nvm.sh
 echo "The $(command -v nvm) has been installed."
 
 DEFAULT_NODE_VERSION="14"
