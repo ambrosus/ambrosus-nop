@@ -12,6 +12,7 @@ net.ipv6.conf.all.disable_ipv6=1
 END
 sysctl -p /etc/sysctl.d/10-ambrosus.conf
 
+git checkout yarn.lock
 git pull origin master
 
 wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
