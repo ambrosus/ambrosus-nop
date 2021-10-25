@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -ex
+set -e
 
 cd "$( dirname "$(readlink -f "${BASH_SOURCE[0]}")" )"
 if [[ -d /etc/cron.daily ]]; then
@@ -13,7 +13,8 @@ END
 sysctl -p /etc/sysctl.d/10-ambrosus.conf
 
 git checkout yarn.lock
-git pull origin master
+git pull
+git checkout node16
 
 wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
 source $HOME/.nvm/nvm.sh
