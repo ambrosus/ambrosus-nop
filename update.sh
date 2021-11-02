@@ -13,7 +13,7 @@ END
 sysctl -p /etc/sysctl.d/10-ambrosus.conf
 
 git checkout yarn.lock
-git pull
+git pull origin master
 
 wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
 source $HOME/.nvm/nvm.sh
