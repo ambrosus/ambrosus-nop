@@ -20,7 +20,7 @@ services:
       - ./chains:/app/chains
 
   ethstats-client:
-    image: quay.io/ambrosus/ethstats-client
+    image: ghcr.io/ambrosus/eth-net-intelligence-api
     container_name: ethstats_client
     restart: unless-stopped
     depends_on:
