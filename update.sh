@@ -25,7 +25,7 @@ if [ "$REQUIRED_NODE_VERSION" = "" ]; then
     REQUIRED_NODE_VERSION=$DEFAULT_NODE_VERSION
 fi
 
-SYSTEM_NODE_VERSION=$(node -v | cut -d '.' -f 1 | cut -b 2-)
+SYSTEM_NODE_VERSION=$(nvm current | cut -d '.' -f 1 | cut -b 2-)
 if [ "$SYSTEM_NODE_VERSION" = "" ] || [ "$SYSTEM_NODE_VERSION" != "$REQUIRED_NODE_VERSION" ]; then
     nvm install "$REQUIRED_NODE_VERSION"
 fi
