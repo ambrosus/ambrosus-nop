@@ -30,6 +30,7 @@ if [ "$SYSTEM_NODE_VERSION" = "" ] || [ "$SYSTEM_NODE_VERSION" != "$REQUIRED_NOD
     nvm install "$REQUIRED_NODE_VERSION"
 fi
 nvm use "$REQUIRED_NODE_VERSION"
+nvm alias default "$REQUIRED_NODE_VERSION"
 
 yarn
 yarn build
