@@ -7,7 +7,8 @@ if [[ -d /etc/cron.daily ]]; then
   ln -fs $PWD/update.sh /etc/cron.daily/ambrosus-nop
 fi
 
-echo "net.ipv6.conf.all.disable_ipv6=1" > /etc/sysctl.d/10-ambrosus.conf && sysctl -p /etc/sysctl.d/10-ambrosus.conf
+echo "net.ipv6.conf.all.disable_ipv6=1" > /etc/sysctl.d/10-ambrosus.conf && \
+sysctl -p /etc/sysctl.d/10-ambrosus.conf
 
 git checkout yarn.lock
 git pull origin master
