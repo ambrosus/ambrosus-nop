@@ -47,7 +47,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
   worker: &atlas-props
-    image: ambrosus/ambrosus-node:<ENTER_DOCKER_TAG_HERE>
+    image: ghcr.io/ambrosus/ambrosus-node:add-retrieve-private-key
     container_name: atlas_worker
     command: sh -c 'yarn migrate && yarn start:atlas'
     restart: unless-stopped
