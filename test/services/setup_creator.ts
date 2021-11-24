@@ -96,7 +96,7 @@ describe('Setup Creator', () => {
     const exampleTag = '7654321';
     const exampleDomain = 'ambrosus-dev.com';
 
-    const sampleForm = (arg1, arg2, arg3, arg4) => `${arg1} || ${arg2} || ${arg3} || ${arg4}`;
+    const sampleForm = (arg1, arg2, arg3, arg4, arg5, arg6) => `${arg1} || ${arg2} || ${arg3} || ${arg4} || ${arg5} || ${arg6}`;
 
     const nodeTypeName = 'atlas';
 

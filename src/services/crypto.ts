@@ -7,7 +7,10 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
+import Web3 from 'web3';
+
 export default class Crypto {
+  web3: Web3;
   constructor(web3) {
     this.web3 = web3;
   }

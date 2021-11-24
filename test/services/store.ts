@@ -80,7 +80,7 @@ describe('Store', () => {
       };
       await writeFile(
         testFile,
-        JSON.stringify(example), null, 2
+        JSON.stringify(example), null
       );
     });
 
@@ -100,7 +100,7 @@ describe('Store', () => {
       };
       await writeFile(
         testFile,
-        JSON.stringify(example), null, 2
+        JSON.stringify(example), null
       );
     });
 

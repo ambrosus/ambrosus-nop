@@ -7,15 +7,15 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-import http from 'http';
-import https from 'https';
+import * as http from 'http';
+import * as https from 'https';
 
 export default class HttpUtils {
   async httpPost(url, data) {
     return new Promise((resolve, reject) => {
       const req = http.request(url,
         {method: 'POST', headers: {'Content-Type': 'application/json'}}, (res) => {
-          const result = {data: ''};
+          const result: any = {data: ''};
           res.setEncoding('utf8');
           res.on('data', (chunk) => {
             result.data += chunk;
@@ -39,7 +39,7 @@ export default class HttpUtils {
     return new Promise((resolve, reject) => {
       const req = https.request(url,
         {method: 'POST', headers: {'Content-Type': 'application/json'}}, (res) => {
-          const result = {data: ''};
+          const result: any = {data: ''};
           res.setEncoding('utf8');
           res.on('data', (chunk) => {
             result.data += chunk;

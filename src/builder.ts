@@ -84,76 +84,78 @@ import quitAction from './menu_actions/quit_action';
 import execCmd from './utils/execCmd';
 import HttpUtils from './utils/http_utils';
 import messages from './messages';
-import networks from '../config/networks';
+import * as networks from '../config/networks.json';
 import Web3 from 'web3';
 import acceptTosPhase from './phases/accept_tos_phase';
 import acceptTosDialog from './dialogs/accept_tos_dialog';
 
 class Builder {
   static buildStage1(config) {
-    const objects = {};
+    const web3 = new Web3();
+    const system = new System(execCmd);
+    const store = new Store(config.storePath);
+    const crypto = new Crypto(web3);
+    const setupCreator = new SetupCreator(config.templateDirectory, config.outputDirectory);
+    const validations = new Validations();
+    const objects = {
+      web3,
+      system,
+      store,
+      crypto,
+      validations,
+      setupCreator,
+      logoDialog,
+      httpUtils: new HttpUtils(),
+      systemModel: new SystemModel(system),
+      stateModel: new StateModel(store, crypto, setupCreator),
+      privateKeyDetectedDialog: privateKeyDetectedDialog(messages),
+      askForPrivateKeyDialog: askForPrivateKeyDialog(validations, messages),
+      dockerDetectedDialog: dockerDetectedDialog(messages),
+      dockerMissingDialog: dockerMissingDialog(messages),
+      askForNodeTypeDialog: askForNodeTypeDialog(messages),
+      roleSelectedDialog: roleSelectedDialog(messages),
+      askForNodeUrlDialog: askForNodeUrlDialog(validations, messages),
+      askForNodeIPDialog: askForNodeIPDialog(validations, messages),
+      nodeUrlDetectedDialog: nodeUrlDetectedDialog(messages),
+      nodeIPDetectedDialog: nodeIPDetectedDialog(messages),
+      askForUserEmailDialog: askForUserEmailDialog(validations, messages),
+      userEmailDetectedDialog: userEmailDetectedDialog(messages),
+      displaySubmissionDialog: displaySubmissionDialog(messages),
+      addressIsNotWhitelistedDialog: addressIsNotWhitelistedDialog(messages),
+      addressIsWhitelistedDialog: addressIsWhitelistedDialog(messages),
+      notEnoughBalanceDialog: notEnoughBalanceDialog(messages),
+      onboardingConfirmationDialog: onboardingConfirmationDialog(messages),
+      onboardingSuccessfulDialog: onboardingSuccessfulDialog(messages),
+      alreadyOnboardedDialog: alreadyOnboardedDialog(messages),
+      askForNetworkDialog: askForNetworkDialog(messages),
+      networkSelectedDialog: networkSelectedDialog(messages),
+      healthCheckUrlDialog: healthCheckUrlDialog(messages),
+      insufficientFundsDialog: insufficientFundsDialog(messages),
+      genericErrorDialog: genericErrorDialog(messages),
+      selectActionDialog: selectActionDialog(messages),
+      changeUrlConfirmationDialog: changeUrlConfirmationDialog(messages),
+      changeUrlSuccessfulDialog: changeUrlSuccessfulDialog(messages),
+      nectarWarningDialog: nectarWarningDialog(messages),
+      availablePayoutDialog: availablePayoutDialog(messages),
+      confirmPayoutWithdrawalDialog: confirmPayoutWithdrawalDialog(messages),
+      withdrawalSuccessfulDialog: withdrawalSuccessfulDialog(messages),
+      dockerRestartRequiredDialog: dockerRestartRequiredDialog(messages),
+      confirmRetirementDialog: confirmRetirementDialog(messages),
+      retirementSuccessfulDialog: retirementSuccessfulDialog(messages, config.outputDirectory),
+      askForApolloDepositDialog: askForApolloDepositDialog(validations, messages),
+      askForApolloMinimalDepositDialog: askForApolloMinimalDepositDialog(validations, messages),
+      acceptTosDialog: acceptTosDialog(validations, messages),
+      continueAtlasRetirementDialog: continueAtlasRetirementDialog(messages),
+      retirementStartSuccessfulDialog: retirementStartSuccessfulDialog(messages),
+      retirementContinueDialog: retirementContinueDialog(messages),
+      retirementStopDialog: retirementStopDialog(messages)
+    };
 
-    objects.web3 = new Web3();
-
-    objects.httpUtils = new HttpUtils();
-
-    objects.store = new Store(config.storePath);
-    objects.system = new System(execCmd);
-    objects.validations = new Validations();
-    objects.crypto = new Crypto(objects.web3);
-    objects.setupCreator = new SetupCreator(config.templateDirectory, config.outputDirectory);
-
-    objects.systemModel = new SystemModel(objects.system);
-    objects.stateModel = new StateModel(objects.store, objects.crypto, objects.setupCreator);
-
-    objects.privateKeyDetectedDialog = privateKeyDetectedDialog(messages);
-    objects.askForPrivateKeyDialog = askForPrivateKeyDialog(objects.validations, messages);
-    objects.dockerDetectedDialog = dockerDetectedDialog(messages);
-    objects.dockerMissingDialog = dockerMissingDialog(messages);
-    objects.askForNodeTypeDialog = askForNodeTypeDialog(messages);
-    objects.roleSelectedDialog = roleSelectedDialog(messages);
-    objects.askForNodeUrlDialog = askForNodeUrlDialog(objects.validations, messages);
-    objects.askForNodeIPDialog = askForNodeIPDialog(objects.validations, messages);
-    objects.nodeUrlDetectedDialog = nodeUrlDetectedDialog(messages);
-    objects.nodeIPDetectedDialog = nodeIPDetectedDialog(messages);
-    objects.askForUserEmailDialog = askForUserEmailDialog(objects.validations, messages);
-    objects.userEmailDetectedDialog = userEmailDetectedDialog(messages);
-    objects.displaySubmissionDialog = displaySubmissionDialog(messages);
-    objects.addressIsNotWhitelistedDialog = addressIsNotWhitelistedDialog(messages);
-    objects.addressIsWhitelistedDialog = addressIsWhitelistedDialog(messages);
-    objects.notEnoughBalanceDialog = notEnoughBalanceDialog(messages);
-    objects.onboardingConfirmationDialog = onboardingConfirmationDialog(messages);
-    objects.onboardingSuccessfulDialog = onboardingSuccessfulDialog(messages);
-    objects.alreadyOnboardedDialog = alreadyOnboardedDialog(messages);
-    objects.askForNetworkDialog = askForNetworkDialog(messages);
-    objects.networkSelectedDialog = networkSelectedDialog(messages);
-    objects.healthCheckUrlDialog = healthCheckUrlDialog(messages);
-    objects.insufficientFundsDialog = insufficientFundsDialog(messages);
-    objects.genericErrorDialog = genericErrorDialog(messages);
-    objects.selectActionDialog = selectActionDialog(messages);
-    objects.logoDialog = logoDialog;
-    objects.changeUrlConfirmationDialog = changeUrlConfirmationDialog(messages);
-    objects.changeUrlSuccessfulDialog = changeUrlSuccessfulDialog(messages);
-    objects.nectarWarningDialog = nectarWarningDialog(messages);
-    objects.availablePayoutDialog = availablePayoutDialog(messages);
-    objects.confirmPayoutWithdrawalDialog = confirmPayoutWithdrawalDialog(messages);
-    objects.withdrawalSuccessfulDialog = withdrawalSuccessfulDialog(messages);
-    objects.dockerRestartRequiredDialog = dockerRestartRequiredDialog(messages);
-    objects.confirmRetirementDialog = confirmRetirementDialog(messages);
-    objects.retirementSuccessfulDialog = retirementSuccessfulDialog(messages, config.outputDirectory);
-    objects.askForApolloDepositDialog = askForApolloDepositDialog(objects.validations, messages);
-    objects.askForApolloMinimalDepositDialog = askForApolloMinimalDepositDialog(objects.validations, messages);
-    objects.acceptTosDialog = acceptTosDialog(objects.validations, messages);
-    objects.continueAtlasRetirementDialog = continueAtlasRetirementDialog(messages);
-    objects.retirementStartSuccessfulDialog = retirementStartSuccessfulDialog(messages);
-    objects.retirementContinueDialog = retirementContinueDialog(messages);
-    objects.retirementStopDialog = retirementStopDialog(messages);
-
-    objects.selectNetworkPhase = selectNetworkPhase(networks, objects.stateModel, objects.askForNetworkDialog, objects.networkSelectedDialog, objects.dockerRestartRequiredDialog);
-    objects.checkDockerAvailablePhase = checkDockerAvailablePhase(objects.systemModel, objects.dockerDetectedDialog, objects.dockerMissingDialog);
-    objects.getPrivateKeyPhase = getPrivateKeyPhase(objects.stateModel, objects.crypto, objects.privateKeyDetectedDialog, objects.askForPrivateKeyDialog);
-
-    return objects;
+    return {...objects,
+      selectNetworkPhase: selectNetworkPhase(networks, objects.stateModel, objects.askForNetworkDialog, objects.networkSelectedDialog, objects.dockerRestartRequiredDialog),
+      checkDockerAvailablePhase: checkDockerAvailablePhase(objects.systemModel, objects.dockerDetectedDialog, objects.dockerMissingDialog),
+      getPrivateKeyPhase: getPrivateKeyPhase(objects.stateModel, objects.crypto, objects.privateKeyDetectedDialog, objects.askForPrivateKeyDialog)
+    };
   }
 
   static buildStage2(stage1Objects, network, privateKey) {

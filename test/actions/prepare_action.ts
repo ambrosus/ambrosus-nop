@@ -14,9 +14,9 @@ const {expect} = chai;
 
 describe('Prepare action', () => {
   it('returns action object', async () => {
-    expect(prepareAction('action', 'nodes')).to.deep.equal({
+    expect(prepareAction('action', [])).to.deep.equal({
       performAction: 'action',
-      nodeTypes: 'nodes'
+      nodeTypes: []
     });
   });
 

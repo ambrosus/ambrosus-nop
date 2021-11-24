@@ -7,8 +7,8 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
+import {config} from '../config/config';
 import Builder from './builder';
-import config from '../config/config';
 import {APOLLO} from './consts';
 
 const start = async (isInteractive) => {

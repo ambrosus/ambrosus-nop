@@ -9,8 +9,13 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 
 import base64url from 'base64url';
 import {ATLAS_1, ATLAS_2, ATLAS_3} from '../consts';
+import StateModel from './state_model';
 
 export default class AtlasModeModel {
+  httpUtils: any;
+  account: any;
+  stateModel: StateModel;
+
   constructor(httpUtils, account, stateModel) {
     this.httpUtils = httpUtils;
     this.account = account;

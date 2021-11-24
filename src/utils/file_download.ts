@@ -7,10 +7,11 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-import https from 'https';
-import fs from 'fs';
+import * as https from 'https';
+import * as fs from 'fs';
+import * as http from 'http';
 
-const makeRequest = async (url) => new Promise((resolve, reject) => {
+const makeRequest = async (url): Promise<http.IncomingMessage> => new Promise((resolve, reject) => {
   https.get(url, (response) => {
     if (response.statusCode !== 200) {
       reject(`Request to ${url} failed: ${response.statusCode}`);
@@ -24,10 +25,11 @@ export default async (url, outputFilePath) => {
   const writeStream = fs.createWriteStream(outputFilePath);
   const response = await makeRequest(url);
   response.pipe(writeStream);
-  return new Promise(((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     writeStream.on('finish', () => {
-      writeStream.close(resolve);
+      writeStream.close();
+      resolve(void(0));
     });
     writeStream.on('error', reject);
-  }));
+  });
 };

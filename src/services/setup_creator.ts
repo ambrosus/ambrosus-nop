@@ -7,7 +7,7 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-import path from 'path';
+import * as path from 'path';
 import {readFile, writeFile, getPath, makeDirectory} from '../utils/file';
 import fileDownload from '../utils/file_download';
 
@@ -20,6 +20,9 @@ const tosFileName = 'TOS.txt';
 const tosTextFileName = 'tos.txt';
 
 export default class SetupCreator {
+  templateDirectory: string;
+  outputDirectory: string;
+
   constructor(templateDirectory, outputDirectory) {
     this.templateDirectory = templateDirectory;
     this.outputDirectory = outputDirectory;

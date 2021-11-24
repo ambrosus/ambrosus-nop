@@ -7,12 +7,9 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-const Web3 = require('web3');
-const fs = require('fs');
-const {
-  HeadWrapper,
-  RolesWrapper
-} = require('ambrosus-node-contracts');
+import Web3 from 'web3';
+import fs from 'fs';
+import {HeadWrapper, RolesWrapper} from 'ambrosus-node-contracts';
 
 const headContractAddress = '0x0000000000000000000000000000000000000F10';
 
@@ -29,7 +26,7 @@ const readFile = (path) =>
 
 async function readConfig() {
   try {
-    return JSON.parse(await readFile('state.json'));
+    return JSON.parse(String(await readFile('state.json')));
   } catch (err) {
     console.log('Read config file error:', err);
   }

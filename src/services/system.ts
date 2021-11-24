@@ -7,7 +7,19 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-import Web3 from 'web3';
+export default class System {
+  execCmd: any;
+  constructor(execCmd) {
+    this.execCmd = execCmd;
+  }
 
-const {utils} = new Web3();
-export default utils;
+  async isDockerAvailable() {
+    try {
+      const {stdout} = await this.execCmd('docker -v');
+      const regex = /^Docker version ([0-9.\-a-z]+), build ([0-9a-f]+)/;
+      return regex.exec(stdout) !== null;
+    } catch ({err}) {
+      return false;
+    }
+  }
+}

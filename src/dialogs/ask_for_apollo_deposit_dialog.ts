@@ -9,7 +9,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 
 import inquirer from 'inquirer';
 import chalk from 'chalk';
-import {utils} from 'web3';
+import * as utils from 'web3-utils';
 
 const askForApolloDepositDialog = (validations, messages) => async (minimalDeposit) => {
   const minimalDepositBn = utils.toBN(minimalDeposit);
@@ -24,7 +24,7 @@ const askForApolloDepositDialog = (validations, messages) => async (minimalDepos
           if (!validations.isValidNumber(answer)) {
             return chalk.red(messages.depositNumberError(chalk.yellow(answer)));
           }
-          if (utils.toBN(utils.toWei(answer, 'ether')).lt(minimalDepositBn)) {
+          if (utils.toBN(+utils.toWei(answer, 'ether')).lt(minimalDepositBn)) {
             return chalk.red(messages.depositTooSmallError(chalk.yellow(minimalDepositInAmb), chalk.yellow(answer)));
           }
           return true;

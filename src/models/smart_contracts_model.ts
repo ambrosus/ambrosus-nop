@@ -10,8 +10,13 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 import {APOLLO, ATLAS_1, ATLAS_2, ATLAS_3, HERMES, NO_ROLE_CODE} from '../consts';
 import utils from '../utils/web3_utils';
 import {roleCodeToRole} from '../utils/role_converters';
+import Crypto from '../services/crypto';
 
 export default class SmartContractsModel {
+  crypto: Crypto;
+  kycWhitelistWrapper: any;
+  rolesWrapper: any;
+
   constructor(crypto, kycWhitelistWrapper, rolesWrapper) {
     this.crypto = crypto;
     this.kycWhitelistWrapper = kycWhitelistWrapper;

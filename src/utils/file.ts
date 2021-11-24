@@ -7,7 +7,7 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-import fs from 'fs';
+import * as fs from 'fs';
 
 const writeFile = (path, data, opts = {}) =>
   new Promise((resolve, reject) => {
@@ -20,7 +20,7 @@ const writeFile = (path, data, opts = {}) =>
     });
   });
 
-const readFile = (path) =>
+const readFile = (path): Promise<string> =>
   new Promise((resolve, reject) => {
     fs.readFile(path, 'utf8', (err, data) => {
       if (err) {
@@ -37,7 +37,7 @@ const removeFile = (path) =>
       if (err) {
         reject(err);
       } else {
-        resolve();
+        resolve(void(0));
       }
     });
   });
@@ -66,7 +66,7 @@ const removeDirectory = (path) =>
       if (err) {
         reject(err);
       } else {
-        resolve();
+        resolve(void(0));
       }
     });
   });
@@ -77,7 +77,7 @@ const makeDirectory = (path) =>
       if (err) {
         reject(err);
       } else {
-        resolve();
+        resolve(void(0));
       }
     });
   });

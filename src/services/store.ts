@@ -10,6 +10,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 import {readFile, writeFile, checkFileExists} from '../utils/file';
 
 export default class Store {
+  storeFilePath: string;
   constructor(storeFilePath) {
     this.storeFilePath = storeFilePath;
   }

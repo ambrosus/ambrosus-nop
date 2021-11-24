@@ -7,18 +7,8 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-export default class System {
-  constructor(execCmd) {
-    this.execCmd = execCmd;
-  }
-
-  async isDockerAvailable() {
-    try {
-      const {stdout} = await this.execCmd('docker -v');
-      const regex = /^Docker version ([0-9.\-a-z]+), build ([0-9a-f]+)/;
-      return regex.exec(stdout) !== null;
-    } catch ({err}) {
-      return false;
-    }
-  }
-}
+export const config = Object.freeze({
+  storePath: process.env.STORE_PATH || 'state.json',
+  templateDirectory: process.env.TEMPLATE_DIRECTORY || './setup_templates/',
+  outputDirectory: process.env.OUTPUT_DIRECTORY || './output'
+});

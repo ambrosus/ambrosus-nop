@@ -7,14 +7,21 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-import path from 'path';
+import * as path from 'path';
 import {readFile} from '../utils/file';
 import {HERMES, APOLLO, ATLAS_1, ATLAS_2, ATLAS_3} from '../consts';
 import jsyaml from 'js-yaml';
+import Store from '../services/store';
+import Crypto from '../services/crypto';
+import SetupCreator from '../services/setup_creator';
 
 const dockerFileName = 'docker-compose.yml';
 
 export default class StateModel {
+  store: Store;
+  crypto: Crypto;
+  setupCreator: SetupCreator;
+
   constructor(store, crypto, setupCreator) {
     this.store = store;
     this.crypto = crypto;
@@ -156,7 +163,7 @@ export default class StateModel {
 
   async assembleSubmission() {
     const privateKey = await this.getPrivateKey();
-    const submissionForm = {
+    const submissionForm: any = {
       network: (await this.getNetwork()).name,
       address: await this.crypto.addressForPrivateKey(privateKey),
       role: await this.getRole(),

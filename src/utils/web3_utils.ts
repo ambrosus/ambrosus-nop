@@ -7,4 +7,5 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-process.env.NODE_ENV = 'test';
+import * as utils from 'web3-utils';
+export default utils;
