@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/start.js",
-    "test": "mocha",
+    "test": "mocha --require ts-node/register test/**/*.ts",
     "dev:start": "ts-node src/start.ts",
     "dev:lint": "eslint src test config",
     "dev:lint:fix": "eslint src test config --fix"
