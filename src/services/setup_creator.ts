@@ -10,6 +10,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 import * as path from 'path';
 import {readFile, writeFile, getPath, makeDirectory} from '../utils/file';
 import fileDownload from '../utils/file_download';
+import {config} from '../../config/config';
 
 const passwordFileName = 'password.pwds';
 const keyFileName = 'keyfile';
@@ -19,13 +20,17 @@ const chainDescriptionFileName = 'chain.json';
 const tosFileName = 'TOS.txt';
 const tosTextFileName = 'tos.txt';
 
-export default class SetupCreator {
-  templateDirectory: string;
-  outputDirectory: string;
+class SetupCreator {
+  public templateDirectory: string;
+  public outputDirectory: string;
 
-  constructor(templateDirectory, outputDirectory) {
-    this.templateDirectory = templateDirectory;
-    this.outputDirectory = outputDirectory;
+  constructor() {
+    this.templateDirectory = config.templateDirectory;
+    this.outputDirectory = config.outputDirectory;
+
+    if (!(this.templateDirectory && this.outputDirectory)) {
+      throw new Error(`Unable to initiate SetupCreator`);
+    }
   }
 
   async createPasswordFile(password) {
@@ -124,3 +129,5 @@ export default class SetupCreator {
     }
   }
 }
+
+export default new SetupCreator();

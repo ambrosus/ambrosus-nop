@@ -8,25 +8,27 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 */
 
 import {APOLLO} from '../consts';
+import Dialog from '../models/dialog_model';
+import StateModel from '../models/state_model';
 
-const selectRole = async (stateModel, askForNodeTypeDialog, askForApolloMinimalDepositDialog) => {
-  const existingRole = await stateModel.getRole();
+const selectRole = async () => {
+  const existingRole = await StateModel.getRole();
   if (existingRole !== null) {
     return existingRole;
   }
 
-  const {nodeType} = await askForNodeTypeDialog();
+  const {nodeType} = await Dialog.askForNodeTypeDialog();
   if (nodeType === APOLLO) {
-    const deposit = await askForApolloMinimalDepositDialog();
-    await stateModel.storeApolloMinimalDeposit(deposit);
+    const deposit = await Dialog.askForApolloMinimalDepositDialog();
+    await StateModel.storeApolloMinimalDeposit(deposit);
   }
-  await stateModel.storeRole(nodeType);
+  await StateModel.storeRole(nodeType);
   return nodeType;
 };
 
-const selectNodeTypePhase = (stateModel, askForNodeTypeDialog, askForApolloMinimalDepositDialog, roleSelectedDialog) => async () => {
-  const selectedRole = await selectRole(stateModel, askForNodeTypeDialog, askForApolloMinimalDepositDialog);
-  await roleSelectedDialog(selectedRole);
+const selectNodeTypePhase = async () => {
+  const selectedRole = await selectRole();
+  Dialog.roleSelectedDialog(selectedRole);
   return selectedRole;
 };
 

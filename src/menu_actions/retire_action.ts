@@ -8,46 +8,49 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 */
 
 import {constants} from 'ambrosus-node-contracts';
+import Dialog from '../models/dialog_model';
+import AtlasModeModel from '../models/atlas_mode_model';
+import SmartContractsModel from '../models/smart_contracts_model';
 
-const isAtlasWithBundles = async (onboardActions) => {
-  const role = await onboardActions.rolesWrapper.onboardedRole(onboardActions.rolesWrapper.defaultAddress);
+const isAtlasWithBundles = async () => {
+  const role = await SmartContractsModel.onboardActions.rolesWrapper.onboardedRole(SmartContractsModel.onboardActions.rolesWrapper.defaultAddress);
   if (role === constants.ATLAS) {
-    return await onboardActions.atlasStakeWrapper.isShelteringAny(onboardActions.atlasStakeWrapper.defaultAddress);
+    return await SmartContractsModel.onboardActions.atlasStakeWrapper.isShelteringAny(SmartContractsModel.onboardActions.atlasStakeWrapper.defaultAddress);
   }
   return false;
 };
 
-const retireAction = (atlasModeModel, onboardActions, confirmRetirementDialog, retirementSuccessfulDialog, continueAtlasRetirementDialog, retirementStartSuccessfulDialog, retirementContinueDialog, retirementStopDialog, genericErrorDialog) => async () => {
-  if (await isAtlasWithBundles(onboardActions)) {
-    const retireMode = (await atlasModeModel.getMode()).mode === 'retire';
+const retireAction = () => async () => {
+  if (await isAtlasWithBundles()) {
+    const retireMode = (await AtlasModeModel.getMode()).mode === 'retire';
     if (retireMode) {
-      if ((await continueAtlasRetirementDialog()).continueConfirmation) {
-        await retirementContinueDialog();
+      if ((await Dialog.continueAtlasRetirementDialog()).continueConfirmation) {
+        Dialog.retirementContinueDialog();
       } else {
-        if (await atlasModeModel.setMode('normal')) {
-          await retirementStopDialog();
+        if (await AtlasModeModel.setMode('normal')) {
+          Dialog.retirementStopDialog();
           return true;
         }
-        await genericErrorDialog('Can not set normal mode: I/O error');
+        Dialog.genericErrorDialog('Can not set normal mode: I/O error');
         return false;
       }
       return true;
     }
-    if (!(await confirmRetirementDialog()).retirementConfirmation) {
+    if (!(await Dialog.confirmRetirementDialog()).retirementConfirmation) {
       return false;
     }
-    if (await atlasModeModel.setMode('retire')) {
-      await retirementStartSuccessfulDialog();
+    if (await AtlasModeModel.setMode('retire')) {
+      Dialog.retirementStartSuccessfulDialog();
       return true;
     }
-    await genericErrorDialog('Can not set retire mode: I/O error');
+    Dialog.genericErrorDialog('Can not set retire mode: I/O error');
     return false;
   }
-  if (!(await confirmRetirementDialog()).retirementConfirmation) {
+  if (!(await Dialog.confirmRetirementDialog()).retirementConfirmation) {
     return false;
   }
-  await onboardActions.retire();
-  await retirementSuccessfulDialog();
+  await SmartContractsModel.onboardActions.retire();
+  Dialog.retirementSuccessfulDialog();
   return true;
 };
 

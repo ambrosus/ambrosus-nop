@@ -10,30 +10,18 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 import base64url from 'base64url';
 import {ATLAS_1, ATLAS_2, ATLAS_3} from '../consts';
 import StateModel from './state_model';
+import Crypto from '../services/crypto';
+import {httpGet, httpPost} from '../utils/http_utils';
 
-export default class AtlasModeModel {
-  httpUtils: any;
-  account: any;
-  stateModel: StateModel;
-
-  constructor(httpUtils, account, stateModel) {
-    this.httpUtils = httpUtils;
-    this.account = account;
-    this.stateModel = stateModel;
-  }
-
+class AtlasModeModel {
   async getMode() {
     try {
-      const role = await this.stateModel.getRole();
-      const url = await this.stateModel.getNodeUrl();
+      const role = await StateModel.getRole();
+      const url = await StateModel.getNodeUrl();
       if (url && (role === ATLAS_1 || role === ATLAS_2 || role === ATLAS_3)) {
-        let nodeInfo;
-        if (0 === url.indexOf('https')) {
-          nodeInfo = await this.httpUtils.getJsonHttps(`${url}/nodeinfo`);
-        } else {
-          nodeInfo = await this.httpUtils.getJsonHttp(`${url}/nodeinfo`);
-        }
-        return nodeInfo.mode;
+        const nodeInfo = await httpGet(`${url}/nodeinfo`);
+        const {mode} = nodeInfo;
+        return mode;
       }
       return {};
     } catch (err) {
@@ -43,15 +31,12 @@ export default class AtlasModeModel {
 
   async setMode(mode) {
     try {
-      const role = await this.stateModel.getRole();
-      const url = await this.stateModel.getNodeUrl();
+      const role = await StateModel.getRole();
+      const url = await StateModel.getNodeUrl();
       if (url && (role === ATLAS_1 || role === ATLAS_2 || role === ATLAS_3)) {
         const token = await this.createSetModeToken(mode, 10);
         const request = `{"mode":"${token}"}`;
-        if (0 === url.indexOf('https')) {
-          return 200 === (await this.httpUtils.httpsPost(`${url}/nodeinfo`, request)).statusCode;
-        }
-        return 200 === (await this.httpUtils.httpPost(`${url}/nodeinfo`, request)).statusCode;
+        return 200 === (await httpPost(`${url}/nodeinfo`, request)).statusCode;
       }
       return false;
     } catch (err) {
@@ -63,11 +48,11 @@ export default class AtlasModeModel {
   async createSetModeToken(mode, accessPeriod, from = Date.now()) {
     const idData = {
       mode,
-      createdBy: this.account.address,
+      createdBy: Crypto.address,
       validUntil: Math.floor(from / 1000) + accessPeriod
     };
     return base64url(this.serializeForHashing({
-      signature: this.account.sign(this.serializeForHashing(idData)).signature,
+      signature: Crypto.account.sign(this.serializeForHashing(idData)).signature,
       idData
     }));
   }
@@ -91,3 +76,5 @@ export default class AtlasModeModel {
     return object.toString();
   }
 }
+
+export default new AtlasModeModel();

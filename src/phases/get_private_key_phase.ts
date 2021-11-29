@@ -7,26 +7,30 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-const getPrivateKey = async (stateModel, askForPrivateKeyDialog) => {
-  const storedPrivateKey = await stateModel.getPrivateKey();
+import Dialog from '../models/dialog_model';
+import Crypto from '../services/crypto';
+import StateModel from '../models/state_model';
+
+const getPrivateKey = async () => {
+  const storedPrivateKey = await StateModel.getPrivateKey();
   if (storedPrivateKey !== null) {
     return storedPrivateKey;
   }
 
-  const answers = await askForPrivateKeyDialog();
+  const answers = await Dialog.askForPrivateKeyDialog();
   const {source} = answers;
   switch (source) {
     case 'manual': {
       const {privateKey} = answers;
-      await stateModel.storePrivateKey(privateKey);
-      const address = await stateModel.getAddress();
-      await stateModel.storeAddress(address);
+      await StateModel.storePrivateKey(privateKey);
+      const address = await StateModel.getAddress();
+      await StateModel.storeAddress(address);
       return privateKey;
     }
     case 'generate': {
-      const privateKey = await stateModel.generateAndStoreNewPrivateKey();
-      const address = await stateModel.getAddress();
-      await stateModel.storeAddress(address);
+      const privateKey = await StateModel.generateAndStoreNewPrivateKey();
+      const address = await StateModel.getAddress();
+      await StateModel.storeAddress(address);
       return privateKey;
     }
     default:
@@ -34,10 +38,10 @@ const getPrivateKey = async (stateModel, askForPrivateKeyDialog) => {
   }
 };
 
-const getPrivateKeyPhase = (stateModel, crypto, privateKeyDetectedDialog, askForPrivateKeyDialog) => async () => {
-  const privateKey = await getPrivateKey(stateModel, askForPrivateKeyDialog);
-  const address = await crypto.addressForPrivateKey(privateKey);
-  await privateKeyDetectedDialog(address);
+const getPrivateKeyPhase = async () => {
+  const privateKey = await getPrivateKey();
+  const address = await Crypto.addressForPrivateKey(privateKey);
+  Dialog.privateKeyDetectedDialog(address);
   return privateKey;
 };
 

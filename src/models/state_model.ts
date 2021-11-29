@@ -17,20 +17,14 @@ import SetupCreator from '../services/setup_creator';
 
 const dockerFileName = 'docker-compose.yml';
 
-export default class StateModel {
-  store: Store;
-  crypto: Crypto;
-  setupCreator: SetupCreator;
-
-  constructor(store, crypto, setupCreator) {
-    this.store = store;
-    this.crypto = crypto;
-    this.setupCreator = setupCreator;
-  }
+class StateModel {
+  private detectedRole: string;
+  setDetectedRole = (role: string) => this.detectedRole = role;
+  getDetectedRole = () => this.detectedRole;
 
   async checkMailInfo() {
     // write default 'mailInfo' if it doesn't exist
-    return await this.store.safeRead('mailInfo') || await this.store.write('mailInfo', {
+    return await Store.safeRead('mailInfo') || await Store.write('mailInfo', {
       from: 'from',
       orgRegTo: 'orgRegTo',
       apiKey: 'apiKey',
@@ -45,7 +39,7 @@ export default class StateModel {
 
   async checkWorkerInterval() {
     // write default workerInterval if it doesn't exist
-    return await this.store.safeRead('workerInterval') || await this.store.write('workerInterval', 300);
+    return await Store.safeRead('workerInterval') || await Store.write('workerInterval', 300);
   }
 
   async checkStateVariables() {
@@ -54,101 +48,101 @@ export default class StateModel {
   }
 
   async getWorkerInterval() {
-    return this.store.safeRead('workerInterval');
+    return Store.safeRead('workerInterval');
   }
 
   async getNetwork() {
-    return this.store.safeRead('network');
+    return Store.safeRead('network');
   }
 
   async storeNetwork(network) {
-    await this.store.write('network', network);
+    await Store.write('network', network);
   }
 
   async generateAndStoreNewPrivateKey() {
-    const privateKey = await this.crypto.generatePrivateKey();
+    const privateKey = await Crypto.generatePrivateKey();
     await this.storePrivateKey(privateKey);
     return privateKey;
   }
 
   async getPrivateKey() {
-    return this.store.safeRead('privateKey');
+    return Store.safeRead('privateKey');
   }
 
   async storePrivateKey(privateKey) {
-    await this.store.write('privateKey', privateKey);
+    await Store.write('privateKey', privateKey);
   }
 
   async getAddress() {
     const privateKey = await this.getPrivateKey();
     if (privateKey) {
-      return this.crypto.addressForPrivateKey(privateKey);
+      return Crypto.addressForPrivateKey(privateKey);
     }
     return null;
   }
 
   async storeAddress(address) {
-    await this.store.write('address', address);
+    await Store.write('address', address);
   }
 
   async getRole() {
-    return this.store.safeRead('role');
+    return Store.safeRead('role');
   }
 
   async storeRole(role) {
-    await this.store.write('role', role);
+    await Store.write('role', role);
   }
 
   async getNodeUrl() {
-    return this.store.safeRead('url');
+    return Store.safeRead('url');
   }
 
   async storeNodeUrl(url) {
-    await this.store.write('url', url);
+    await Store.write('url', url);
   }
 
   async getNodeIP() {
-    return this.store.safeRead('ip');
+    return Store.safeRead('ip');
   }
 
   async storeNodeIP(ip) {
-    await this.store.write('ip', ip);
+    await Store.write('ip', ip);
   }
 
   async getUserEmail() {
-    return this.store.safeRead('email');
+    return Store.safeRead('email');
   }
 
   async storeUserEmail(email) {
-    await this.store.write('email', email);
+    await Store.write('email', email);
   }
 
   async getApolloMinimalDeposit() {
-    return this.store.safeRead('apolloMinimalDeposit');
+    return Store.safeRead('apolloMinimalDeposit');
   }
 
   async storeApolloMinimalDeposit(deposit) {
-    await this.store.write('apolloMinimalDeposit', deposit);
+    await Store.write('apolloMinimalDeposit', deposit);
   }
 
   async getSignedTos() {
-    return  this.store.safeRead('termsOfServiceSignature');
+    return Store.safeRead('termsOfServiceSignature');
   }
 
   async storeSignedTos(tosSignature) {
-    await this.store.write('termsOfServiceSignature', tosSignature);
+    await Store.write('termsOfServiceSignature', tosSignature);
   }
 
   async storeTosHash(tosHash) {
-    await this.store.write('termsOfServiceHash', tosHash);
+    await Store.write('termsOfServiceHash', tosHash);
   }
 
   async getTosHash() {
-    return this.store.safeRead('termsOfServiceHash');
+    return Store.safeRead('termsOfServiceHash');
   }
 
   async getMailInfo() {
-    return this.store.safeRead('mailInfo');
+    return Store.safeRead('mailInfo');
   }
 
   async getExtraData(templateDirectory, nodeTypeName, dockerFileName) {
@@ -165,7 +159,7 @@ export default class StateModel {
     const privateKey = await this.getPrivateKey();
     const submissionForm: any = {
       network: (await this.getNetwork()).name,
-      address: await this.crypto.addressForPrivateKey(privateKey),
+      address: await Crypto.addressForPrivateKey(privateKey),
       role: await this.getRole(),
       email: await this.getUserEmail(),
       termsOfServiceHash: await this.getTosHash(),
@@ -184,11 +178,11 @@ export default class StateModel {
   }
 
   async readTosText() {
-    return this.setupCreator.readTosText();
+    return SetupCreator.readTosText();
   }
 
   async createTosFile(termsOfServiceText) {
-    await this.setupCreator.createTosFile(termsOfServiceText);
+    await SetupCreator.createTosFile(termsOfServiceText);
   }
 
   async prepareSetupFiles() {
@@ -210,11 +204,11 @@ export default class StateModel {
 
     const {headContractAddress, chainspec, dockerTag, domain} = await this.getNetwork();
 
-    const networkName = await this.setupCreator.fetchChainJson(chainspec);
+    const networkName = await SetupCreator.fetchChainJson(chainspec);
 
     const workerInterval = await this.getWorkerInterval();
 
-    await this.setupCreator.prepareDockerComposeFile(
+    await SetupCreator.prepareDockerComposeFile(
       dockerTag,
       nodeTypeName,
       address,
@@ -228,17 +222,19 @@ export default class StateModel {
     );
 
     if (role === APOLLO) {
-      const password = this.crypto.getRandomPassword();
-      await this.setupCreator.createPasswordFile(password);
+      const password = Crypto.getRandomPassword();
+      await SetupCreator.createPasswordFile(password);
 
-      const encryptedWallet = this.crypto.getEncryptedWallet(privateKey, password);
-      await this.setupCreator.createKeyFile(encryptedWallet);
+      const encryptedWallet = Crypto.getEncryptedWallet(privateKey, password);
+      await SetupCreator.createKeyFile(encryptedWallet);
 
       const nodeIp = await this.getNodeIP();
-      const extraData = await this.getExtraData(this.setupCreator.templateDirectory, nodeTypeName, dockerFileName);
-      await this.setupCreator.copyParityConfiguration(nodeTypeName, {address, ip: nodeIp, extraData});
+      const extraData = await this.getExtraData(SetupCreator.templateDirectory, nodeTypeName, dockerFileName);
+      await SetupCreator.copyParityConfiguration(nodeTypeName, {address, ip: nodeIp, extraData});
     } else {
-      await this.setupCreator.copyParityConfiguration(nodeTypeName, {});
+      await SetupCreator.copyParityConfiguration(nodeTypeName, {});
     }
   }
 }
+
+export default new StateModel();

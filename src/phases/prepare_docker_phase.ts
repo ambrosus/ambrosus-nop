@@ -9,15 +9,17 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 
 
 import {ATLAS_1, ATLAS_2, ATLAS_3, HERMES} from '../consts';
+import Dialog from '../models/dialog_model';
+import StateModel from '../models/state_model';
 
-const prepareDockerPhase = (stateModel, healthCheckUrlDialog) => async () => {
-  await stateModel.prepareSetupFiles();
+const prepareDockerPhase = async () => {
+  await StateModel.prepareSetupFiles();
 
-  const role = await stateModel.getRole();
+  const role = await StateModel.getRole();
   if (role === HERMES || role === ATLAS_1 || role === ATLAS_2 || role === ATLAS_3) {
-    const url = await stateModel.getNodeUrl();
+    const url = await StateModel.getNodeUrl();
     if (url) {
-      healthCheckUrlDialog();
+      Dialog.healthCheckUrlDialog();
     }
   }
 };

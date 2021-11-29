@@ -6,20 +6,24 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
-const acceptTosPhase = (stateModel, smartContractsModel, acceptTosDialog) => async () => {
-  const existingSignedTos = await stateModel.getSignedTos();
+import Dialog from '../models/dialog_model';
+import StateModel from '../models/state_model';
+import SmartContractsModel from '../models/smart_contracts_model';
+
+const acceptTosPhase = () => async () => {
+  const existingSignedTos = await StateModel.getSignedTos();
   if (existingSignedTos !== null) {
     return existingSignedTos;
   }
-  const tosText = await stateModel.readTosText();
-  const {acceptanceSentence} = await acceptTosDialog(tosText);
+  const tosText = await StateModel.readTosText();
+  const {acceptanceSentence} = await Dialog.acceptTosDialog(tosText);
   const acceptedTosText = `${tosText}\n${acceptanceSentence}`;
-  await stateModel.createTosFile(acceptedTosText);
-  const tosTextHash = smartContractsModel.hashData(tosText);
-  await stateModel.storeTosHash(tosTextHash);
-  const privateKey = await stateModel.getPrivateKey();
-  const tosSignature = smartContractsModel.signMessage(acceptedTosText, privateKey);
-  await stateModel.storeSignedTos(tosSignature);
+  await StateModel.createTosFile(acceptedTosText);
+  const tosTextHash = SmartContractsModel.hashData(tosText);
+  await StateModel.storeTosHash(tosTextHash);
+  const privateKey = await StateModel.getPrivateKey();
+  const tosSignature = SmartContractsModel.signMessage(acceptedTosText, privateKey);
+  await StateModel.storeSignedTos(tosSignature);
 };
 
 export default acceptTosPhase;

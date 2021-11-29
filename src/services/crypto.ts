@@ -8,11 +8,27 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 */
 
 import Web3 from 'web3';
+import {Account} from 'web3-core';
 
-export default class Crypto {
-  web3: Web3;
-  constructor(web3) {
-    this.web3 = web3;
+class Crypto {
+  public web3: Web3;
+  public account: Account;
+  public address: string;
+
+  constructor() {
+    this.web3 = new Web3();
+  }
+
+  setProvider(rpc: string) {
+    this.web3 = new Web3(rpc);
+  }
+
+  setAccount(privateKey) {
+    this.account = this.web3.eth.accounts.privateKeyToAccount(privateKey);
+    this.web3.eth.accounts.wallet.add(this.account);
+    const {address} = this.account;
+    this.address = address;
+    this.web3.eth.defaultAccount = address;
   }
 
   async generatePrivateKey() {
@@ -45,3 +61,5 @@ export default class Crypto {
     return this.web3.utils.sha3(data);
   }
 }
+
+export default new Crypto();

@@ -10,92 +10,49 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 import * as http from 'http';
 import * as https from 'https';
 
-export default class HttpUtils {
-  async httpPost(url, data) {
-    return new Promise((resolve, reject) => {
-      const req = http.request(url,
-        {method: 'POST', headers: {'Content-Type': 'application/json'}}, (res) => {
-          const result: any = {data: ''};
-          res.setEncoding('utf8');
-          res.on('data', (chunk) => {
-            result.data += chunk;
-          });
-          res.on('end', () => {
-            if (res.statusCode === 200 || res.statusCode === 201) {
-              result.statusCode = res.statusCode;
-              resolve(result);
-            } else {
-              reject(res.statusCode);
-            }
-          });
-        });
-      req.on('error', reject);
-      req.write(data);
-      req.end();
-    });
-  }
-
-  async httpsPost(url, data) {
-    return new Promise((resolve, reject) => {
-      const req = https.request(url,
-        {method: 'POST', headers: {'Content-Type': 'application/json'}}, (res) => {
-          const result: any = {data: ''};
-          res.setEncoding('utf8');
-          res.on('data', (chunk) => {
-            result.data += chunk;
-          });
-          res.on('end', () => {
-            if (res.statusCode === 200 || res.statusCode === 201) {
-              result.statusCode = res.statusCode;
-              resolve(result);
-            } else {
-              reject(res.statusCode);
-            }
-          });
-        });
-      req.on('error', reject);
-      req.write(data);
-      req.end();
-    });
-  }
-
-  async getJsonHttp(url) {
-    return new Promise((resolve, reject) => {
-      const req = http.get(url, (res) => {
-        let data = '';
+export async function httpPost(url: string, data): Promise<{data: string, statusCode: number}> {
+  const httpModule = url.startsWith('https') ? https : http;
+  return new Promise((resolve, reject) => {
+    const req = httpModule.request(url,
+      {method: 'POST', headers: {'Content-Type': 'application/json'}}, (res) => {
+        const result: any = {data: '', statusCode: 0};
+        res.setEncoding('utf8');
         res.on('data', (chunk) => {
-          data += chunk;
+          result.data += chunk;
         });
         res.on('end', () => {
-          try {
-            resolve(JSON.parse(data));
-          } catch (err) {
-            reject(err);
+          if (res.statusCode === 200 || res.statusCode === 201) {
+            result.statusCode = res.statusCode;
+            resolve(result);
+          } else {
+            reject(res.statusCode);
           }
         });
       });
-      req.on('error', reject);
-      req.end();
-    });
-  }
-
-  async getJsonHttps(url) {
-    return new Promise((resolve, reject) => {
-      const req = https.get(url, (res) => {
-        let data = '';
-        res.on('data', (chunk) => {
-          data += chunk;
-        });
-        res.on('end', () => {
-          try {
-            resolve(JSON.parse(data));
-          } catch (err) {
-            reject(err);
-          }
-        });
-      });
-      req.on('error', reject);
-      req.end();
-    });
-  }
+    req.on('error', reject);
+    req.write(data);
+    req.end();
+  });
 }
+
+export async function httpGet(url: string): Promise<any> {
+  const httpModule = url.startsWith('https') ? https : http;
+  return new Promise((resolve, reject) => {
+    const req = httpModule.get(url, (res) => {
+      let data = '';
+      res.on('data', (chunk) => {
+        data += chunk;
+      });
+      res.on('end', () => {
+        try {
+          resolve(JSON.parse(data));
+        } catch (err) {
+          reject(err);
+        }
+      });
+    });
+    req.on('error', reject);
+    req.end();
+  });
+}
+

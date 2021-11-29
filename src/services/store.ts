@@ -8,11 +8,15 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 */
 
 import {readFile, writeFile, checkFileExists} from '../utils/file';
+import {config} from '../../config/config';
 
-export default class Store {
+class Store {
   storeFilePath: string;
-  constructor(storeFilePath) {
-    this.storeFilePath = storeFilePath;
+  constructor() {
+    this.storeFilePath = config.storePath;
+    if (!this.storeFilePath) {
+      throw new Error(`Unable to initiate Store`);
+    }
   }
 
   async write(key, value) {
@@ -52,3 +56,5 @@ export default class Store {
     await writeFile(this.storeFilePath, JSON.stringify(contents, null, 2), {mode: 0o660});
   }
 }
+
+export default new Store();

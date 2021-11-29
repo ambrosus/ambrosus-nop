@@ -6,23 +6,24 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
+import Dialog from '../models/dialog_model';
+import StateModel from '../models/state_model';
 
-
-const getNodeIP = async (stateModel, askForNodeIPDialog) => {
-  const storedNodeIP = await stateModel.getNodeIP();
+const getNodeIP = async () => {
+  const storedNodeIP = await StateModel.getNodeIP();
   if (storedNodeIP !== null) {
     return storedNodeIP;
   }
 
-  const answers = await askForNodeIPDialog();
+  const answers = await Dialog.askForNodeIPDialog();
   const {nodeIP : providedIP} = answers;
-  await stateModel.storeNodeIP(providedIP);
+  await StateModel.storeNodeIP(providedIP);
   return providedIP;
 };
 
-const getNodeIPPhase = (stateModel, nodeIPDetectedDialog, askForNodeIPDialog) => async () => {
-  const nodeIP = await getNodeIP(stateModel, askForNodeIPDialog);
-  await nodeIPDetectedDialog(nodeIP);
+const getNodeIPPhase = async () => {
+  const nodeIP = await getNodeIP();
+  await Dialog.nodeIPDetectedDialog(nodeIP);
   return nodeIP;
 };
 

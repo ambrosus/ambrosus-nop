@@ -11,16 +11,28 @@ import {APOLLO, ATLAS_1, ATLAS_2, ATLAS_3, HERMES, NO_ROLE_CODE} from '../consts
 import utils from '../utils/web3_utils';
 import {roleCodeToRole} from '../utils/role_converters';
 import Crypto from '../services/crypto';
+import {HeadWrapper, KycWhitelistWrapper, RolesWrapper, PayoutsWrapper, TimeWrapper, PayoutsActions, OnboardActions, AtlasStakeStoreWrapper} from 'ambrosus-node-contracts';
+import {Network} from '../interfaces/network';
 
-export default class SmartContractsModel {
-  crypto: Crypto;
-  kycWhitelistWrapper: any;
-  rolesWrapper: any;
+class SmartContractsModel {
+  headWrapper;
+  kycWhitelistWrapper;
+  rolesWrapper;
+  timeWrapper;
+  payoutsWrapper;
+  atlasStakeWrapper;
+  payoutsActions;
+  onboardActions;
 
-  constructor(crypto, kycWhitelistWrapper, rolesWrapper) {
-    this.crypto = crypto;
-    this.kycWhitelistWrapper = kycWhitelistWrapper;
-    this.rolesWrapper = rolesWrapper;
+  init(network: Network) {
+    this.headWrapper = new HeadWrapper(network.headContractAddress, Crypto.web3, Crypto.address);
+    this.kycWhitelistWrapper = new KycWhitelistWrapper(this.headWrapper, Crypto.web3, Crypto.address);
+    this.rolesWrapper = new RolesWrapper(this.headWrapper, Crypto.web3, Crypto.address);
+    this.timeWrapper = new TimeWrapper(this.headWrapper, Crypto.web3, Crypto.address);
+    this.payoutsWrapper = new PayoutsWrapper(this.headWrapper, Crypto.web3, Crypto.address);
+    this.atlasStakeWrapper = new AtlasStakeStoreWrapper(this.headWrapper, Crypto.web3, Crypto.address);
+    this.payoutsActions = new PayoutsActions(this.timeWrapper, this.payoutsWrapper);
+    this.onboardActions = new OnboardActions(this.kycWhitelistWrapper, this.rolesWrapper, this.atlasStakeWrapper);
   }
 
   async isAddressWhitelisted(address) {
@@ -35,7 +47,7 @@ export default class SmartContractsModel {
   }
 
   async hasEnoughBalance(address, requiredBalance) {
-    const balance = await this.crypto.getBalance(address);
+    const balance = await Crypto.getBalance(address);
     return utils.toBN(requiredBalance)
       .lte(balance);
   }
@@ -50,11 +62,11 @@ export default class SmartContractsModel {
   }
 
   hashData(data) {
-    return this.crypto.hashData(data);
+    return Crypto.hashData(data);
   }
 
   signMessage(data, privateKey) {
-    const {signature} = this.crypto.sign(data, privateKey);
+    const {signature} = Crypto.sign(data, privateKey);
     return signature;
   }
 
@@ -73,3 +85,5 @@ export default class SmartContractsModel {
     }
   }
 }
+
+export default new SmartContractsModel();

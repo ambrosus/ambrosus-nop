@@ -6,23 +6,24 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
+import Dialog from '../models/dialog_model';
+import StateModel from '../models/state_model';
 
-
-const getUserEmail = async (stateModel, askForUserEmailDialog) => {
-  const existingUserEmail = await stateModel.getUserEmail();
+const getUserEmail = async () => {
+  const existingUserEmail = await StateModel.getUserEmail();
   if (existingUserEmail !== null) {
     return existingUserEmail;
   }
 
-  const answers = await askForUserEmailDialog();
+  const answers = await Dialog.askForUserEmailDialog();
   const {userEmail} = answers;
-  await stateModel.storeUserEmail(userEmail);
+  await StateModel.storeUserEmail(userEmail);
   return userEmail;
 };
 
-const getUserEmailPhase = (stateModel, userEmailDetectedDialog, askForUserEmailDialog) => async () => {
-  const userEmail = await getUserEmail(stateModel, askForUserEmailDialog);
-  await userEmailDetectedDialog(userEmail);
+const getUserEmailPhase = () => async () => {
+  const userEmail = await getUserEmail();
+  await Dialog.userEmailDetectedDialog(userEmail);
   return userEmail;
 };
 

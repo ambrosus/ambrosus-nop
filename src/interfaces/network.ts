@@ -6,11 +6,11 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
-
-import chalk from 'chalk';
-
-const retirementSuccessfulDialog = (messages, outputDir) => async () => {
-  console.log(chalk.green(messages.retirementSuccessful(chalk.yellow(messages.dockerDownCommand), chalk.yellow(outputDir))));
-};
-
-export default retirementSuccessfulDialog;
+export interface Network {
+    domain: string;
+    rpc: string;
+    chainspec: string;
+    headContractAddress: string;
+    dockerTag: string;
+    name: string;
+}

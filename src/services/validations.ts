@@ -9,7 +9,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 
 import ipRegex from 'ip-regex';
 
-export default class Validations {
+class Validations {
   isValidPrivateKey(candidate) {
     const addressRegex = /^0x[0-9a-f]{64}$/i;
     return addressRegex.exec(candidate) !== null;
@@ -38,3 +38,5 @@ export default class Validations {
     return tosConfirmationRegex.exec(confirmation) !== null;
   }
 }
+
+export default new Validations();
