@@ -9,7 +9,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 import Dialog from '../models/dialog_model';
 import System from '../services/system';
 
-const checkDockerAvailablePhase = () => async () => {
+const checkDockerAvailablePhase = async () => {
   if (!await System.isDockerAvailable()) {
     Dialog.dockerMissingDialog();
     return false;
