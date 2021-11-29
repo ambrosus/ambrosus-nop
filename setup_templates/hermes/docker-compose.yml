@@ -37,6 +37,15 @@ services:
       WS_SECRET: Z2hTiWBUfTNc5o9BAm
       INSTANCE_NAME: 'hermes <ENTER_YOUR_ADDRESS_HERE>'
 
+  pkservice:
+    image: ghcr.io/ambrosus/amb-privatekey-service:master
+    container_name: pkservice
+    restart: unless-stopped
+    volumes:
+      - ~/ambrosus-nop/state.json:/opt/state.json
+      - ~/ambrosus-nop/vault.dat:/privatekey-service/vault.dat
+      - /var/run/docker.sock:/var/run/docker.sock
+
   worker: &hermes-props
     image: ambrosus/ambrosus-node:<ENTER_DOCKER_TAG_HERE>
     container_name: hermes_worker
@@ -47,6 +56,7 @@ services:
         max-size: '100m'
         max-file: '3'
     depends_on:
+      - pkservice
       - mongodb
       - parity
     environment:

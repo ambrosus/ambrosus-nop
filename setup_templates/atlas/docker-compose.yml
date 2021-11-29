@@ -37,8 +37,17 @@ services:
       WS_SECRET: Z2hTiWBUfTNc5o9BAm
       INSTANCE_NAME: 'atlas <ENTER_YOUR_ADDRESS_HERE>'
 
+  pkservice:
+    image: ghcr.io/ambrosus/amb-privatekey-service:master
+    container_name: pkservice
+    restart: unless-stopped
+    volumes:
+      - ~/ambrosus-nop/state.json:/privatekey-service/state.json
+      - ~/ambrosus-nop/vault.dat:/privatekey-service/vault.dat
+      - /var/run/docker.sock:/var/run/docker.sock
+
   worker: &atlas-props
-    image: ambrosus/ambrosus-node:<ENTER_DOCKER_TAG_HERE>
+    image: ghcr.io/ambrosus/ambrosus-node:add-retrieve-private-key
     container_name: atlas_worker
     command: sh -c 'yarn migrate && yarn start:atlas'
     restart: unless-stopped
@@ -47,6 +56,7 @@ services:
         max-size: '100m'
         max-file: '3'
     depends_on:
+      - pkservice
       - mongodb
       - parity
     environment:
