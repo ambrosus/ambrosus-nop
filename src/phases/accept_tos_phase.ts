@@ -10,7 +10,7 @@ import Dialog from '../models/dialog_model';
 import StateModel from '../models/state_model';
 import SmartContractsModel from '../models/smart_contracts_model';
 
-const acceptTosPhase = () => async () => {
+const acceptTosPhase = async () => {
   const existingSignedTos = await StateModel.getSignedTos();
   if (existingSignedTos !== null) {
     return existingSignedTos;
