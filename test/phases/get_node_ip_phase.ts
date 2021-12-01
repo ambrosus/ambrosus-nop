@@ -12,6 +12,8 @@ import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
+import Dialog from '../../src/models/dialog_model';
+import StateModel from '../../src/models/state_model';
 import getNodeIPPhase from '../../src/phases/get_node_ip_phase';
 
 chai.use(chaiAsPromised);
@@ -26,15 +28,21 @@ describe('Get Node IP Phase', () => {
   const exampleStoredIP = '127.0.0.1';
   const exampleUserProvidedIP = '192.168.0.2';
 
-  const call = async () => getNodeIPPhase(stateModelStub, nodeIPDetectedDialogStub, askForNodeIPDialogStub)();
+  const call = getNodeIPPhase;
 
   beforeEach(async () => {
     stateModelStub = {
       getNodeIP: sinon.stub(),
       storeNodeIP: sinon.stub()
     };
+    StateModel.getNodeIP = stateModelStub.getNodeIP;
+    StateModel.storeNodeIP = stateModelStub.storeNodeIP;
+
     askForNodeIPDialogStub = sinon.stub();
     nodeIPDetectedDialogStub = sinon.stub();
+
+    Dialog.askForNodeIPDialog = askForNodeIPDialogStub;
+    Dialog.nodeIPDetectedDialog = nodeIPDetectedDialogStub;
   });
 
   it('ends if a IP is already in the store', async () => {

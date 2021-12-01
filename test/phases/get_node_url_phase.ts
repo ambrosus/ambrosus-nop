@@ -12,6 +12,8 @@ import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
+import Dialog from '../../src/models/dialog_model';
+import StateModel from '../../src/models/state_model';
 import getNodeTypePhase from '../../src/phases/get_node_url_phase';
 
 chai.use(chaiAsPromised);
@@ -25,15 +27,21 @@ describe('Get Node Url Phase', () => {
 
   const exampleUrl = 'https://amb-node.com';
 
-  const call = async () => getNodeTypePhase(stateModelStub, nodeUrlDetectedDialogStub, askForNodeUrlDialogStub)();
+  const call = getNodeTypePhase;
 
   beforeEach(async () => {
     stateModelStub = {
       getNodeUrl: sinon.stub(),
       storeNodeUrl: sinon.stub()
     };
+    StateModel.getNodeUrl = stateModelStub.getNodeUrl;
+    StateModel.storeNodeUrl = stateModelStub.storeNodeUrl;
+
     nodeUrlDetectedDialogStub = sinon.stub();
     askForNodeUrlDialogStub = sinon.stub();
+
+    Dialog.nodeUrlDetectedDialog = nodeUrlDetectedDialogStub;
+    Dialog.askForNodeUrlDialog = askForNodeUrlDialogStub;
   });
 
   it('ends if a URL is already in the store', async () => {

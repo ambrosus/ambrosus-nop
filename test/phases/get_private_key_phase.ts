@@ -12,6 +12,9 @@ import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
+import Dialog from '../../src/models/dialog_model';
+import StateModel from '../../src/models/state_model';
+import Crypto from '../../src/services/crypto';
 import getPrivateKeyPhase from '../../src/phases/get_private_key_phase';
 
 chai.use(chaiAsPromised);
@@ -26,12 +29,14 @@ describe('Get Private Key Phase', () => {
   let privateKeyDetectedDialogStub;
   let askForPrivateKeyDialogStub;
 
-  const call = async () => getPrivateKeyPhase(stateModelStub, cryptoStub, privateKeyDetectedDialogStub, askForPrivateKeyDialogStub)();
+  const call = getPrivateKeyPhase;
 
   beforeEach(async () => {
     cryptoStub = {
       addressForPrivateKey: sinon.stub().resolves(exampleAddress)
     };
+    Crypto.addressForPrivateKey = cryptoStub.addressForPrivateKey;
+
     stateModelStub = {
       getAddress: sinon.stub(),
       storeAddress: sinon.stub(),
@@ -39,8 +44,16 @@ describe('Get Private Key Phase', () => {
       storePrivateKey: sinon.stub(),
       generateAndStoreNewPrivateKey: sinon.stub()
     };
+    StateModel.getAddress = stateModelStub.getAddress;
+    StateModel.storeAddress = stateModelStub.storeAddress;
+    StateModel.getPrivateKey = stateModelStub.getPrivateKey;
+    StateModel.storePrivateKey = stateModelStub.storePrivateKey;
+    StateModel.generateAndStoreNewPrivateKey = stateModelStub.generateAndStoreNewPrivateKey;
+
     privateKeyDetectedDialogStub = sinon.stub().resolves();
     askForPrivateKeyDialogStub = sinon.stub();
+    Dialog.privateKeyDetectedDialog = privateKeyDetectedDialogStub;
+    Dialog.askForPrivateKeyDialog = askForPrivateKeyDialogStub;
   });
 
   it('ends if a private key is already in the store', async () => {
