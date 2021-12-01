@@ -12,6 +12,7 @@ import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
+import Crypto from '../../src/services/crypto';
 import SmartContractsModel from '../../src/models/smart_contracts_model';
 import utils from '../../src/utils/web3_utils';
 import {
@@ -46,18 +47,24 @@ describe('Smart Contract Model', () => {
     cryptoStub = {
       getBalance: sinon.stub()
     };
+    Crypto.getBalance = cryptoStub.getBalance;
+
     kycWhitelistWrapperStub = {
       isWhitelisted: sinon.stub().resolves(exampleBoolean),
       getRequiredDeposit: sinon.stub().resolves(ATLAS_1_STAKE),
       getRoleAssigned: sinon.stub()
     };
+    SmartContractsModel.kycWhitelistWrapper = kycWhitelistWrapperStub;
+
     rolesWrapperStub = {
       onboardAsHermes: sinon.stub(),
       onboardAsApollo: sinon.stub(),
       onboardAsAtlas: sinon.stub(),
       onboardedRole: sinon.stub().resolves(null)
     };
-    smartContractsModel = new SmartContractsModel(cryptoStub, kycWhitelistWrapperStub, rolesWrapperStub);
+    SmartContractsModel.rolesWrapper = rolesWrapperStub;
+
+    smartContractsModel = SmartContractsModel;
   });
 
   describe('isAddressWhitelisted', async () => {

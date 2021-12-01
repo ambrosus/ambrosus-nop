@@ -12,6 +12,8 @@ import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
+import Dialog from '../../src/models/dialog_model';
+import System from '../../src/services/system';
 import checkDockerAvailablePhase from '../../src/phases/check_docker_available_phase';
 
 chai.use(chaiAsPromised);
@@ -20,17 +22,16 @@ const {expect} = chai;
 
 describe('Check docker available', () => {
   let systemModelStub;
-  let dockerDetectedDialogStub;
-  let dockerMissingDialogStub;
 
-  const call = async () => checkDockerAvailablePhase(systemModelStub, dockerDetectedDialogStub, dockerMissingDialogStub)();
+  const call = checkDockerAvailablePhase;
 
   beforeEach(async () => {
     systemModelStub = {
       isDockerAvailable: sinon.stub()
     };
-    dockerDetectedDialogStub = sinon.stub().resolves();
-    dockerMissingDialogStub = sinon.stub().resolves();
+    System.isDockerAvailable = systemModelStub.isDockerAvailable;
+    Dialog.dockerDetectedDialog = sinon.stub().resolves();
+    Dialog.dockerMissingDialog = sinon.stub().resolves();
   });
 
   it('displays confirmation dialog if docker available', async () => {
@@ -39,8 +40,8 @@ describe('Check docker available', () => {
     const ret = await call();
 
     expect(systemModelStub.isDockerAvailable).to.have.been.calledOnce;
-    expect(dockerDetectedDialogStub).to.have.been.called;
-    expect(dockerMissingDialogStub).to.not.have.been.called;
+    expect(Dialog.dockerDetectedDialog).to.have.been.called;
+    expect(Dialog.dockerMissingDialog).to.not.have.been.called;
     expect(ret).to.equal(true);
   });
 
@@ -50,8 +51,8 @@ describe('Check docker available', () => {
     const ret = await call();
 
     expect(systemModelStub.isDockerAvailable).to.have.been.calledOnce;
-    expect(dockerDetectedDialogStub).to.not.have.been.called;
-    expect(dockerMissingDialogStub).to.have.been.called;
+    expect(Dialog.dockerDetectedDialog).to.not.have.been.called;
+    expect(Dialog.dockerMissingDialog).to.have.been.called;
     expect(ret).to.equal(false);
   });
 });

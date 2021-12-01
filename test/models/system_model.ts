@@ -12,7 +12,7 @@ import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
-import SystemModel from '../../src/models/system_model';
+import System from '../../src/services/system';
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
@@ -26,19 +26,20 @@ describe('System Model', () => {
     systemStub = {
       isDockerAvailable: sinon.stub()
     };
-    systemModel = new SystemModel(systemStub);
+    System.isDockerAvailable = systemStub.isDockerAvailable;
+    systemModel = System;
   });
 
   describe('isDockerAvailable', () => {
     it('returns true if docker is available', async () => {
       systemStub.isDockerAvailable.resolves(true);
-      await expect(systemModel.isDockerAvailable()).to.be.eventually.fulfilled.with.true;
+      await expect(System.isDockerAvailable()).to.be.eventually.fulfilled.with.true;
       await expect(systemStub.isDockerAvailable).to.have.been.calledOnce;
     });
 
     it('returns false if docker is not available', async () => {
       systemStub.isDockerAvailable.resolves(false);
-      await expect(systemModel.isDockerAvailable()).to.be.eventually.fulfilled.with.false;
+      await expect(System.isDockerAvailable()).to.be.eventually.fulfilled.with.false;
       await expect(systemStub.isDockerAvailable).to.have.been.calledOnce;
     });
   });

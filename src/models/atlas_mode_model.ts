@@ -11,7 +11,7 @@ import base64url from 'base64url';
 import {ATLAS_1, ATLAS_2, ATLAS_3} from '../consts';
 import StateModel from './state_model';
 import Crypto from '../services/crypto';
-import {httpGet, httpPost} from '../utils/http_utils';
+import HttpUtils from '../utils/http_utils';
 
 class AtlasModeModel {
   async getMode() {
@@ -19,7 +19,7 @@ class AtlasModeModel {
       const role = await StateModel.getRole();
       const url = await StateModel.getNodeUrl();
       if (url && (role === ATLAS_1 || role === ATLAS_2 || role === ATLAS_3)) {
-        const nodeInfo = await httpGet(`${url}/nodeinfo`);
+        const nodeInfo = await HttpUtils.httpGet(`${url}/nodeinfo`);
         const {mode} = nodeInfo;
         return mode;
       }
@@ -36,7 +36,7 @@ class AtlasModeModel {
       if (url && (role === ATLAS_1 || role === ATLAS_2 || role === ATLAS_3)) {
         const token = await this.createSetModeToken(mode, 10);
         const request = `{"mode":"${token}"}`;
-        return 200 === (await httpPost(`${url}/nodeinfo`, request)).statusCode;
+        return 200 === (await HttpUtils.httpPost(`${url}/nodeinfo`, request)).statusCode;
       }
       return false;
     } catch (err) {

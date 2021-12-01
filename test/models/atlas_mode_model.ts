@@ -15,6 +15,9 @@ import sinonChai from 'sinon-chai';
 import Web3 from 'web3';
 import {ATLAS_1, APOLLO, HERMES} from '../../src/consts';
 import AtlasModeModel from '../../src/models/atlas_mode_model';
+import StateModel from '../../src/models/state_model';
+import HttpUtils from '../../src/utils/http_utils';
+import Crypto from '../../src/services/crypto';
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
@@ -34,6 +37,7 @@ describe('Atlas Mode Model', () => {
     account = web3.eth.accounts.privateKeyToAccount(privateKey);
     web3.eth.accounts.wallet.add(account);
     web3.eth.defaultAccount = account.address;
+    Crypto.setAccount(privateKey);
   });
 
   beforeEach(() => {
@@ -41,13 +45,17 @@ describe('Atlas Mode Model', () => {
       getRole: sinon.stub(),
       getNodeUrl: sinon.stub()
     };
+    StateModel.getRole = stateModelStub.getRole;
+    StateModel.getNodeUrl = stateModelStub.getNodeUrl;
+
     httpUtilsMock = {
       httpPost:  sinon.stub(),
-      httpsPost:  sinon.stub(),
-      getJsonHttp: sinon.stub(),
-      getJsonHttps: sinon.stub()
+      httpGet: sinon.stub()
     };
-    atlasModeModel = new AtlasModeModel(httpUtilsMock, account, stateModelStub);
+    HttpUtils.httpGet = httpUtilsMock.httpGet;
+    HttpUtils.httpPost = httpUtilsMock.httpPost;
+
+    atlasModeModel = AtlasModeModel;
   });
 
   describe('getMode', () => {
@@ -56,8 +64,7 @@ describe('Atlas Mode Model', () => {
       stateModelStub.getNodeUrl.resolves('');
       const mode = await atlasModeModel.getMode();
       expect(mode).to.be.deep.equal({});
-      expect(httpUtilsMock.getJsonHttp).to.not.be.called;
-      expect(httpUtilsMock.getJsonHttps).to.not.be.called;
+      expect(httpUtilsMock.httpGet).to.not.be.called;
     });
 
     it('returns empty for APOLLO', async () => {
@@ -65,8 +72,7 @@ describe('Atlas Mode Model', () => {
       stateModelStub.getNodeUrl.resolves('http://atlas.ambrosus.io');
       const mode = await atlasModeModel.getMode();
       expect(mode).to.be.deep.equal({});
-      expect(httpUtilsMock.getJsonHttp).to.not.be.called;
-      expect(httpUtilsMock.getJsonHttps).to.not.be.called;
+      expect(httpUtilsMock.httpGet).to.not.be.called;
     });
 
     it('returns empty for HERMES', async () => {
@@ -74,14 +80,13 @@ describe('Atlas Mode Model', () => {
       stateModelStub.getNodeUrl.resolves('http://atlas.ambrosus.io');
       const mode = await atlasModeModel.getMode();
       expect(mode).to.be.deep.equal({});
-      expect(httpUtilsMock.getJsonHttp).to.not.be.called;
-      expect(httpUtilsMock.getJsonHttps).to.not.be.called;
+      expect(httpUtilsMock.httpGet).to.not.be.called;
     });
 
     it('returns "normal" mode by http', async () => {
       stateModelStub.getRole.resolves(ATLAS_1);
       stateModelStub.getNodeUrl.resolves('http://atlas.ambrosus.io');
-      httpUtilsMock.getJsonHttp.resolves(JSON.parse('{"mode":{"mode":"normal"}}'));
+      httpUtilsMock.httpGet.resolves(JSON.parse('{"mode":{"mode":"normal"}}'));
       const mode = await atlasModeModel.getMode();
       expect(mode).to.be.deep.equal({mode:'normal'});
     });
@@ -89,7 +94,7 @@ describe('Atlas Mode Model', () => {
     it('returns "normal" mode by https', async () => {
       stateModelStub.getRole.resolves(ATLAS_1);
       stateModelStub.getNodeUrl.resolves('https://atlas.ambrosus.io');
-      httpUtilsMock.getJsonHttps.resolves(JSON.parse('{"mode":{"mode":"normal"}}'));
+      httpUtilsMock.httpGet.resolves(JSON.parse('{"mode":{"mode":"normal"}}'));
       const mode = await atlasModeModel.getMode();
       expect(mode).to.be.deep.equal({mode:'normal'});
     });
@@ -97,7 +102,7 @@ describe('Atlas Mode Model', () => {
     it('returns {} by error', async () => {
       stateModelStub.getRole.resolves(ATLAS_1);
       stateModelStub.getNodeUrl.resolves('https://atlas.ambrosus.io');
-      httpUtilsMock.getJsonHttps.throws();
+      httpUtilsMock.httpGet.throws();
       const mode = await atlasModeModel.getMode();
       expect(mode).to.be.deep.equal({});
     });
@@ -108,24 +113,21 @@ describe('Atlas Mode Model', () => {
       stateModelStub.getRole.resolves(ATLAS_1);
       stateModelStub.getNodeUrl.resolves('');
       expect(await atlasModeModel.setMode()).to.be.false;
-      expect(httpUtilsMock.getJsonHttp).to.not.be.called;
-      expect(httpUtilsMock.getJsonHttps).to.not.be.called;
+      expect(httpUtilsMock.httpGet).to.not.be.called;
     });
 
     it('returns false for APOLLO', async () => {
       stateModelStub.getRole.resolves(APOLLO);
       stateModelStub.getNodeUrl.resolves('http://atlas.ambrosus.io');
       expect(await atlasModeModel.setMode()).to.be.false;
-      expect(httpUtilsMock.getJsonHttp).to.not.be.called;
-      expect(httpUtilsMock.getJsonHttps).to.not.be.called;
+      expect(httpUtilsMock.httpGet).to.not.be.called;
     });
 
     it('returns false for HERMES', async () => {
       stateModelStub.getRole.resolves(HERMES);
       stateModelStub.getNodeUrl.resolves('http://atlas.ambrosus.io');
       expect(await atlasModeModel.setMode()).to.be.false;
-      expect(httpUtilsMock.getJsonHttp).to.not.be.called;
-      expect(httpUtilsMock.getJsonHttps).to.not.be.called;
+      expect(httpUtilsMock.httpGet).to.not.be.called;
     });
 
     it('returns false by http error', async () => {
@@ -133,15 +135,15 @@ describe('Atlas Mode Model', () => {
       stateModelStub.getNodeUrl.resolves('http://atlas.ambrosus.io');
       httpUtilsMock.httpPost.resolves(false);
       expect(await atlasModeModel.setMode('normal')).to.be.false;
-      expect(httpUtilsMock.httpsPost).to.not.be.called;
+      expect(httpUtilsMock.httpPost).to.be.called;
     });
 
     it('returns false by https error', async () => {
       stateModelStub.getRole.resolves(ATLAS_1);
       stateModelStub.getNodeUrl.resolves('https://atlas.ambrosus.io');
-      httpUtilsMock.httpsPost.resolves(false);
+      httpUtilsMock.httpPost.resolves(false);
       expect(await atlasModeModel.setMode('normal')).to.be.false;
-      expect(httpUtilsMock.httpPost).to.not.be.called;
+      expect(httpUtilsMock.httpPost).to.be.called;
     });
   });
 

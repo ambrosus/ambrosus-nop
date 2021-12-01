@@ -15,14 +15,14 @@ import {HeadWrapper, KycWhitelistWrapper, RolesWrapper, PayoutsWrapper, TimeWrap
 import {Network} from '../interfaces/network';
 
 class SmartContractsModel {
-  headWrapper;
-  kycWhitelistWrapper;
-  rolesWrapper;
-  timeWrapper;
-  payoutsWrapper;
-  atlasStakeWrapper;
-  payoutsActions;
-  onboardActions;
+  headWrapper: any = null;
+  kycWhitelistWrapper: any = null;
+  rolesWrapper: any = null;
+  timeWrapper: any = null;
+  payoutsWrapper: any = null;
+  atlasStakeWrapper: any = null;
+  payoutsActions: any = null;
+  onboardActions: any = null;
 
   init(network: Network) {
     this.headWrapper = new HeadWrapper(network.headContractAddress, Crypto.web3, Crypto.address);

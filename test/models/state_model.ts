@@ -13,6 +13,9 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
 import StateModel from '../../src/models/state_model';
+import Store from '../../src/services/store';
+import Crypto from '../../src/services/crypto';
+import SetupCreator from '../../src/services/setup_creator';
 import {APOLLO, HERMES} from '../../src/consts';
 
 chai.use(chaiAsPromised);
@@ -55,6 +58,9 @@ describe('State Model', () => {
       safeRead: sinon.stub(),
       write: sinon.stub()
     };
+    Store.safeRead = storeStub.safeRead;
+    Store.write = storeStub.write;
+
     cryptoStub = {
       generatePrivateKey: sinon.stub().resolves(examplePrivateKey),
       addressForPrivateKey: sinon.stub().withArgs(examplePrivateKey)
@@ -63,6 +69,11 @@ describe('State Model', () => {
       getEncryptedWallet: sinon.stub().withArgs(examplePrivateKey, examplePassword)
         .returns(exampleEncryptedWallet)
     };
+    Crypto.generatePrivateKey = cryptoStub.generatePrivateKey;
+    Crypto.addressForPrivateKey = cryptoStub.addressForPrivateKey;
+    Crypto.getRandomPassword = cryptoStub.getRandomPassword;
+    Crypto.getEncryptedWallet = cryptoStub.getEncryptedWallet;
+
     setupCreatorStub = {
       copyParityConfiguration: sinon.stub(),
       createPasswordFile: sinon.stub(),
@@ -70,7 +81,13 @@ describe('State Model', () => {
       prepareDockerComposeFile: sinon.stub(),
       fetchChainJson: sinon.stub()
     };
-    stateModel = new StateModel(storeStub, cryptoStub, setupCreatorStub);
+    SetupCreator.copyParityConfiguration = setupCreatorStub.copyParityConfiguration;
+    SetupCreator.createPasswordFile = setupCreatorStub.createPasswordFile;
+    SetupCreator.createKeyFile = setupCreatorStub.createKeyFile;
+    SetupCreator.prepareDockerComposeFile = setupCreatorStub.prepareDockerComposeFile;
+    SetupCreator.fetchChainJson = setupCreatorStub.fetchChainJson;
+
+    stateModel = StateModel;
   });
 
   describe('getNetwork', () => {
@@ -266,7 +283,8 @@ describe('State Model', () => {
 
   describe('prepareSetupFiles', async () => {
     beforeEach(async () => {
-      getExtraDataStub = sinon.stub(stateModel, 'getExtraData').returns(exampleExtraData);
+      getExtraDataStub = sinon.stub().returns(exampleExtraData);
+      stateModel.getExtraData = getExtraDataStub;
     });
 
     it('creates files for Apollo', async () => {
@@ -313,10 +331,6 @@ describe('State Model', () => {
     it('throws if invalid role provided', async () => {
       storeStub.safeRead.resolves(null);
       await expect(() => stateModel.prepareSetupFiles()).to.throw;
-    });
-
-    after(() => {
-      getExtraDataStub.restore();
     });
   });
 });

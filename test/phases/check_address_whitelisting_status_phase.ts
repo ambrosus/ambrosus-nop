@@ -13,6 +13,9 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
 import checkAddressWhitelistingStatus from '../../src/phases/check_address_whitelisting_status_phase';
+import Dialog from '../../src/models/dialog_model';
+import StateModel from '../../src/models/state_model';
+import SmartContractsModel from '../../src/models/smart_contracts_model';
 import {ATLAS_1_STAKE, ATLAS_1, HERMES} from '../../src/consts';
 
 chai.use(chaiAsPromised);
@@ -23,16 +26,13 @@ describe('Check Address Whitelisting Status Phase', () => {
   const exampleAddress = '0x123';
   let stateModelStub;
   let smartContractsModelStub;
-  let addressIsNotWhitelistedDialog;
-  let addressIsWhitelistedDialog;
 
   const exampleStatus = {
     requiredDeposit: ATLAS_1_STAKE,
     roleAssigned: ATLAS_1
   };
 
-
-  const call = async () => checkAddressWhitelistingStatus(smartContractsModelStub, stateModelStub, addressIsNotWhitelistedDialog, addressIsWhitelistedDialog)();
+  const call = checkAddressWhitelistingStatus;
 
   beforeEach(async () => {
     stateModelStub = {
@@ -40,12 +40,19 @@ describe('Check Address Whitelisting Status Phase', () => {
       storeRole: sinon.stub(),
       getAddress: sinon.stub().resolves(exampleAddress)
     };
+    StateModel.getRole = stateModelStub.getRole;
+    StateModel.storeRole = stateModelStub.storeRole;
+    StateModel.getAddress = stateModelStub.getAddress;
+
     smartContractsModelStub = {
       isAddressWhitelisted: sinon.stub(),
       getAddressWhitelistingData: sinon.stub()
     };
-    addressIsNotWhitelistedDialog = sinon.stub();
-    addressIsWhitelistedDialog = sinon.stub();
+    SmartContractsModel.isAddressWhitelisted = smartContractsModelStub.isAddressWhitelisted;
+    SmartContractsModel.getAddressWhitelistingData = smartContractsModelStub.getAddressWhitelistingData;
+
+    Dialog.addressIsNotWhitelistedDialog = sinon.stub();
+    Dialog.addressIsWhitelistedDialog = sinon.stub();
   });
 
   it('ends if user is not whitelisted yet', async () => {
@@ -54,9 +61,9 @@ describe('Check Address Whitelisting Status Phase', () => {
     const ret = await call();
 
     expect(smartContractsModelStub.isAddressWhitelisted).to.have.been.calledOnceWith(exampleAddress);
-    expect(addressIsNotWhitelistedDialog).to.have.been.called;
+    expect(Dialog.addressIsNotWhitelistedDialog).to.have.been.called;
     expect(smartContractsModelStub.getAddressWhitelistingData).to.have.not.been.called;
-    expect(addressIsWhitelistedDialog).to.have.not.been.called;
+    expect(Dialog.addressIsWhitelistedDialog).to.have.not.been.called;
     expect(stateModelStub.getRole).to.have.not.been.called;
     expect(ret).to.equal(null);
   });
@@ -69,9 +76,9 @@ describe('Check Address Whitelisting Status Phase', () => {
     const ret = await call();
 
     expect(smartContractsModelStub.isAddressWhitelisted).to.have.been.calledOnce;
-    expect(addressIsNotWhitelistedDialog).to.have.not.been.called;
+    expect(Dialog.addressIsNotWhitelistedDialog).to.have.not.been.called;
     expect(smartContractsModelStub.getAddressWhitelistingData).to.have.been.calledOnceWith(exampleAddress);
-    expect(addressIsWhitelistedDialog).to.have.been.calledOnceWith(exampleStatus.requiredDeposit, exampleStatus.roleAssigned);
+    expect(Dialog.addressIsWhitelistedDialog).to.have.been.calledOnceWith(exampleStatus.requiredDeposit, exampleStatus.roleAssigned);
     expect(stateModelStub.getRole).to.have.been.calledOnceWith();
     expect(ret).to.deep.equal(exampleStatus);
   });

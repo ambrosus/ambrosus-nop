@@ -12,7 +12,7 @@
     "dev:lint:fix": "eslint src test config --fix",
     "dev:start": "ts-node src/start.ts",
     "start": "node dist/start.js",
-    "test": "mocha --require ts-node/register test/**/*.ts"
+    "test": "./tests.sh"
   },
   "dependencies": {
     "ambrosus-node-contracts": "0.0.83",

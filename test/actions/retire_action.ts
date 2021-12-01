@@ -13,6 +13,9 @@ import sinonChai from 'sinon-chai';
 import chaiAsPromised from 'chai-as-promised';
 import retireAction from '../../src/menu_actions/retire_action';
 import {constants} from 'ambrosus-node-contracts';
+import Dialog from '../../src/models/dialog_model';
+import AtlasModeModel from '../../src/models/atlas_mode_model';
+import SmartContractsModel from '../../src/models/smart_contracts_model';
 
 chai.use(sinonChai);
 chai.use(chaiAsPromised);
@@ -22,26 +25,25 @@ describe('Retire action', () => {
   let atlasModeModelMock;
   let onboardMock;
   let confirmRetirementDialogStub;
-  let retirementSuccessfulDialogStub;
   let continueAtlasRetirementDialogStub;
-  let retirementStartSuccessfulDialogStub;
-  let retirementContinueDialogStub;
-  let retirementStopDialogStub;
-  let genericErrorDialogStub;
   let retireActionCall;
 
   beforeEach(() => {
     confirmRetirementDialogStub = sinon.stub().resolves({retirementConfirmation: true});
-    retirementSuccessfulDialogStub = sinon.stub().resolves();
     continueAtlasRetirementDialogStub = sinon.stub().resolves({atlasRetirementConfirmation: true});
-    retirementStartSuccessfulDialogStub = sinon.stub().resolves();
-    retirementContinueDialogStub = sinon.stub().resolves();
-    retirementStopDialogStub = sinon.stub().resolves();
-    genericErrorDialogStub = sinon.stub().resolves();
+    Dialog.confirmRetirementDialog  = confirmRetirementDialogStub;
+    Dialog.continueAtlasRetirementDialog = continueAtlasRetirementDialogStub;
+    Dialog.retirementSuccessfulDialog = sinon.stub().resolves();
+    Dialog.retirementStartSuccessfulDialog = sinon.stub().resolves();
+    Dialog.retirementContinueDialog = sinon.stub().resolves();
+    Dialog.retirementStopDialog = sinon.stub().resolves();
+    Dialog.genericErrorDialog = sinon.stub().resolves();
     atlasModeModelMock = {
       getMode: sinon.stub().resolves({mode:'normal'}),
       setMode: sinon.stub().resolves(true)
     };
+    AtlasModeModel.getMode = atlasModeModelMock.getMode;
+    AtlasModeModel.setMode = atlasModeModelMock.setMode;
     onboardMock = {
       rolesWrapper: {
         onboardedRole: sinon.stub().resolves(constants.APOLLO),
@@ -53,17 +55,8 @@ describe('Retire action', () => {
       },
       retire: sinon.stub().resolves()
     };
-    retireActionCall = retireAction(
-      atlasModeModelMock,
-      onboardMock,
-      confirmRetirementDialogStub,
-      retirementSuccessfulDialogStub,
-      continueAtlasRetirementDialogStub,
-      retirementStartSuccessfulDialogStub,
-      retirementContinueDialogStub,
-      retirementStopDialogStub,
-      genericErrorDialogStub
-    );
+    SmartContractsModel.onboardActions = onboardMock;
+    retireActionCall = retireAction;
   });
 
   it(`returns true and ends NOP on successful retirement`, async () => {
@@ -79,7 +72,7 @@ describe('Retire action', () => {
   it('shows success dialog after retirement', async () => {
     expect(await retireActionCall()).to.be.true;
     expect(onboardMock.retire).to.be.calledOnce;
-    expect(retirementSuccessfulDialogStub).to.be.calledAfter(onboardMock.retire);
+    expect(Dialog.retirementSuccessfulDialog).to.be.calledAfter(onboardMock.retire);
   });
 
   it('immediately returns false if confirmation was negative for ATLAS without bundles', async () => {
@@ -102,8 +95,8 @@ describe('Retire action', () => {
     onboardMock.atlasStakeWrapper.isShelteringAny.resolves(true),
     confirmRetirementDialogStub.resolves({retirementConfirmation: true});
     expect(await retireActionCall()).to.be.true;
-    expect(atlasModeModelMock.setMode).to.be.calledOnceWith('retire');
-    expect(retirementStartSuccessfulDialogStub).to.be.calledAfter(atlasModeModelMock.setMode);
+    expect(AtlasModeModel.setMode).to.be.calledOnceWith('retire');
+    expect(Dialog.retirementStartSuccessfulDialog).to.be.calledAfter(AtlasModeModel.setMode);
   });
 
   it('fail to start retirement and shows error dialog for ATLAS with bundles', async () => {
@@ -112,8 +105,8 @@ describe('Retire action', () => {
     confirmRetirementDialogStub.resolves({retirementConfirmation: true});
     atlasModeModelMock.setMode.resolves(false),
     expect(await retireActionCall()).to.be.false;
-    expect(atlasModeModelMock.setMode).to.be.calledOnceWith('retire');
-    expect(genericErrorDialogStub).to.be.calledAfter(atlasModeModelMock.setMode);
+    expect(AtlasModeModel.setMode).to.be.calledOnceWith('retire');
+    expect(Dialog.genericErrorDialog).to.be.calledAfter(AtlasModeModel.setMode);
   });
 
   it('continue retirement and shows continue dialog for ATLAS with bundles', async () => {
@@ -122,7 +115,7 @@ describe('Retire action', () => {
     atlasModeModelMock.getMode.resolves({mode:'retire'}),
     continueAtlasRetirementDialogStub.resolves({continueConfirmation: true});
     expect(await retireActionCall()).to.be.true;
-    expect(retirementContinueDialogStub).to.be.calledOnce;
+    expect(Dialog.retirementContinueDialog).to.be.calledOnce;
   });
 
   it('stop retirement and shows stop dialog for ATLAS with bundles', async () => {
@@ -131,8 +124,8 @@ describe('Retire action', () => {
     atlasModeModelMock.getMode.resolves({mode:'retire'}),
     continueAtlasRetirementDialogStub.resolves({continueConfirmation: false});
     expect(await retireActionCall()).to.be.true;
-    expect(atlasModeModelMock.setMode).to.be.calledOnceWith('normal');
-    expect(retirementStopDialogStub).to.be.calledAfter(atlasModeModelMock.setMode);
+    expect(AtlasModeModel.setMode).to.be.calledOnceWith('normal');
+    expect(Dialog.retirementStopDialog).to.be.calledAfter(AtlasModeModel.setMode);
   });
 
   it('fail to stop retirement and shows error dialog for ATLAS with bundles', async () => {
@@ -142,7 +135,7 @@ describe('Retire action', () => {
     continueAtlasRetirementDialogStub.resolves({continueConfirmation: false});
     atlasModeModelMock.setMode.resolves(false),
     expect(await retireActionCall()).to.be.false;
-    expect(atlasModeModelMock.setMode).to.be.calledOnceWith('normal');
-    expect(genericErrorDialogStub).to.be.calledAfter(atlasModeModelMock.setMode);
+    expect(AtlasModeModel.setMode).to.be.calledOnceWith('normal');
+    expect(Dialog.genericErrorDialog).to.be.calledAfter(AtlasModeModel.setMode);
   });
 });

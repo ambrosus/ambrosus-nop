@@ -12,29 +12,29 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import chaiAsPromised from 'chai-as-promised';
 import payoutAction from '../../src/menu_actions/payout_action';
+import Dialog from '../../src/models/dialog_model';
+import SmartContractsModel from '../../src/models/smart_contracts_model';
 
 chai.use(sinonChai);
 chai.use(chaiAsPromised);
 const {expect} = chai;
 
 describe('Payout actions', () => {
-  let payoutsActionsMock;
-  let availablePayoutDialogStub;
   let confirmPayoutWithdrawalDialogStub;
-  let withdrawalSuccessfulDialogStub;
   let payoutActionCall;
   const availablePayoutInWei = '42000000000000000000';
   const availablePayoutInAmb = '42';
 
   beforeEach(() => {
-    payoutsActionsMock = {
+    confirmPayoutWithdrawalDialogStub = sinon.stub().resolves({payoutConfirmation: true});
+    Dialog.confirmPayoutWithdrawalDialog = confirmPayoutWithdrawalDialogStub;
+    Dialog.availablePayoutDialog = sinon.stub().resolves();
+    Dialog.withdrawalSuccessfulDialog = sinon.stub().resolves();
+    SmartContractsModel.payoutsActions = {
       getTotalAvailablePayout: sinon.stub().resolves(availablePayoutInWei),
       withdraw: sinon.stub().resolves()
     };
-    availablePayoutDialogStub = sinon.stub().resolves();
-    confirmPayoutWithdrawalDialogStub = sinon.stub().resolves({payoutConfirmation: true});
-    withdrawalSuccessfulDialogStub = sinon.stub().resolves();
-    payoutActionCall = payoutAction(payoutsActionsMock, availablePayoutDialogStub, confirmPayoutWithdrawalDialogStub, withdrawalSuccessfulDialogStub);
+    payoutActionCall = payoutAction;
   });
 
   it('always returns false', async () => {
@@ -43,31 +43,31 @@ describe('Payout actions', () => {
 
   it('shows available payout dialog with amount converted to ambers', async () => {
     await payoutActionCall();
-    expect(availablePayoutDialogStub).to.be.calledOnceWith(availablePayoutInAmb);
+    expect(Dialog.availablePayoutDialog).to.be.calledOnceWith(availablePayoutInAmb);
   });
 
   it('withdraws payout when confirmation was positive', async () => {
     await payoutActionCall();
-    expect(payoutsActionsMock.withdraw).to.be.calledOnce;
-    expect(withdrawalSuccessfulDialogStub).to.be.calledOnceWith(availablePayoutInAmb);
+    expect(SmartContractsModel.payoutsActions.withdraw).to.be.calledOnce;
+    expect(Dialog.withdrawalSuccessfulDialog).to.be.calledOnceWith(availablePayoutInAmb);
   });
 
   it('does not show successful dialog in case withdrawal fails', async () => {
-    payoutsActionsMock.withdraw.rejects();
+    SmartContractsModel.payoutsActions.withdraw.rejects();
     await expect(payoutActionCall()).to.be.rejected;
-    expect(withdrawalSuccessfulDialogStub).to.be.not.called;
+    expect(Dialog.withdrawalSuccessfulDialog).to.be.not.called;
   });
 
   it('does not try to withdraw when available payout is 0', async () => {
-    payoutsActionsMock.getTotalAvailablePayout.resolves('0');
+    SmartContractsModel.payoutsActions.getTotalAvailablePayout.resolves('0');
     await payoutActionCall();
     expect(confirmPayoutWithdrawalDialogStub).to.be.not.called;
-    expect(payoutsActionsMock.withdraw).to.be.not.called;
+    expect(SmartContractsModel.payoutsActions.withdraw).to.be.not.called;
   });
 
   it('does not perform withdraw when confirmation was negative', async () => {
     confirmPayoutWithdrawalDialogStub.resolves({payoutConfirmation: false});
     await payoutActionCall();
-    expect(payoutsActionsMock.withdraw).to.be.not.called;
+    expect(SmartContractsModel.payoutsActions.withdraw).to.be.not.called;
   });
 });
