@@ -13,6 +13,8 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
 import manualSubmissionPhase from '../../src/phases/manual_submission_phase';
+import StateModel from '../../src/models/state_model';
+import Dialog from '../../src/models/dialog_model';
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
@@ -20,19 +22,19 @@ const {expect} = chai;
 
 describe('Manual Submission Phase', () => {
   let stateModelStub;
-  let displaySubmissionDialogStub;
 
   const exampleSubmission = {
     foo: 'bar'
   };
 
-  const call = async () => manualSubmissionPhase(stateModelStub, displaySubmissionDialogStub)();
+  const call = manualSubmissionPhase;
 
   beforeEach(async () => {
     stateModelStub = {
       assembleSubmission: sinon.stub()
     };
-    displaySubmissionDialogStub = sinon.stub().resolves();
+    StateModel.assembleSubmission = stateModelStub.assembleSubmission;
+    Dialog.displaySubmissionDialog = sinon.stub().resolves();
   });
 
   it('displays form to send', async () => {
@@ -41,7 +43,7 @@ describe('Manual Submission Phase', () => {
     const ret = await call();
 
     expect(stateModelStub.assembleSubmission).to.have.been.calledOnce;
-    expect(displaySubmissionDialogStub).to.have.been.calledWith(exampleSubmission);
+    expect(Dialog.displaySubmissionDialog).to.have.been.calledWith(exampleSubmission);
     expect(ret).to.deep.equal(exampleSubmission);
   });
 });

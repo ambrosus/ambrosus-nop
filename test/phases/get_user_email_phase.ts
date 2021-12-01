@@ -13,6 +13,8 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
 import getUserEmail from '../../src/phases/get_user_email_phase';
+import StateModel from '../../src/models/state_model';
+import Dialog from '../../src/models/dialog_model';
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
@@ -25,15 +27,20 @@ describe('Get User Email Phase', () => {
 
   const exampleEmail = 'amb_node_operator@mail.com';
 
-  const call = async () => getUserEmail(stateModelStub, userEmailDetectedDialogStub, askForUserEmailDialogStub)();
+  const call = getUserEmail;
 
   beforeEach(async () => {
     stateModelStub = {
       getUserEmail: sinon.stub(),
       storeUserEmail: sinon.stub()
     };
+    StateModel.getUserEmail = stateModelStub.getUserEmail;
+    StateModel.storeUserEmail = stateModelStub.storeUserEmail;
+
     askForUserEmailDialogStub = sinon.stub();
     userEmailDetectedDialogStub = sinon.stub();
+    Dialog.askForUserEmailDialog = askForUserEmailDialogStub;
+    Dialog.userEmailDetectedDialog = userEmailDetectedDialogStub;
   });
 
   it('ends if a email is already in the store', async () => {

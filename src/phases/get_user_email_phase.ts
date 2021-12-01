@@ -21,7 +21,7 @@ const getUserEmail = async () => {
   return userEmail;
 };
 
-const getUserEmailPhase = () => async () => {
+const getUserEmailPhase = async () => {
   const userEmail = await getUserEmail();
   await Dialog.userEmailDetectedDialog(userEmail);
   return userEmail;

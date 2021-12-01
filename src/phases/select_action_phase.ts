@@ -42,4 +42,5 @@ const selectActionPhase = async () => {
   }
 };
 
+export default selectActionPhase;
 selectActionPhase();

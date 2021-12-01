@@ -14,6 +14,8 @@ import sinonChai from 'sinon-chai';
 
 import prepareDockerPhase from '../../src/phases/prepare_docker_phase';
 import {ATLAS_1, APOLLO} from '../../src/consts';
+import StateModel from "../../src/models/state_model";
+import Dialog from "../../src/models/dialog_model";
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
@@ -21,21 +23,22 @@ const {expect} = chai;
 
 describe('Prepare Docker Phase', () => {
   let stateModelStub;
-  let healthCheckUrlDialogStub;
 
   const exampleUrl = 'https://hermes-node.com';
 
-  const call = async () => prepareDockerPhase(stateModelStub, healthCheckUrlDialogStub)();
+  const call = prepareDockerPhase;
 
   beforeEach(async () => {
     stateModelStub = {
-      getNodeUrl: sinon.stub(),
-      getRole: sinon.stub(),
+      getNodeUrl: sinon.stub().resolves(exampleUrl),
+      getRole: sinon.stub().resolves(ATLAS_1),
       prepareSetupFiles: sinon.stub()
     };
-    stateModelStub.getNodeUrl.resolves(exampleUrl);
-    stateModelStub.getRole.resolves(ATLAS_1);
-    healthCheckUrlDialogStub = sinon.stub();
+    StateModel.getNodeUrl = stateModelStub.getNodeUrl;
+    StateModel.getRole = stateModelStub.getRole;
+    StateModel.prepareSetupFiles = stateModelStub.prepareSetupFiles;
+
+    Dialog.healthCheckUrlDialog = sinon.stub();
   });
 
   it('prepares setup files', async () => {
@@ -45,20 +48,20 @@ describe('Prepare Docker Phase', () => {
 
   it('shows node health url after successful installation', async () => {
     await call();
-    expect(healthCheckUrlDialogStub).to.be.calledOnce;
+    expect(Dialog.healthCheckUrlDialog).to.be.calledOnce;
   });
 
   it('does not show health url if url has not been set', async () => {
     stateModelStub.getNodeUrl.resolves(null);
 
     await call();
-    expect(healthCheckUrlDialogStub).to.be.not.called;
+    expect(Dialog.healthCheckUrlDialog).to.be.not.called;
   });
 
   it('does not show health url if role is Apollo', async () => {
     stateModelStub.getRole.resolves(APOLLO);
 
     await call();
-    expect(healthCheckUrlDialogStub).to.be.not.called;
+    expect(Dialog.healthCheckUrlDialog).to.be.not.called;
   });
 });
