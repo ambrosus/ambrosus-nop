@@ -13,6 +13,8 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
 import selectNetworkPhase from '../../src/phases/select_network_phase';
+import StateModel from "../../src/models/state_model";
+import Dialog from "../../src/models/dialog_model";
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
@@ -22,7 +24,7 @@ describe('Select Network Phase', () => {
   let stateModelStub;
   let askForNetworkDialogStub;
   let networkSelectedDialogStub;
-  let dockerRestartReuiredDialogStub;
+  let dockerRestartRequiredDialogStub;
 
   const exampleAvailableNetworks = {
     test: {
@@ -43,18 +45,25 @@ describe('Select Network Phase', () => {
     name: 'test'
   };
 
-  const call = async (networks) => selectNetworkPhase(networks, stateModelStub, askForNetworkDialogStub, networkSelectedDialogStub, dockerRestartReuiredDialogStub)();
+  const call = selectNetworkPhase;
 
   beforeEach(async () => {
     stateModelStub = {
       storeNetwork: sinon.stub(),
       getNetwork: sinon.stub().resolves(null)
     };
+    StateModel.storeNetwork = stateModelStub.storeNetwork;
+    StateModel.getNetwork = stateModelStub.getNetwork;
+
     askForNetworkDialogStub = sinon.stub().resolves({
       network: exampleStoredNetwork.name
     });
     networkSelectedDialogStub = sinon.stub();
-    dockerRestartReuiredDialogStub = sinon.stub();
+    dockerRestartRequiredDialogStub = sinon.stub();
+
+    Dialog.askForNetworkDialog = askForNetworkDialogStub;
+    Dialog.networkSelectedDialog = networkSelectedDialogStub;
+    Dialog.dockerRestartRequiredDialog = dockerRestartRequiredDialogStub;
   });
 
   it('stores selected network', async () => {
@@ -64,7 +73,7 @@ describe('Select Network Phase', () => {
     expect(askForNetworkDialogStub).to.have.been.calledOnceWith(['test', 'dev']);
     expect(stateModelStub.storeNetwork).to.have.been.calledOnceWith(exampleStoredNetwork);
     expect(networkSelectedDialogStub).to.have.been.calledOnceWith(exampleStoredNetwork.name);
-    expect(dockerRestartReuiredDialogStub).to.be.not.called;
+    expect(dockerRestartRequiredDialogStub).to.be.not.called;
     expect(phaseResult).to.deep.equal(exampleStoredNetwork);
   });
 
@@ -77,7 +86,7 @@ describe('Select Network Phase', () => {
     expect(askForNetworkDialogStub).to.not.have.been.called;
     expect(stateModelStub.storeNetwork).to.not.have.been.called;
     expect(networkSelectedDialogStub).to.have.been.calledOnceWith(exampleStoredNetwork.name);
-    expect(dockerRestartReuiredDialogStub).to.be.not.called;
+    expect(dockerRestartRequiredDialogStub).to.be.not.called;
     expect(phaseResult).to.deep.equal(exampleStoredNetwork);
   });
 
@@ -88,7 +97,7 @@ describe('Select Network Phase', () => {
       const phaseResult = await call(exampleAvailableNetworks);
       expect(askForNetworkDialogStub).to.be.not.called;
       expect(stateModelStub.storeNetwork).to.have.been.calledOnceWith(exampleStoredNetwork);
-      expect(dockerRestartReuiredDialogStub).to.be.calledOnce;
+      expect(dockerRestartRequiredDialogStub).to.be.calledOnce;
       expect(phaseResult).to.deep.equal(exampleStoredNetwork);
     });
   }
@@ -99,7 +108,7 @@ describe('Select Network Phase', () => {
       stateModelStub.getNetwork.resolves({...exampleStoredNetwork, [field]: 12});
       const phaseResult = await call(exampleAvailableNetworks);
       expect(askForNetworkDialogStub).to.be.not.called;
-      expect(dockerRestartReuiredDialogStub).to.be.calledOnce;
+      expect(dockerRestartRequiredDialogStub).to.be.calledOnce;
       expect(stateModelStub.storeNetwork).to.have.been.calledOnceWith(exampleStoredNetwork);
       expect(phaseResult).to.deep.equal(exampleStoredNetwork);
     });
@@ -114,7 +123,7 @@ describe('Select Network Phase', () => {
     expect(askForNetworkDialogStub).to.have.been.calledOnceWith(['test', 'dev']);
     expect(stateModelStub.storeNetwork).to.have.been.calledOnceWith(exampleStoredNetwork);
     expect(networkSelectedDialogStub).to.have.been.calledOnceWith(exampleStoredNetwork.name);
-    expect(dockerRestartReuiredDialogStub).to.be.calledOnce;
+    expect(dockerRestartRequiredDialogStub).to.be.calledOnce;
     expect(phaseResult).to.deep.equal(exampleStoredNetwork);
   });
 
@@ -127,7 +136,7 @@ describe('Select Network Phase', () => {
     expect(askForNetworkDialogStub).to.have.been.calledOnceWith(['test', 'dev']);
     expect(stateModelStub.storeNetwork).to.have.been.calledOnceWith(exampleStoredNetwork);
     expect(networkSelectedDialogStub).to.have.been.calledOnceWith(exampleStoredNetwork.name);
-    expect(dockerRestartReuiredDialogStub).to.be.calledOnce;
+    expect(dockerRestartRequiredDialogStub).to.be.calledOnce;
     expect(phaseResult).to.deep.equal(exampleStoredNetwork);
   });
 
@@ -137,7 +146,7 @@ describe('Select Network Phase', () => {
     expect(stateModelStub.getNetwork).to.have.been.calledOnce;
     expect(askForNetworkDialogStub).to.not.have.been.called;
     expect(stateModelStub.storeNetwork).to.have.been.calledOnceWith(exampleStoredNetwork);
-    expect(dockerRestartReuiredDialogStub).to.be.not.called;
+    expect(dockerRestartRequiredDialogStub).to.be.not.called;
     expect(networkSelectedDialogStub).to.have.been.calledOnceWith(exampleStoredNetwork.name);
     expect(phaseResult).to.deep.equal(exampleStoredNetwork);
   });

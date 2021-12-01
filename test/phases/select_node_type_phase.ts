@@ -14,6 +14,8 @@ import sinonChai from 'sinon-chai';
 
 import selectNodeTypePhase from '../../src/phases/select_node_type_phase';
 import {APOLLO, ATLAS_1} from '../../src/consts';
+import StateModel from '../../src/models/state_model';
+import Dialog from '../../src/models/dialog_model';
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
@@ -27,7 +29,7 @@ describe('Select Node Type Phase', () => {
   const exampleRole = ATLAS_1;
   const exampleDeposit = '123';
 
-  const call = async () => selectNodeTypePhase(stateModelStub, askForNodeTypeDialogStub, askForApolloDepositDialogStub, roleSelectedDialogStub)();
+  const call = selectNodeTypePhase;
 
   beforeEach(async () => {
     stateModelStub = {
@@ -35,9 +37,16 @@ describe('Select Node Type Phase', () => {
       getRole: sinon.stub(),
       storeApolloMinimalDeposit: sinon.stub()
     };
+    StateModel.storeRole = stateModelStub.storeRole;
+    StateModel.getRole = stateModelStub.getRole;
+    StateModel.storeApolloMinimalDeposit = stateModelStub.storeApolloMinimalDeposit;
+
     askForNodeTypeDialogStub = sinon.stub();
     askForApolloDepositDialogStub = sinon.stub().resolves(exampleDeposit);
     roleSelectedDialogStub = sinon.stub();
+    Dialog.askForNodeTypeDialog = askForNodeTypeDialogStub;
+    Dialog.askForApolloDepositDialog = askForApolloDepositDialogStub;
+    Dialog.roleSelectedDialog = roleSelectedDialogStub;
   });
 
   it('ends if a role is already in the store', async () => {
