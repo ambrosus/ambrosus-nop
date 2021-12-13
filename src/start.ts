@@ -11,6 +11,7 @@ import StateModel from './models/state_model';
 import SmartContractsModel from './models/smart_contracts_model';
 import Dialog from './models/dialog_model';
 import selectNetworkPhase from './phases/select_network_phase';
+import {selectActionPhase, defaultActions} from './phases/select_action_phase';
 import * as networks from '../config/networks.json';
 import checkDockerAvailablePhase from './phases/check_docker_available_phase';
 import getPrivateKeyPhase from './phases/get_private_key_phase';
@@ -37,7 +38,7 @@ const start = async () => {
 
   await StateModel.checkStateVariables(); // MOVED HERE
 
-  Crypto.setProvider(network.rpc); // MOVED HERE
+  Crypto.setWeb3UsingRpc(network.rpc); // MOVED HERE
   Crypto.setAccount(privateKey); // MOVED HERE
 
   SmartContractsModel.init(network); // NEW
@@ -45,7 +46,6 @@ const start = async () => {
   const whitelistingStatus = await checkAddressWhitelistingStatusPhase();
 
   const role = await selectNodeTypePhase();
-  StateModel.setDetectedRole(role);
   if (role === APOLLO) {
     await getNodeIPPhase();
   } else {
@@ -68,7 +68,7 @@ const start = async () => {
 
   const isInteractive = process.argv[2] !== 'update';
   if (isInteractive) {
-    await import('./phases/select_action_phase');
+    await (selectActionPhase(role, defaultActions))();
   }
 };
 

@@ -17,11 +17,9 @@ chai.use(chaiAsPromised);
 chai.use(sinonChai);
 const {expect} = chai;
 
-
 describe('Crypto', () => {
   const exampleAddress = '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01';
   const examplePrivateKey = '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709';
-  let crypto;
   let web3Stub;
 
   beforeEach(async () => {
@@ -39,11 +37,11 @@ describe('Crypto', () => {
         randomHex: sinon.stub()
       }
     };
-    crypto = new Crypto(web3Stub);
+    Crypto.setWeb3(web3Stub);
   });
 
   describe('generatePrivateKey', () => {
-    const call = async () => crypto.generatePrivateKey();
+    const call = async () => Crypto.generatePrivateKey();
 
     it('delegates the generation to web3 internally', async () => {
       web3Stub.eth.accounts.create.returns({
@@ -63,7 +61,7 @@ describe('Crypto', () => {
       web3Stub.eth.accounts.privateKeyToAccount.returns({
         address: '0x9876'
       });
-      await expect(crypto.addressForPrivateKey('0x1234')).to.eventually.be.equal('0x9876');
+      await expect(Crypto.addressForPrivateKey('0x1234')).to.eventually.be.equal('0x9876');
       expect(web3Stub.eth.accounts.privateKeyToAccount).to.have.been.calledOnceWith('0x1234');
     });
   });
@@ -75,7 +73,7 @@ describe('Crypto', () => {
       web3Stub.eth.getBalance.resolves(balance);
       web3Stub.utils.toBN.returns(balanceBN);
 
-      expect(await crypto.getBalance(exampleAddress)).to.deep.equal(balanceBN);
+      expect(await Crypto.getBalance(exampleAddress)).to.deep.equal(balanceBN);
       expect(web3Stub.eth.getBalance).to.be.calledOnceWith(exampleAddress);
       expect(web3Stub.utils.toBN).to.be.calledOnceWith(balance);
     });
@@ -89,7 +87,7 @@ describe('Crypto', () => {
     it('calls encrypt on web3', async () => {
       web3Stub.eth.accounts.encrypt.returns(encryptedWallet);
 
-      expect(await crypto.getEncryptedWallet(privateKey, password)).to.deep.equal(encryptedWallet);
+      expect(await Crypto.getEncryptedWallet(privateKey, password)).to.deep.equal(encryptedWallet);
       expect(web3Stub.eth.accounts.encrypt).to.be.calledOnceWith(privateKey, password);
     });
   });
@@ -98,8 +96,7 @@ describe('Crypto', () => {
     it('calls randomHex on web3', async () => {
       const randomHex = '0xdeadbeef';
       web3Stub.utils.randomHex.resolves(randomHex);
-
-      expect(await crypto.getRandomPassword(exampleAddress)).to.deep.equal(randomHex);
+      expect(await Crypto.getRandomPassword()).to.deep.equal(randomHex);
       expect(web3Stub.utils.randomHex).to.be.calledOnceWith(32);
     });
   });

@@ -20,7 +20,7 @@ const isAtlasWithBundles = async () => {
   return false;
 };
 
-const retireAction = async () => {
+const retireAction = () => async () => {
   if (await isAtlasWithBundles()) {
     const retireMode = (await AtlasModeModel.getMode()).mode === 'retire';
     if (retireMode) {

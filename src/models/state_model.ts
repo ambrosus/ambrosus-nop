@@ -18,10 +18,6 @@ import SetupCreator from '../services/setup_creator';
 const dockerFileName = 'docker-compose.yml';
 
 class StateModel {
-  private detectedRole: string;
-  setDetectedRole = (role: string) => this.detectedRole = role;
-  getDetectedRole = () => this.detectedRole;
-
   async checkMailInfo() {
     // write default 'mailInfo' if it doesn't exist
     return await Store.safeRead('mailInfo') || await Store.write('mailInfo', {

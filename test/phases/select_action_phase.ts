@@ -11,10 +11,9 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
-import selectActionPhase from '../../src/phases/select_action_phase';
+import {selectActionPhase} from '../../src/phases/select_action_phase';
 import prepareAction from '../../src/menu_actions/prepare_action';
 import {ATLAS_CODE, HERMES_CODE, HERMES, ATLAS_1} from '../../src/consts';
-import StateModel from '../../src/models/state_model';
 import Dialog from '../../src/models/dialog_model';
 
 chai.use(chaiAsPromised);
@@ -27,7 +26,7 @@ describe('Select Action Phase', () => {
   let errorDialogStub;
   let actions;
 
-  const startPhase = selectActionPhase;
+  const startPhase = async (role) => selectActionPhase(role, actions);
 
   beforeEach(async () => {
     selectActionDialogStub = sinon.stub();
@@ -45,11 +44,10 @@ describe('Select Action Phase', () => {
   });
 
   it(`assembles hermes' action list and shows select action dialog`, async () => {
-    selectActionDialogStub.onFirstCall().resolves({action: 'First action'});
-    selectActionDialogStub.onSecondCall().resolves({action: 'Quit'});
+    selectActionDialogStub.resolves({action: 'First action'});
+    selectActionDialogStub.resolves({action: 'Quit'});
 
-    StateModel.getDetectedRole = sinon.stub().returns(HERMES);
-    await startPhase();
+    await (await startPhase(HERMES))();
 
     expect(selectActionDialogStub).to.have.been.calledWithExactly(['First action', 'Quit']);
   });
@@ -58,8 +56,7 @@ describe('Select Action Phase', () => {
     selectActionDialogStub.onFirstCall().resolves({action: 'First action'});
     selectActionDialogStub.onSecondCall().resolves({action: 'Quit'});
 
-    StateModel.getDetectedRole = sinon.stub().returns(ATLAS_1);
-    await startPhase();
+    await (await startPhase(ATLAS_1))();
 
     expect(selectActionDialogStub).to.have.been.calledWithExactly(['First action', 'Second action', 'Quit']);
   });
@@ -68,8 +65,7 @@ describe('Select Action Phase', () => {
     selectActionDialogStub.resolves({action: 'Second action'});
     selectActionDialogStub.onCall(5).resolves({action: 'Quit'});
 
-    StateModel.getDetectedRole = sinon.stub().returns(ATLAS_1);
-    await startPhase();
+    await (await startPhase(ATLAS_1))();
 
     expect(selectActionDialogStub).to.have.callCount(6);
   });
@@ -79,8 +75,7 @@ describe('Select Action Phase', () => {
     selectActionDialogStub.onSecondCall().resolves({action: 'Second action'});
     selectActionDialogStub.onThirdCall().resolves({action: 'Quit'});
 
-    StateModel.getDetectedRole = sinon.stub().returns(ATLAS_1);
-    await startPhase();
+    await (await startPhase(ATLAS_1))();
 
     expect(actions['First action'].performAction).to.be.calledOnceWith();
     expect(actions['First action'].performAction).to.be.calledBefore(actions['Second action']);
@@ -98,8 +93,7 @@ describe('Select Action Phase', () => {
     it('displays correct dialog when account has insufficient funds', async () => {
       actions['First action'].performAction.rejects(new Error('Error: Insufficient funds'));
 
-      StateModel.getDetectedRole = sinon.stub().returns(ATLAS_1);
-      await startPhase();
+      await (await startPhase(ATLAS_1))();
 
       expect(insufficientFundsDialogStub).to.be.calledOnce;
     });
@@ -107,8 +101,7 @@ describe('Select Action Phase', () => {
     it('displays generic error dialog otherwise', async () => {
       actions['First action'].performAction.rejects(new Error('TestError'));
 
-      StateModel.getDetectedRole = sinon.stub().returns(ATLAS_1);
-      await startPhase();
+      await (await startPhase(ATLAS_1))();
 
       expect(errorDialogStub).to.be.calledOnceWith('TestError');
     });

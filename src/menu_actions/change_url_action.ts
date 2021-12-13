@@ -10,7 +10,7 @@ import Dialog from '../models/dialog_model';
 import StateModel from '../models/state_model';
 import SmartContractsModel from '../models/smart_contracts_model';
 
-const changeUrlAction = async () => {
+const changeUrlAction = () => async () => {
   Dialog.nectarWarningDialog();
   const oldUrl = await StateModel.getNodeUrl();
   const {nodeUrl: newUrl} = await Dialog.askForNodeUrlDialog();

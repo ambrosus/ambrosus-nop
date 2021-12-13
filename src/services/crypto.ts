@@ -19,7 +19,11 @@ class Crypto {
     this.web3 = new Web3();
   }
 
-  setProvider(rpc: string) {
+  setWeb3(web3: any) {
+    this.web3 = web3;
+  }
+
+  setWeb3UsingRpc(rpc: string) {
     this.web3 = new Web3(rpc);
   }
 
