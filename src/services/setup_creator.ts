@@ -35,7 +35,6 @@ class SetupCreator {
 
   async createPasswordFile(password) {
     await this.ensureOutputDirectoryExists();
-    console.log(path.join(this.outputDirectory, passwordFileName));
     await writeFile(path.join(this.outputDirectory, passwordFileName), password);
   }
 
