@@ -18,10 +18,9 @@ const {expect} = chai;
 
 describe('Store', () => {
   const testFile = './testStore.json';
-  let store;
 
   before(async () => {
-    store = new Store(testFile);
+    Store.storeFilePath = testFile;
   });
 
   afterEach(async () => {
@@ -33,7 +32,7 @@ describe('Store', () => {
       const testKey = 'abc';
       const testValue = '12345';
 
-      await expect(store.write(testKey, testValue)).to.be.eventually.fulfilled;
+      await expect(Store.write(testKey, testValue)).to.be.eventually.fulfilled;
       const fileContents = JSON.parse(await readFile(testFile));
       expect(fileContents[testKey]).to.be.equal(testValue);
     });
@@ -43,8 +42,8 @@ describe('Store', () => {
       const testValue1 = '12345';
       const testValue2 = '6421';
 
-      await expect(store.write(testKey, testValue1)).to.be.eventually.fulfilled;
-      await expect(store.write(testKey, testValue2)).to.be.eventually.fulfilled;
+      await expect(Store.write(testKey, testValue1)).to.be.eventually.fulfilled;
+      await expect(Store.write(testKey, testValue2)).to.be.eventually.fulfilled;
       const fileContents = JSON.parse(await readFile(testFile));
       expect(fileContents[testKey]).to.be.equal(testValue2);
     });
@@ -53,8 +52,8 @@ describe('Store', () => {
       const testKey = 'abc';
       const testValue = '12345';
 
-      await expect(store.write(testKey, testValue)).to.be.eventually.fulfilled;
-      await expect(store.write(testKey, undefined)).to.be.eventually.fulfilled;
+      await expect(Store.write(testKey, testValue)).to.be.eventually.fulfilled;
+      await expect(Store.write(testKey, undefined)).to.be.eventually.fulfilled;
       const fileContents = JSON.parse(await readFile(testFile));
       expect(fileContents[testKey]).to.be.undefined;
     });
@@ -65,8 +64,8 @@ describe('Store', () => {
       const testValue1 = '12345';
       const testValue2 = '6421';
 
-      await store.write(testKey1, testValue1);
-      await store.write(testKey2, testValue2);
+      await Store.write(testKey1, testValue1);
+      await Store.write(testKey2, testValue2);
       const fileContents = JSON.parse(await readFile(testFile));
       expect(fileContents[testKey1]).to.be.equal(testValue1);
       expect(fileContents[testKey2]).to.be.equal(testValue2);
@@ -85,11 +84,11 @@ describe('Store', () => {
     });
 
     it('returns the value stored under key in the file', async () => {
-      await expect(store.read(`oneTwoThree`)).to.eventually.be.fulfilled.and.equal('test');
+      await expect(Store.read(`oneTwoThree`)).to.eventually.be.fulfilled.and.equal('test');
     });
 
     it('throws if requested key is not found in the file', async () => {
-      await expect(store.read(`otherKey`)).to.eventually.be.rejected;
+      await expect(Store.read(`otherKey`)).to.eventually.be.rejected;
     });
   });
 
@@ -105,11 +104,11 @@ describe('Store', () => {
     });
 
     it('returns the value stored under key in the file', async () => {
-      expect(await store.safeRead(`oneTwoThree`)).to.equal(123);
+      expect(await Store.safeRead(`oneTwoThree`)).to.equal(123);
     });
 
     it('returns null if requested key is not found in the file', async () => {
-      expect(await store.safeRead(`otherKey`)).to.be.null;
+      expect(await Store.safeRead(`otherKey`)).to.be.null;
     });
   });
 
@@ -118,15 +117,15 @@ describe('Store', () => {
     const nonExistingKey = 'xyz';
 
     beforeEach(async () => {
-      await store.write(existingKey, 'abc');
+      await Store.write(existingKey, 'abc');
     });
 
     it('returns true if there is a value for the key', async () => {
-      await expect(store.has(existingKey)).to.eventually.be.true;
+      await expect(Store.has(existingKey)).to.eventually.be.true;
     });
 
     it('returns false if there is no value for the key', async () => {
-      await expect(store.has(nonExistingKey)).to.eventually.be.false;
+      await expect(Store.has(nonExistingKey)).to.eventually.be.false;
     });
   });
 });

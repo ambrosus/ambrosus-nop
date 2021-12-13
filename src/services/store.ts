@@ -11,7 +11,7 @@ import {readFile, writeFile, checkFileExists} from '../utils/file';
 import {config} from '../../config/config';
 
 class Store {
-  storeFilePath: string;
+  public storeFilePath: string;
   constructor() {
     this.storeFilePath = config.storePath;
     if (!this.storeFilePath) {
@@ -19,7 +19,7 @@ class Store {
     }
   }
 
-  async write(key, value) {
+  async write(key: string, value: string) {
     const contents = await this.readFile();
     contents[key] = value;
     await this.writeFile(contents);

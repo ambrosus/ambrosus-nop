@@ -35,6 +35,7 @@ class SetupCreator {
 
   async createPasswordFile(password) {
     await this.ensureOutputDirectoryExists();
+    console.log(path.join(this.outputDirectory, passwordFileName));
     await writeFile(path.join(this.outputDirectory, passwordFileName), password);
   }
 
@@ -60,9 +61,9 @@ class SetupCreator {
     headContractAddress,
     networkName,
     domain,
-    url,
-    mailInfo,
-    workerInterval
+    url?,
+    mailInfo?,
+    workerInterval?
   ) {
     await this.ensureOutputDirectoryExists();
     let dockerFile = await readFile(path.join(this.templateDirectory, nodeTypeName, dockerFileName));

@@ -20,7 +20,6 @@ const {expect} = chai;
 describe('Setup Creator', () => {
   const testInputDir = './testInputDir/';
   const testOutputDir = './testOutputDir/';
-  let setupCreator;
 
   beforeEach(async () => {
     await makeDirectory(testInputDir);
@@ -33,7 +32,8 @@ describe('Setup Creator', () => {
   });
 
   before(async () => {
-    setupCreator = new SetupCreator(testInputDir, testOutputDir);
+    SetupCreator.templateDirectory = testInputDir;
+    SetupCreator.outputDirectory = testOutputDir;
   });
 
   describe('createPasswordFile', () => {
@@ -45,7 +45,7 @@ describe('Setup Creator', () => {
     });
 
     it('creates file correctly', async () => {
-      await setupCreator.createPasswordFile(examplePassword);
+      await SetupCreator.createPasswordFile(examplePassword);
       expect(await readFile(passwordFilePath)).to.equal(examplePassword);
     });
   });
@@ -59,7 +59,7 @@ describe('Setup Creator', () => {
     });
 
     it('creates file correctly', async () => {
-      await setupCreator.createTosFile(exampleTosText);
+      await SetupCreator.createTosFile(exampleTosText);
       expect(await readFile(tosFilePath)).to.equal(exampleTosText);
     });
   });
@@ -76,7 +76,7 @@ describe('Setup Creator', () => {
     });
 
     it('creates file correctly', async () => {
-      await setupCreator.createKeyFile(exampleEncryptedWallet);
+      await SetupCreator.createKeyFile(exampleEncryptedWallet);
       expect(JSON.parse(await readFile(keyFilePath))).to.deep.equal(exampleEncryptedWallet);
     });
   });
@@ -115,7 +115,7 @@ describe('Setup Creator', () => {
     });
 
     it('creates file correctly', async () => {
-      await setupCreator.prepareDockerComposeFile(exampleTag, nodeTypeName, exampleAddress, examplePrivateKey, exampleHeadAddress, exampleNetworkName, exampleDomain);
+      await SetupCreator.prepareDockerComposeFile(exampleTag, nodeTypeName, exampleAddress, examplePrivateKey, exampleHeadAddress, exampleNetworkName, exampleDomain);
       expect(await readFile(destinationFilePath)).to.deep.equal(sampleForm(exampleTag, exampleAddress, examplePrivateKey, exampleHeadAddress, exampleNetworkName, exampleDomain));
     });
   });
@@ -145,12 +145,12 @@ describe('Setup Creator', () => {
     });
 
     it('copies files correctly and replaces the TYPE_YOUR_ADDRESS_HERE placeholder if address was provided', async () => {
-      await setupCreator.copyParityConfiguration(nodeTypeName, {address: exampleAddress});
+      await SetupCreator.copyParityConfiguration(nodeTypeName, {address: exampleAddress});
       expect(await readFile(destParityConfigPath)).to.equal(formWithAddressReplaced);
     });
 
     it('copies files correctly and replaces the TYPE_YOUR_IP_HERE placeholder if IP was provided', async () => {
-      await setupCreator.copyParityConfiguration(nodeTypeName, {ip: exampleIP});
+      await SetupCreator.copyParityConfiguration(nodeTypeName, {ip: exampleIP});
       expect(await readFile(destParityConfigPath)).to.equal(formWithIPReplaced);
     });
   });
@@ -177,7 +177,7 @@ describe('Setup Creator', () => {
         .get('/')
         .reply(200, chainJsonContent);
 
-      const result = await setupCreator.fetchChainJson(chainSpecUrl);
+      const result = await SetupCreator.fetchChainJson(chainSpecUrl);
       expect(await readFile(destChainJsonPath)).to.equal(chainJsonContent);
       expect(result).to.equal('dev');
     });
@@ -187,7 +187,7 @@ describe('Setup Creator', () => {
         .get('/')
         .reply(500);
 
-      await expect(setupCreator.fetchChainJson(chainSpecUrl)).to.be.rejected;
+      await expect(SetupCreator.fetchChainJson(chainSpecUrl)).to.be.rejected;
     });
   });
 });

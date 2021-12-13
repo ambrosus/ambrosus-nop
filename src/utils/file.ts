@@ -9,88 +9,13 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 
 import * as fs from 'fs';
 
-const writeFile = (path, data, opts = {}) =>
-  new Promise((resolve, reject) => {
-    fs.writeFile(path, data, opts, (err) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(data);
-      }
-    });
-  });
+const writeFile = (path, data, opts = {}) => fs.promises.writeFile(path, data, opts);
+const readFile = (path): Promise<string> => fs.promises.readFile(path).then((buffer) => buffer.toString());
+const removeFile = (path) => fs.promises.unlink(path);
+const removeDirectory = (path) => fs.promises.rmdir(path);
+const makeDirectory = (path) => fs.promises.mkdir(path);
+const checkFileExists = (path): Promise<boolean> => fs.promises.access(path).then(() => true)
+  .catch(() => false);
+const getPath = (path): Promise<fs.Stats> => fs.promises.lstat(path);
 
-const readFile = (path): Promise<string> =>
-  new Promise((resolve, reject) => {
-    fs.readFile(path, 'utf8', (err, data) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(data);
-      }
-    });
-  });
-
-const removeFile = (path) =>
-  new Promise((resolve, reject) => {
-    fs.unlink(path, (err) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(void(0));
-      }
-    });
-  });
-
-const checkFileExists = (path) =>
-  new Promise((resolve) => {
-    fs.access(path, (err) => {
-      resolve(!err);
-    });
-  });
-
-const listDirectory = (path) =>
-  new Promise((resolve, reject) => {
-    fs.readdir(path, (err, files) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(files);
-      }
-    });
-  });
-
-const removeDirectory = (path) =>
-  new Promise((resolve, reject) => {
-    fs.rmdir(path, (err) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(void(0));
-      }
-    });
-  });
-
-const makeDirectory = (path) =>
-  new Promise((resolve, reject) => {
-    fs.mkdir(path, (err) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(void(0));
-      }
-    });
-  });
-
-const getPath = (path) =>
-  new Promise((resolve, reject) => {
-    fs.lstat(path, (err, stats) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(stats);
-      }
-    });
-  });
-
-export {writeFile, readFile, removeFile, checkFileExists, listDirectory, removeDirectory, makeDirectory, getPath};
+export {writeFile, readFile, removeFile, checkFileExists, removeDirectory, makeDirectory, getPath};
