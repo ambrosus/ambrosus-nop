@@ -13,9 +13,9 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
 import performOnboardingPhase from '../../src/phases/perform_onboarding_phase';
-import StateModel from "../../src/models/state_model";
-import SmartContractsModel from "../../src/models/smart_contracts_model";
-import Dialog from "../../src/models/dialog_model";
+import StateModel from '../../src/models/state_model';
+import SmartContractsModel from '../../src/models/smart_contracts_model';
+import Dialog from '../../src/models/dialog_model';
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);

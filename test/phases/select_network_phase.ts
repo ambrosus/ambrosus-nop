@@ -13,8 +13,8 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
 import selectNetworkPhase from '../../src/phases/select_network_phase';
-import StateModel from "../../src/models/state_model";
-import Dialog from "../../src/models/dialog_model";
+import StateModel from '../../src/models/state_model';
+import Dialog from '../../src/models/dialog_model';
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);

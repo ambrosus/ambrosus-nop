@@ -14,8 +14,8 @@ import sinonChai from 'sinon-chai';
 
 import prepareDockerPhase from '../../src/phases/prepare_docker_phase';
 import {ATLAS_1, APOLLO} from '../../src/consts';
-import StateModel from "../../src/models/state_model";
-import Dialog from "../../src/models/dialog_model";
+import StateModel from '../../src/models/state_model';
+import Dialog from '../../src/models/dialog_model';
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
