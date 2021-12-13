@@ -11,7 +11,7 @@
     "dev:lint": "eslint src test config",
     "dev:lint:fix": "eslint src test config --fix",
     "dev:start": "ts-node src/start.ts",
-    "start": "node dist/start.js",
+    "start": "node dist/src/start.js",
     "test": "./tests.sh"
   },
   "dependencies": {
