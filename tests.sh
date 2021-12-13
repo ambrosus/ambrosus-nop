@@ -9,5 +9,5 @@ for testfile; do
 done
 
 if [ "$#" = "0" ]; then
-  $execute "test/**/*.ts"
+  find ./test -name '*.ts' -type f -exec $execute {} \;
 fi

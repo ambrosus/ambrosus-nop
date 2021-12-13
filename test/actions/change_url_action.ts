@@ -39,7 +39,7 @@ describe('Change url action', () => {
     StateModel.getNodeUrl = sinon.stub().resolves(exampleOldUrl);
     StateModel.getAddress = sinon.stub().resolves(exampleAddress);
     StateModel.storeNodeUrl = sinon.stub().resolves();
-    changeUrlActionCall = changeUrlAction;
+    changeUrlActionCall = changeUrlAction();
   });
 
   it(`always returns false, as it never ends NOP`, async () => {

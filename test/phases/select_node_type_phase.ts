@@ -45,7 +45,7 @@ describe('Select Node Type Phase', () => {
     askForApolloDepositDialogStub = sinon.stub().resolves(exampleDeposit);
     roleSelectedDialogStub = sinon.stub();
     Dialog.askForNodeTypeDialog = askForNodeTypeDialogStub;
-    Dialog.askForApolloDepositDialog = askForApolloDepositDialogStub;
+    Dialog.askForApolloMinimalDepositDialog = askForApolloDepositDialogStub;
     Dialog.roleSelectedDialog = roleSelectedDialogStub;
   });
 

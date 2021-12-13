@@ -19,7 +19,7 @@ class Store {
     }
   }
 
-  async write(key: string, value: string) {
+  async write(key: string, value: any) {
     const contents = await this.readFile();
     contents[key] = value;
     await this.writeFile(contents);

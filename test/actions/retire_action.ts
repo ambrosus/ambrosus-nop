@@ -56,7 +56,7 @@ describe('Retire action', () => {
       retire: sinon.stub().resolves()
     };
     SmartContractsModel.onboardActions = onboardMock;
-    retireActionCall = retireAction;
+    retireActionCall = retireAction();
   });
 
   it(`returns true and ends NOP on successful retirement`, async () => {

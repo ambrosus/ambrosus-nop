@@ -34,7 +34,7 @@ describe('Payout actions', () => {
       getTotalAvailablePayout: sinon.stub().resolves(availablePayoutInWei),
       withdraw: sinon.stub().resolves()
     };
-    payoutActionCall = payoutAction;
+    payoutActionCall = payoutAction();
   });
 
   it('always returns false', async () => {
