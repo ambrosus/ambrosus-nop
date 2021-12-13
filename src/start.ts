@@ -36,12 +36,12 @@ const start = async () => {
   const network = await selectNetworkPhase(networks);
   const privateKey = await getPrivateKeyPhase();
 
-  await StateModel.checkStateVariables(); // MOVED HERE
+  await StateModel.checkStateVariables();
 
-  Crypto.setWeb3UsingRpc(network.rpc); // MOVED HERE
-  Crypto.setAccount(privateKey); // MOVED HERE
+  Crypto.setWeb3UsingRpc(network.rpc);
+  Crypto.setAccount(privateKey);
 
-  SmartContractsModel.init(network); // NEW
+  SmartContractsModel.init(network);
 
   const whitelistingStatus = await checkAddressWhitelistingStatusPhase();
 
