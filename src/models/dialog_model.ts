@@ -322,7 +322,7 @@ class Dialog {
       this.output(chalk.green(messages.addressWhitelisted(chalk.yellow(roleAssigned), `${chalk.yellow(requiredDepositInAmb)} ${messages.unitAmb}`)));
     }
 
-    async askForApolloDepositDialog(minimalDeposit) {
+    async askForApolloDepositDialog(minimalDeposit: string) {
       const minimalDepositBn = utils.toBN(minimalDeposit);
       const minimalDepositInAmb = utils.fromWei(minimalDeposit, 'ether');
       const {deposit} = inquirer.prompt(
@@ -342,7 +342,7 @@ class Dialog {
             }
           }
         ]);
-      return utils.toWei(deposit, 'ether').toString();
+      return utils.toWei(String(deposit), 'ether').toString();
     }
 
     async askForApolloMinimalDepositDialog() {

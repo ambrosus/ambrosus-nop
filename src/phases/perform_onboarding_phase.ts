@@ -12,7 +12,7 @@ import Dialog from '../models/dialog_model';
 import StateModel from '../models/state_model';
 import SmartContractsModel from '../models/smart_contracts_model';
 
-const performOnboardingPhase = async (whitelistingStatus) => {
+const performOnboardingPhase = async (whitelistingStatus: {requiredDeposit: string, roleAssigned: string}) => {
   const userAddress = await StateModel.getAddress();
   const onboardedRole = await SmartContractsModel.getOnboardedRole(userAddress);
   if (onboardedRole) {

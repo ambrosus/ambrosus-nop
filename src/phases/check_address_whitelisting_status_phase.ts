@@ -11,7 +11,7 @@ import Dialog from '../models/dialog_model';
 import StateModel from '../models/state_model';
 import SmartContractsModel from '../models/smart_contracts_model';
 
-const checkAddressWhitelistingStatusPhase = async () => {
+const checkAddressWhitelistingStatusPhase = async (): Promise<{requiredDeposit: string, roleAssigned: string}> => {
   const userAddress = await StateModel.getAddress();
   if (await SmartContractsModel.isAddressWhitelisted(userAddress) === false) {
     Dialog.addressIsNotWhitelistedDialog();
