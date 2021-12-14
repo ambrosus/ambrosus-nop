@@ -25,6 +25,14 @@ class Store {
     await this.writeFile(contents);
   }
 
+  async clear(key: string) {
+    const contents = await this.readFile();
+    if (key in contents) {
+      delete contents[key];
+    }
+    await this.writeFile(contents);
+  }
+
   async read(key) {
     const contents = await this.readFile();
     if (contents[key] === undefined) {

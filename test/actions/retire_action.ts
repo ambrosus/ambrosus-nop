@@ -15,6 +15,7 @@ import retireAction from '../../src/menu_actions/retire_action';
 import {constants} from 'ambrosus-node-contracts';
 import Dialog from '../../src/models/dialog_model';
 import AtlasModeModel from '../../src/models/atlas_mode_model';
+import Store from '../../src/services/store';
 import SmartContractsModel from '../../src/models/smart_contracts_model';
 
 chai.use(sinonChai);
@@ -56,6 +57,7 @@ describe('Retire action', () => {
       retire: sinon.stub().resolves()
     };
     SmartContractsModel.onboardActions = onboardMock;
+    Store.clear = sinon.stub();
     retireActionCall = retireAction();
   });
 
@@ -137,5 +139,13 @@ describe('Retire action', () => {
     expect(await retireActionCall()).to.be.false;
     expect(AtlasModeModel.setMode).to.be.calledOnceWith('normal');
     expect(Dialog.genericErrorDialog).to.be.calledAfter(AtlasModeModel.setMode);
+  });
+
+  it('retires atlas and removes role via state & store', async () => {
+    onboardMock.rolesWrapper.onboardedRole.resolves(constants.ATLAS),
+    onboardMock.atlasStakeWrapper.isShelteringAny.resolves(false),
+    confirmRetirementDialogStub.resolves({retirementConfirmation: true});
+    expect(await retireActionCall()).to.be.true;
+    expect(Store.clear).to.be.calledOnceWith('role');
   });
 });

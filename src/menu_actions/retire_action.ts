@@ -10,18 +10,14 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 import {constants} from 'ambrosus-node-contracts';
 import Dialog from '../models/dialog_model';
 import AtlasModeModel from '../models/atlas_mode_model';
+import StateModel from '../models/state_model';
 import SmartContractsModel from '../models/smart_contracts_model';
 
-const isAtlasWithBundles = async () => {
-  const role = await SmartContractsModel.onboardActions.rolesWrapper.onboardedRole(SmartContractsModel.onboardActions.rolesWrapper.defaultAddress);
-  if (role === constants.ATLAS) {
-    return await SmartContractsModel.onboardActions.atlasStakeWrapper.isShelteringAny(SmartContractsModel.onboardActions.atlasStakeWrapper.defaultAddress);
-  }
-  return false;
-};
+const isAtlas = async (): Promise<boolean> => await SmartContractsModel.onboardActions.rolesWrapper.onboardedRole(SmartContractsModel.onboardActions.rolesWrapper.defaultAddress) === constants.ATLAS;
+const isAtlasWithBundles = async (): Promise<boolean> => await SmartContractsModel.onboardActions.atlasStakeWrapper.isShelteringAny(SmartContractsModel.onboardActions.atlasStakeWrapper.defaultAddress);
 
 const retireAction = () => async () => {
-  if (await isAtlasWithBundles()) {
+  if (await isAtlas() && await isAtlasWithBundles()) {
     const retireMode = (await AtlasModeModel.getMode()).mode === 'retire';
     if (retireMode) {
       if ((await Dialog.continueAtlasRetirementDialog()).continueConfirmation) {
@@ -46,11 +42,13 @@ const retireAction = () => async () => {
     Dialog.genericErrorDialog('Can not set retire mode: I/O error');
     return false;
   }
+
   if (!(await Dialog.confirmRetirementDialog()).retirementConfirmation) {
     return false;
   }
   await SmartContractsModel.onboardActions.retire();
   Dialog.retirementSuccessfulDialog();
+  await StateModel.removeRole();
   return true;
 };
 

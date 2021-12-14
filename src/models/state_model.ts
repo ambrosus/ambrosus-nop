@@ -89,6 +89,10 @@ class StateModel {
     await Store.write('role', role);
   }
 
+  async removeRole() {
+    await Store.clear('role');
+  }
+
   async getNodeUrl() {
     return Store.safeRead('url');
   }
