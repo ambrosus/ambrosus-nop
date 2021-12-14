@@ -323,7 +323,6 @@ class Dialog {
     }
 
     async askForApolloDepositDialog(minimalDeposit: string): Promise<string> {
-      // const minimalDepositBn = utils.toBN(minimalDeposit);
       const minimalDepositInAmb = utils.fromWei(minimalDeposit, 'ether');
       const {deposit} = await inquirer.prompt(
         [
@@ -335,7 +334,7 @@ class Dialog {
               if (!validations.isValidNumber(answer)) {
                 return chalk.red(messages.depositNumberError(chalk.yellow(answer)));
               }
-              if (utils.toBN(answer).lt(utils.toBN(minimalDeposit))) {
+              if (utils.toBN(answer).lt(utils.toBN(minimalDepositInAmb))) {
                 return chalk.red(messages.depositTooSmallError(chalk.yellow(minimalDepositInAmb), chalk.yellow(answer)));
               }
               return true;
