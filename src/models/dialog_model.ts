@@ -322,10 +322,10 @@ class Dialog {
       this.output(chalk.green(messages.addressWhitelisted(chalk.yellow(roleAssigned), `${chalk.yellow(requiredDepositInAmb)} ${messages.unitAmb}`)));
     }
 
-    async askForApolloDepositDialog(minimalDeposit: string) {
-      const minimalDepositBn = utils.toBN(minimalDeposit);
+    async askForApolloDepositDialog(minimalDeposit: string): Promise<string> {
+      // const minimalDepositBn = utils.toBN(minimalDeposit);
       const minimalDepositInAmb = utils.fromWei(minimalDeposit, 'ether');
-      const {deposit} = inquirer.prompt(
+      const {deposit} = await inquirer.prompt(
         [
           {
             type: 'input',
@@ -335,7 +335,7 @@ class Dialog {
               if (!validations.isValidNumber(answer)) {
                 return chalk.red(messages.depositNumberError(chalk.yellow(answer)));
               }
-              if (utils.toBN(+utils.toWei(answer, 'ether')).lt(minimalDepositBn)) {
+              if (utils.toBN(answer).lt(utils.toBN(minimalDeposit))) {
                 return chalk.red(messages.depositTooSmallError(chalk.yellow(minimalDepositInAmb), chalk.yellow(answer)));
               }
               return true;
