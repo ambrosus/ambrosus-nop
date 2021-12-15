@@ -199,7 +199,7 @@ class Dialog {
       ]);
 
     changeUrlConfirmationDialog = async(oldUrl, newUrl) => {
-      const {confirmation} = inquirer.prompt([
+      const {confirmation} = await inquirer.prompt([
         {
           type: 'list',
           name: 'confirmation',
@@ -346,7 +346,7 @@ class Dialog {
 
     async askForApolloMinimalDepositDialog() {
       const MINIMAL_DEPOSIT = 250000;
-      const {deposit} = inquirer.prompt(
+      const {deposit} = await inquirer.prompt(
         [
           {
             type: 'input',
