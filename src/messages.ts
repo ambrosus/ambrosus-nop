@@ -47,7 +47,7 @@ const messages = {
   submissionInfo: (submissionMail, onboardChannel, tosFilePath) => `To finish requesting process, copy following form and mail it to ${submissionMail} or send to ${onboardChannel} in Slack.
   Additionally attach your signed Terms of Service file (${tosFilePath})`,
   tosFilePath: 'output/TOS.txt',
-  submissionMail: 'tech@ambrosus.io',
+  submissionMail: 'support@ambrosus.io',
   onboardChannel: '#onboarding',
   addressNotWhitelisted: 'Address is not whitelisted yet',
   addressWhitelisted: (roleAssigned, requiredDeposit) => `✅ Address is whitelisted as ${roleAssigned}. Required deposit is: ${requiredDeposit}`,
