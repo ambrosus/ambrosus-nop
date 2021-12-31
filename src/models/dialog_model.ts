@@ -345,7 +345,7 @@ class Dialog {
     }
 
     async askForApolloMinimalDepositDialog() {
-      const MINIMAL_DEPOSIT = 250000;
+      const MINIMAL_DEPOSIT = 1000000;
       const {deposit} = await inquirer.prompt(
         [
           {
