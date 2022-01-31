@@ -88,5 +88,5 @@ services:
       - 80:3000
 
   dashboard:
-    image: quay.io/ambrosus/dashboard
+    image: ghcr.io/ambrosus/hermes-dashboard:v0.1.0
     container_name: dashboard
