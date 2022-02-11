@@ -69,7 +69,7 @@ services:
       - EMAIL_TMPL_ID_ORGREQ_REFUSE=<ENTER_YOUR_EMAIL_TMPL_ID_ORGREQ_REFUSE>
 
   server:
-    image: ghcr.io/ambrosus/ambrosus-node-extended:master
+    image: ghcr.io/ambrosus/ambrosus-node-extended
     container_name: hermes_server
     <<: *hermes-props
     command: yarn start:server
