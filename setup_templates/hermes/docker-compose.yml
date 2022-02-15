@@ -69,7 +69,7 @@ services:
       - EMAIL_TMPL_ID_ORGREQ_REFUSE=<ENTER_YOUR_EMAIL_TMPL_ID_ORGREQ_REFUSE>
 
   server:
-    image: quay.io/ambrosus/ambrosus-node-extended
+    image: ghcr.io/ambrosus/ambrosus-node-extended:v0.1.16
     container_name: hermes_server
     <<: *hermes-props
     command: yarn start:server
@@ -88,5 +88,5 @@ services:
       - 80:3000
 
   dashboard:
-    image: ghcr.io/ambrosus/hermes-dashboard:v0.1.0
+    image: ghcr.io/ambrosus/hermes-dashboard:v0.1.1
     container_name: dashboard
