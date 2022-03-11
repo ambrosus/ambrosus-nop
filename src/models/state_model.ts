@@ -145,8 +145,8 @@ class StateModel {
     return Store.safeRead('mailInfo');
   }
 
-  async getExtraData(templateDirectory, nodeTypeName, dockerFileName) {
-    const dockerFile = await readFile(path.join(templateDirectory, nodeTypeName, dockerFileName));
+  async getExtraData(templateDirectory, nodeTypeName, networkName, dockerFileName) {
+    const dockerFile = await readFile(path.join(templateDirectory, nodeTypeName, networkName.replace('ambnet-', ''), dockerFileName));
 
     const dockerYaml = await jsyaml.load(dockerFile);
 
@@ -229,10 +229,10 @@ class StateModel {
       await SetupCreator.createKeyFile(encryptedWallet);
 
       const nodeIp = await this.getNodeIP();
-      const extraData = await this.getExtraData(SetupCreator.templateDirectory, nodeTypeName, dockerFileName);
-      await SetupCreator.copyParityConfiguration(nodeTypeName, {address, ip: nodeIp, extraData});
+      const extraData = await this.getExtraData(SetupCreator.templateDirectory,  nodeTypeName, networkName, dockerFileName);
+      await SetupCreator.copyParityConfiguration(nodeTypeName, networkName, {address, ip: nodeIp, extraData});
     } else {
-      await SetupCreator.copyParityConfiguration(nodeTypeName, {});
+      await SetupCreator.copyParityConfiguration(nodeTypeName, networkName, {});
     }
   }
 }
