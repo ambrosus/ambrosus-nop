@@ -65,7 +65,7 @@ class SetupCreator {
     workerInterval?
   ) {
     await this.ensureOutputDirectoryExists();
-    let dockerFile = await readFile(path.join(this.templateDirectory, nodeTypeName, dockerFileName));
+    let dockerFile = await readFile(path.join(this.templateDirectory, nodeTypeName, networkName.replace('ambnet-', ''), dockerFileName));
 
     dockerFile = dockerFile.replace(/<ENTER_DOCKER_TAG_HERE>/gi, tag);
     dockerFile = dockerFile.replace(/<ENTER_YOUR_ADDRESS_HERE>/gi, address);
@@ -94,9 +94,9 @@ class SetupCreator {
     await writeFile(path.join(this.outputDirectory, dockerFileName), dockerFile);
   }
 
-  async copyParityConfiguration(nodeTypeName, values) {
+  async copyParityConfiguration(nodeTypeName, networkName, values) {
     await this.ensureOutputDirectoryExists();
-    let parityConfigFile = await readFile(path.join(this.templateDirectory, nodeTypeName, parityConfigFileName));
+    let parityConfigFile = await readFile(path.join(this.templateDirectory, nodeTypeName, networkName.replace('ambnet-', ''), parityConfigFileName));
 
     if (values.address !== undefined) {
       parityConfigFile = parityConfigFile.replace(/<TYPE_YOUR_ADDRESS_HERE>/gi, values.address);

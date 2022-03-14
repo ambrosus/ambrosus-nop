@@ -1,0 +1,26 @@
+[parity]
+base_path = "/app/"
+chain = "/app/chain.json"
+
+[network]
+nat = "extip:<TYPE_YOUR_IP_HERE>"
+warp = false
+
+[rpc]
+apis = ["web3", "eth", "net", "parity"]
+interface = "all"
+
+[ui]
+disable = true
+
+[account]
+password = ["/app/password.pwds"]
+
+[mining]
+extra_data = "<TYPE_EXTRA_DATA_HERE>"
+engine_signer = "<TYPE_YOUR_ADDRESS_HERE>"
+reseal_on_txs = "none"
+force_sealing = true
+
+[misc]
+logging = "own_tx=trace"
