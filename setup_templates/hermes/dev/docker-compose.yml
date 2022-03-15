@@ -1,0 +1,92 @@
+---
+version: '2.4'
+services:
+  mongodb:
+    image: mongo:4.2.9
+    container_name: mongod
+    restart: unless-stopped
+    volumes:
+      - ./data/db:/data/db
+      - ./data/configdb:/data/configdb
+
+  parity:
+    image: parity/parity:v2.7.2-stable
+    container_name: parity
+    command: --config /app/parity_config.toml
+    working_dir: /app
+    user: root
+    restart: unless-stopped
+    ports:
+      - '127.0.0.1:8545:8545/tcp'
+      - '30303:30303/tcp'
+      - '30303:30303/udp'
+    volumes:
+      - ./chain.json:/app/chain.json
+      - ./parity_config.toml:/app/parity_config.toml
+      - ./chains:/app/chains
+
+  ethstats-client:
+    image: ghcr.io/ambrosus/eth-net-intelligence-api
+    container_name: ethstats_client
+    restart: unless-stopped
+    depends_on:
+      - parity
+    environment:
+      RPC_HOST: parity
+      WS_SERVER: wss://stats-api.<ENTER_DOMAIN_HERE>
+      WS_SECRET: Z2hTiWBUfTNc5o9BAm
+      INSTANCE_NAME: 'hermes <ENTER_YOUR_ADDRESS_HERE>'
+
+  worker: &hermes-props
+    image: ambrosus/ambrosus-node:<ENTER_DOCKER_TAG_HERE>
+    container_name: hermes_worker
+    command: sh -c 'yarn migrate && yarn start:hermes'
+    restart: unless-stopped
+    logging:
+      options:
+        max-size: '100m'
+        max-file: '3'
+    depends_on:
+      - mongodb
+      - parity
+    environment:
+      - WEB3_NODEPRIVATEKEY=<ENTER_YOUR_PRIVATE_KEY_HERE>
+      - HEAD_CONTRACT_ADDRESS=<ENTER_YOUR_HEAD_CONTRACT_ADDRESS_HERE>
+      - WEB3_RPC=http://parity:8545
+      - MONGO_HOSTS=mongodb:27017
+      - MONGO_DB_NAME=ambrosus
+      - AUTHORIZATION_WITH_SECRET_KEY_ENABLED=false
+      - NODE_ENV=production
+      - USE_STATIC=1
+      - WORKER_INTERVAL=<ENTER_YOUR_WORKER_INTERVAL>
+      - DASHBOARD_URL=<ENTER_YOUR_DASHBOARD_URL>
+      - EMAIL_DEFAULT_FROM=<ENTER_YOUR_EMAIL_FROM>
+      - EMAIL_ORGREQ_TO=<ENTER_YOUR_EMAIL_ORGREQ_TO>
+      - EMAIL_API_KEY=<ENTER_YOUR_EMAIL_API_KEY>
+      - EMAIL_TMPL_ID_INVITE=<ENTER_YOUR_EMAIL_TMPL_ID_INVITE>
+      - EMAIL_TMPL_ID_ORGREQ=<ENTER_YOUR_EMAIL_TMPL_ID_ORGREQ>
+      - EMAIL_TMPL_ID_ORGREQ_APPROVE=<ENTER_YOUR_EMAIL_TMPL_ID_ORGREQ_APPROVE>
+      - EMAIL_TMPL_ID_ORGREQ_REFUSE=<ENTER_YOUR_EMAIL_TMPL_ID_ORGREQ_REFUSE>
+
+  server:
+    image: ghcr.io/ambrosus/ambrosus-node-extended:v0.1.17
+    container_name: hermes_server
+    <<: *hermes-props
+    command: yarn start:server
+    logging:
+      options:
+        max-size: '100m'
+        max-file: '3'
+    volumes:
+      - ~/ambrosus-nop:/opt/hermes
+    volumes_from:
+      - dashboard
+    depends_on:
+      - worker
+      - dashboard
+    ports:
+      - 80:3000
+
+  dashboard:
+    image: ghcr.io/ambrosus/hermes-dashboard:v0.1.1
+    container_name: dashboard

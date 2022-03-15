@@ -66,7 +66,6 @@ class SetupCreator {
   ) {
     await this.ensureOutputDirectoryExists();
     let dockerFile = await readFile(path.join(this.templateDirectory, nodeTypeName, networkName, dockerFileName));
-
     dockerFile = dockerFile.replace(/<ENTER_DOCKER_TAG_HERE>/gi, tag);
     dockerFile = dockerFile.replace(/<ENTER_YOUR_ADDRESS_HERE>/gi, address);
     dockerFile = dockerFile.replace(/<ENTER_YOUR_PRIVATE_KEY_HERE>/gi, privateKey);
