@@ -146,7 +146,7 @@ class StateModel {
   }
 
   async getExtraData(templateDirectory, nodeTypeName, networkName, dockerFileName) {
-    const dockerFile = await readFile(path.join(templateDirectory, nodeTypeName, networkName.replace('ambnet-', ''), dockerFileName));
+    const dockerFile = await readFile(path.join(templateDirectory, nodeTypeName, networkName, dockerFileName));
 
     const dockerYaml = await jsyaml.load(dockerFile);
 
