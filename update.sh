@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 set -e
-
 cd "$( dirname "$(readlink -f "${BASH_SOURCE[0]}")" )"
 if [[ -d /etc/cron.daily ]]; then
   rm -f /etc/cron.daily/amb*-nop
@@ -31,6 +30,19 @@ if [ "$SYSTEM_NODE_VERSION" = "" ] || [ "$SYSTEM_NODE_VERSION" != "$REQUIRED_NOD
 fi
 nvm use "$REQUIRED_NODE_VERSION"
 nvm alias default "$REQUIRED_NODE_VERSION"
+
+BLOCKCHAIN_DB_FILE_PATH=$(find ./output/chains/ambnet-test -name "db_version")
+BLOCKHAIN_DB_VERSION=$(cat $BLOCKCHAIN_DB_FILE_PATH)
+BLOCKHAIN_DB_UPDATE_PATH=$(find ./output/chains/ambnet-test/ -name "overlayrecent")
+
+if [ 16 -gt $BLOCKHAIN_DB_VERSION ]; then 
+    git clone https://github.com/openethereum/3.1-db-upgrade-tool.git
+    apt-get -yq install cargo clang llvm
+    cd 3.1-db-upgrade-tool
+    docker container stop parity 
+    echo "I AGREE" | cargo run ../$BLOCKHAIN_DB_UPDATE_PATH
+    rm -rf 3.1-db-upgrade-tool
+fi
 
 yarn
 yarn build
