@@ -31,11 +31,12 @@ fi
 nvm use "$REQUIRED_NODE_VERSION"
 nvm alias default "$REQUIRED_NODE_VERSION"
 
-BLOCKCHAIN_DB_FILE_PATH=$(find ./output/chains/ambnet-test -name "db_version")
+BLOCKCHAIN_DB_FILE_PATH=$(find ./output/chains -name "db_version")
 BLOCKHAIN_DB_VERSION=$(cat $BLOCKCHAIN_DB_FILE_PATH)
-BLOCKHAIN_DB_UPDATE_PATH=$(find ./output/chains/ambnet-test/ -name "overlayrecent")
+BLOCKHAIN_DB_UPDATE_PATH=$(find ./output/chains -name "overlayrecent")
+NETWORK_ENV=$(echo $BLOCKCHAIN_DB_FILE_PATH | cut -d/ -f4)
 
-if [ 16 -gt $BLOCKHAIN_DB_VERSION ]; then 
+if [ 16 -gt $BLOCKHAIN_DB_VERSION ] &&  [ "$NETWORK_ENV" == "ambnet-test" ]; then 
     git clone https://github.com/openethereum/3.1-db-upgrade-tool.git
     apt-get -yq install cargo clang llvm
     cd 3.1-db-upgrade-tool
@@ -51,3 +52,4 @@ if [[ -f output/docker-compose.yml ]]; then
   docker-compose -f output/docker-compose.yml pull
   docker-compose -f output/docker-compose.yml up -d
 fi
+
