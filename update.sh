@@ -52,4 +52,3 @@ if [[ -f output/docker-compose.yml ]]; then
   docker-compose -f output/docker-compose.yml pull
   docker-compose -f output/docker-compose.yml up -d
 fi
-
