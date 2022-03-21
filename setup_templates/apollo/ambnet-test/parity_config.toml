@@ -10,9 +10,6 @@ warp = false
 apis = ["web3", "eth", "net", "parity"]
 interface = "all"
 
-[ui]
-disable = true
-
 [account]
 password = ["/app/password.pwds"]
 

@@ -14,9 +14,6 @@ cors = ["*"]
 apis = ["web3", "eth", "net"]
 interface = "all"
 
-[ui]
-disable = true
-
 [ipc]
 disable = true
 
