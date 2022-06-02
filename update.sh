@@ -12,6 +12,7 @@ END
 sysctl -p /etc/sysctl.d/10-ambrosus.conf
 
 git checkout yarn.lock
+git checkout run-update.sh
 git pull origin master
 
 chmod +x run-update.sh
