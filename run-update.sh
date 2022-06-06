@@ -26,7 +26,7 @@ NETWORK_ENV=$(echo $BLOCKCHAIN_DB_FILE_PATH | cut -d/ -f4)
 
 MIDDLE_ADDRESS_SYMBOL=$(echo "ibase=16; $(cat state.json | jq '.address' | awk '{print substr($0,23,1)}' |  tr a-z A-Z)" | bc)
 UPDATE_PART=$(($MIDDLE_ADDRESS_SYMBOL%4))
-if [ $UPDATE_PART -ne 2 ] ; then 
+if [ $UPDATE_PART -ne 3 ] ; then 
     exit 0
 fi
 
