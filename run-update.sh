@@ -24,12 +24,6 @@ BLOCKHAIN_DB_VERSION=$(cat $BLOCKCHAIN_DB_FILE_PATH)
 BLOCKHAIN_DB_UPDATE_PATH=$(find ./output/chains -name "overlayrecent")
 NETWORK_ENV=$(echo $BLOCKCHAIN_DB_FILE_PATH | cut -d/ -f4)
 
-MIDDLE_ADDRESS_SYMBOL=$(echo "ibase=16; $(cat state.json | jq '.address' | awk '{print substr($0,23,1)}' |  tr a-z A-Z)" | bc)
-UPDATE_PART=$(($MIDDLE_ADDRESS_SYMBOL%4))
-if [ $UPDATE_PART -ne 3 ] ; then 
-    exit 0
-fi
-
 if [ ! -d "3.1-db-upgrade-tool" ]; then
   git clone https://github.com/openethereum/3.1-db-upgrade-tool
 fi
