@@ -18,6 +18,9 @@ extra_data = "<TYPE_EXTRA_DATA_HERE>"
 engine_signer = "<TYPE_YOUR_ADDRESS_HERE>"
 reseal_on_txs = "none"
 force_sealing = true
+gas_floor_target = "40000000"
+gas_cap = "40000000"
+tx_gas_limit = "40000000"
 
 [misc]
 logging = "own_tx=trace"
