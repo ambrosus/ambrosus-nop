@@ -16,7 +16,7 @@ import StateModel from '../../src/models/state_model';
 import Store from '../../src/services/store';
 import Crypto from '../../src/services/crypto';
 import SetupCreator from '../../src/services/setup_creator';
-import {APOLLO, HERMES} from '../../src/consts';
+import {APOLLO, ATLAS_1} from '../../src/consts';
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
@@ -301,13 +301,13 @@ describe('State Model', () => {
       expect(cryptoStub.getEncryptedWallet).to.have.been.calledOnceWith(examplePrivateKey, examplePassword);
       expect(setupCreatorStub.createKeyFile).to.have.been.calledOnceWith(exampleEncryptedWallet);
       expect(setupCreatorStub.fetchChainJson).to.have.been.calledOnceWith(exampleNetwork.chainspec);
-      expect(setupCreatorStub.copyParityConfiguration).to.have.been.calledOnceWith('apollo', {address: exampleAddress, ip: exampleIP, extraData: exampleExtraData});
+      expect(setupCreatorStub.copyParityConfiguration).to.have.been.calledOnceWith('apollo', exampleNetworkFullName, {address: exampleAddress, ip: exampleIP, extraData: exampleExtraData});
       expect(setupCreatorStub.prepareDockerComposeFile).to.have.been.calledOnceWith(
         exampleDockerTag, 'apollo', exampleAddress, examplePrivateKey, exampleNetwork.headContractAddress, exampleNetworkFullName, exampleDomain);
     });
 
-    it('creates files for Hermes and Atlas', async () => {
-      storeStub.safeRead.withArgs('role').resolves(HERMES)
+    it('creates files for Atlas', async () => {
+      storeStub.safeRead.withArgs('role').resolves(ATLAS_1)
         .withArgs('privateKey')
         .resolves(examplePrivateKey)
         .withArgs('network')
@@ -320,9 +320,9 @@ describe('State Model', () => {
       expect(cryptoStub.getEncryptedWallet).to.have.not.been.called;
       expect(setupCreatorStub.createKeyFile).to.have.not.been.called;
       expect(setupCreatorStub.fetchChainJson).to.have.been.calledOnceWith(exampleNetwork.chainspec);
-      expect(setupCreatorStub.copyParityConfiguration).to.have.been.calledOnceWith('hermes', {});
+      expect(setupCreatorStub.copyParityConfiguration).to.have.been.calledOnceWith('atlas', exampleNetworkFullName, {});
       expect(setupCreatorStub.prepareDockerComposeFile).to.have.been.calledOnceWith(
-        exampleDockerTag, 'hermes', exampleAddress, examplePrivateKey, exampleNetwork.headContractAddress, exampleNetworkFullName, exampleDomain);
+        exampleDockerTag, 'atlas', exampleAddress, examplePrivateKey, exampleNetwork.headContractAddress, exampleNetworkFullName, exampleDomain);
     });
 
     it('throws if invalid role provided', async () => {

@@ -13,7 +13,7 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
 import Web3 from 'web3';
-import {ATLAS_1, APOLLO, HERMES} from '../../src/consts';
+import {ATLAS_1, APOLLO} from '../../src/consts';
 import AtlasModeModel from '../../src/models/atlas_mode_model';
 import StateModel from '../../src/models/state_model';
 import HttpUtils from '../../src/utils/http_utils';
@@ -75,14 +75,6 @@ describe('Atlas Mode Model', () => {
       expect(httpUtilsMock.httpGet).to.not.be.called;
     });
 
-    it('returns empty for HERMES', async () => {
-      stateModelStub.getRole.resolves(HERMES);
-      stateModelStub.getNodeUrl.resolves('http://atlas.ambrosus.io');
-      const mode = await atlasModeModel.getMode();
-      expect(mode).to.be.deep.equal({});
-      expect(httpUtilsMock.httpGet).to.not.be.called;
-    });
-
     it('returns "normal" mode by http', async () => {
       stateModelStub.getRole.resolves(ATLAS_1);
       stateModelStub.getNodeUrl.resolves('http://atlas.ambrosus.io');
@@ -118,13 +110,6 @@ describe('Atlas Mode Model', () => {
 
     it('returns false for APOLLO', async () => {
       stateModelStub.getRole.resolves(APOLLO);
-      stateModelStub.getNodeUrl.resolves('http://atlas.ambrosus.io');
-      expect(await atlasModeModel.setMode()).to.be.false;
-      expect(httpUtilsMock.httpGet).to.not.be.called;
-    });
-
-    it('returns false for HERMES', async () => {
-      stateModelStub.getRole.resolves(HERMES);
       stateModelStub.getNodeUrl.resolves('http://atlas.ambrosus.io');
       expect(await atlasModeModel.setMode()).to.be.false;
       expect(httpUtilsMock.httpGet).to.not.be.called;

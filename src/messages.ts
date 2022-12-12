@@ -12,7 +12,6 @@ const messages = {
   nodeTypeQuestion: `Which node do you want to run?`,
   atlasVersionQuestion: `Which Atlas version do you want to run?`,
   apolloName: 'Apollo',
-  hermesName: 'Hermes',
   atlasName: 'Atlas',
   atlas1Name: 'Zeta',
   atlas2Name: 'Sigma',

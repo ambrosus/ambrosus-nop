@@ -16,7 +16,7 @@ import checkAddressWhitelistingStatus from '../../src/phases/check_address_white
 import Dialog from '../../src/models/dialog_model';
 import StateModel from '../../src/models/state_model';
 import SmartContractsModel from '../../src/models/smart_contracts_model';
-import {ATLAS_1_STAKE, ATLAS_1, HERMES} from '../../src/consts';
+import {ATLAS_1_STAKE, ATLAS_1, APOLLO} from '../../src/consts';
 
 chai.use(chaiAsPromised);
 chai.use(sinonChai);
@@ -96,8 +96,7 @@ describe('Check Address Whitelisting Status Phase', () => {
   it('throws if fetched role does not match already kept in the store', async () => {
     smartContractsModelStub.isAddressWhitelisted.resolves(true);
     smartContractsModelStub.getAddressWhitelistingData.resolves(exampleStatus);
-    stateModelStub.getRole.resolves(HERMES);
-
+    stateModelStub.getRole.resolves(APOLLO);
     expect(call()).to.be.eventually.rejectedWith('Role selected differs from role assigned in whitelist. Please contact Ambrosus Tech Support');
   });
 });

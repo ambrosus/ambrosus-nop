@@ -12,7 +12,7 @@ import chalk from 'chalk';
 import validations from '../services/validations';
 import messages from '../messages';
 import utils from '../utils/web3_utils';
-import {APOLLO, ATLAS_1, ATLAS_2, ATLAS_3, HERMES} from '../consts';
+import {APOLLO, ATLAS_1, ATLAS_2, ATLAS_3} from '../consts';
 import {config} from '../../config/config';
 
 class Dialog {
@@ -97,10 +97,6 @@ class Dialog {
             {
               name: messages.apolloName,
               value: APOLLO
-            },
-            {
-              name: messages.hermesName,
-              value: HERMES
             },
             {
               name: messages.atlasName,

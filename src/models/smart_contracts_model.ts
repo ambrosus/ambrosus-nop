@@ -7,7 +7,7 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-import {APOLLO, ATLAS_1, ATLAS_2, ATLAS_3, HERMES, NO_ROLE_CODE} from '../consts';
+import {APOLLO, ATLAS_1, ATLAS_2, ATLAS_3, NO_ROLE_CODE} from '../consts';
 import utils from '../utils/web3_utils';
 import {roleCodeToRole} from '../utils/role_converters';
 import Crypto from '../services/crypto';
@@ -72,8 +72,6 @@ class SmartContractsModel {
 
   async performOnboarding(address, role, deposit, url) {
     switch (role) {
-      case HERMES:
-        return this.rolesWrapper.onboardAsHermes(address, url);
       case APOLLO:
         return this.rolesWrapper.onboardAsApollo(address, deposit);
       case ATLAS_1:

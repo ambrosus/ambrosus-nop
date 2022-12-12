@@ -9,7 +9,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 
 import * as path from 'path';
 import {readFile} from '../utils/file';
-import {HERMES, APOLLO, ATLAS_1, ATLAS_2, ATLAS_3} from '../consts';
+import {APOLLO, ATLAS_1, ATLAS_2, ATLAS_3} from '../consts';
 import jsyaml from 'js-yaml';
 import Store from '../services/store';
 import Crypto from '../services/crypto';
@@ -189,9 +189,7 @@ class StateModel {
     const role = await this.getRole();
     let nodeTypeName;
 
-    if (role === HERMES) {
-      nodeTypeName = 'hermes';
-    } else if (role === APOLLO) {
+    if (role === APOLLO) {
       nodeTypeName = 'apollo';
     } else if (role === ATLAS_1 || role === ATLAS_2 || role === ATLAS_3) {
       nodeTypeName = 'atlas';
