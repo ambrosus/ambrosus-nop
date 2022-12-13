@@ -24,7 +24,7 @@ const {expect} = chai;
 describe('Prepare Docker Phase', () => {
   let stateModelStub;
 
-  const exampleUrl = 'https://hermes-node.com';
+  const exampleUrl = 'https://any-node.com';
 
   const call = prepareDockerPhase;
 
