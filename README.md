@@ -37,7 +37,7 @@ There is detailed step by step information how to setup droplet on digitalocean 
 
 Our brief instructions:
 
-Create an account and log in. Press 'Droplets' and then 'Create Droplet'. Use the OS Ubuntu 20.04 x64 and then choose what machine preferences and which data center suits you. Then either create a SSH key which you will use to access the instance or if you do not choose one you will get a password to your email. Write a hostname that suits you and launch the instance.
+Create an account and log in. Press 'Droplets' and then 'Create Droplet'. Use the OS Ubuntu and then choose what machine preferences and which data center suits you. Then either create a SSH key which you will use to access the instance or if you do not choose one you will get a password to your email. Write a hostname that suits you and launch the instance.
 
 Now lets setup a firewall for the instance to make sure the instance is accessible only through specific ports. Your instance should be launched and you should see it by pressing 'Droplets'. Click on the instance you launched and then press 'Networking' -> 'Manage Firewalls'.
 Add rules for the following ports according to the node you are running:
