@@ -76,9 +76,10 @@ Now enter the password that you received by Email from digital ocean.
 
 Once you're logged in on your virtual machine, run the following commands (1 line per command):
 ```
-
-```
 1. source <(curl -s https://nop.ambrosus.io/setup.sh)
+```
+
+> **NOTE:** You should execute this script as a root user
 
 Choose the necessary options:
 - network (main);
