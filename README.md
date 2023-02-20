@@ -80,6 +80,8 @@ Once you're logged in on your virtual machine, run the following commands (1 lin
 ```
 1. source <(curl -s https://nop.ambrosus.io/setup.sh)
 
+**If you are launching a script as a non-root user, it is necessary to execute 'sudo -s' beforehand.**
+
 Choose the necessary options:
 - network (main);
 - input already existing private key or create a new one;
