@@ -79,7 +79,7 @@ Once you're logged in on your virtual machine, run the following commands (1 lin
 1. source <(curl -s https://nop.ambrosus.io/setup.sh)
 ```
 
-> **NOTE:** If you are launching a script as a non-root user, it is necessary to execute 'sudo -s' beforehand.
+> **NOTE:** For the correct script execution, it needs to be launched under the user account of root or from within the root shell.
 
 Choose the necessary options:
 - network (main);
