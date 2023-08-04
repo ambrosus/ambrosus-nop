@@ -7,16 +7,14 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-import * as fs from 'fs';
+import ipRegex from 'ip-regex';
 
-export const checkFileExists = (path): Promise<boolean> => fs.promises.access(path)
-  .then(() => true)
-  .catch(() => false);
+export function isValidPrivateKey(candidate) {
+  const addressRegex = /^0x[0-9a-f]{64}$/i;
+  return addressRegex.exec(candidate) !== null;
+}
 
-export async function ensureOutputDirectoryExists(path) {
-  try {
-    await fs.promises.lstat(path);
-  } catch (error) {
-    await fs.promises.mkdir(path);
-  }
+export function isValidIP(candidate) {
+  return ipRegex({exact: true})
+    .test(candidate);
 }

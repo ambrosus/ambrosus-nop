@@ -1,5 +1,6 @@
 {
   "test": {
+    "name": "test",
     "domain": "ambrosus-test.io",
     "rpc": "https://network.ambrosus-test.io",
     "chainspec": "https://chainspec.ambrosus-test.io",
@@ -7,6 +8,7 @@
     "dockerTag": "v1.1.19"
   },
   "dev": {
+    "name": "dev",
     "domain": "ambrosus-dev.io",
     "rpc": "https://network.ambrosus-dev.io",
     "chainspec": "https://chainspec.ambrosus-dev.io",
@@ -14,6 +16,7 @@
     "dockerTag": "v1.1.19"
   },
   "main": {
+    "name": "main",
     "domain": "ambrosus.io",
     "rpc": "https://network.ambrosus.io",
     "chainspec": "https://chainspec.ambrosus.io",

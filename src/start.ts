@@ -7,25 +7,14 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-import StateModel from './models/state_model';
-import SmartContractsModel from './models/smart_contracts_model';
-import Dialog from './models/dialog_model';
-import selectNetworkPhase from './phases/select_network_phase';
-import {selectActionPhase, defaultActions} from './phases/select_action_phase';
-import * as networks from '../config/networks.json';
-import checkDockerAvailablePhase from './phases/check_docker_available_phase';
-import getPrivateKeyPhase from './phases/get_private_key_phase';
-import Crypto from './services/crypto';
-import checkAddressWhitelistingStatusPhase from './phases/check_address_whitelisting_status_phase';
-import selectNodeTypePhase from './phases/select_node_type_phase';
-import {APOLLO} from './consts';
-import getNodeIPPhase from './phases/get_node_ip_phase';
-import getNodeUrlPhase from './phases/get_node_url_phase';
-import getUserEmailPhase from './phases/get_user_email_phase';
-import acceptTosPhase from './phases/accept_tos_phase';
-import manualSubmissionPhase from './phases/manual_submission_phase';
-import performOnboardingPhase from './phases/perform_onboarding_phase';
-import prepareDockerPhase from './phases/prepare_docker_phase';
+import Dialog from './dialogs/dialog_model';
+import networks from '../config/networks.json';
+import checkDockerAvailablePhase from './phases/01_check_docker_available_phase';
+import selectNetworkPhase from './phases/02_select_network_phase';
+import getPrivateKeyPhase from './phases/03_get_private_key_phase';
+import getNodeIPPhase from './phases/04_get_node_ip_phase';
+import {readState, writeState} from './utils/state';
+import setup from './setup';
 
 const start = async () => {
   Dialog.logoDialog();
@@ -33,43 +22,16 @@ const start = async () => {
   if (!await checkDockerAvailablePhase()) {
     return;
   }
-  const network = await selectNetworkPhase(networks);
-  const privateKey = await getPrivateKeyPhase();
 
-  await StateModel.checkStateVariables();
+  const state = await readState();
 
-  Crypto.setWeb3UsingRpc(network.rpc);
-  Crypto.setAccount(privateKey);
+  state.network = await selectNetworkPhase(state.network, networks);
+  state.privateKey = await getPrivateKeyPhase(state.privateKey);
+  state.ip = await getNodeIPPhase(state.ip);
 
-  SmartContractsModel.init(network);
+  await writeState(state);
 
-  const whitelistingStatus = await checkAddressWhitelistingStatusPhase();
-
-  const role = await selectNodeTypePhase();
-  if (role === APOLLO) {
-    await getNodeIPPhase();
-  } else {
-    await getNodeUrlPhase();
-  }
-  await getUserEmailPhase();
-
-  await acceptTosPhase();
-  if (whitelistingStatus === null) {
-    await manualSubmissionPhase();
-    return;
-  }
-
-  const isOnboarded = await performOnboardingPhase(whitelistingStatus);
-  if (!isOnboarded) {
-    return;
-  }
-
-  await prepareDockerPhase();
-
-  const isInteractive = process.argv[2] !== 'update';
-  if (isInteractive) {
-    await (selectActionPhase(role, defaultActions))();
-  }
+  await setup(state);
 };
 
 start()

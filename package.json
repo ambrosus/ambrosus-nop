@@ -15,7 +15,6 @@
     "test": "./tests.sh"
   },
   "dependencies": {
-    "ambrosus-node-contracts": "0.0.83",
     "base64url": "^3.0.1",
     "chalk": "^4.1.1",
     "inquirer": "^6.5.2",

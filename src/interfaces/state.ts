@@ -7,16 +7,11 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-import * as fs from 'fs';
+import {Network} from './network';
 
-export const checkFileExists = (path): Promise<boolean> => fs.promises.access(path)
-  .then(() => true)
-  .catch(() => false);
-
-export async function ensureOutputDirectoryExists(path) {
-  try {
-    await fs.promises.lstat(path);
-  } catch (error) {
-    await fs.promises.mkdir(path);
-  }
-}
+export default interface State {
+  network: Network;
+  privateKey: string;
+  address: string;
+  ip: string;
+};
