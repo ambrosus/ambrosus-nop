@@ -8,15 +8,13 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 */
 
 import * as fs from 'fs';
+import path from 'path';
 
-export const checkFileExists = (path): Promise<boolean> => fs.promises.access(path)
-  .then(() => true)
-  .catch(() => false);
+export async function ensureDirectoryForFileExists(filePath) {
+  const dirPath = path.dirname(filePath);
+  await ensureDirectoryExists(dirPath);
+}
 
-export async function ensureOutputDirectoryExists(path) {
-  try {
-    await fs.promises.lstat(path);
-  } catch (error) {
-    await fs.promises.mkdir(path);
-  }
+export async function ensureDirectoryExists(dirPath) {
+  await fs.promises.mkdir(dirPath, {recursive: true});
 }

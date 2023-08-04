@@ -57,11 +57,18 @@ class Dialog {
         }
       ]);
 
-    askForNodeIPDialog = async() => inquirer.prompt(
+    askForNodeIPDialog = async(ipGuess) => inquirer.prompt(
       [
+        {
+          type: 'confirm',
+          name: 'useGuess',
+          when: () => ipGuess !== null,
+          message: messages.nodeIPGuessQuestion(ipGuess)
+        },
         {
           type: 'input',
           name: 'nodeIP',
+          when: (answers) => !answers.useGuess,
           message: messages.nodeIPInputInstruction,
           validate: (answer) => isValidIP(answer) || chalk.red(messages.nodeIPInputError(chalk.yellow(answer)))
         }
@@ -100,6 +107,7 @@ class Dialog {
         }
       ]);
 
+    setupCompleteDialog = (outputDir) => this.output(chalk.blue(messages.dockerComposeInfo(chalk.yellow(outputDir), chalk.yellow(messages.dockerComposeCommand))));
 
     dockerRestartRequiredDialog() {
       const center = (text, consoleWidth) => text.padStart((consoleWidth / 2) + (text.length / 2));

@@ -7,6 +7,7 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 import Dialog from '../dialogs/dialog_model';
+import {getMyIP} from '../utils/http_utils';
 
 const getNodeIPPhase = async (storedNodeIP) => {
   const nodeIP = await getNodeIP(storedNodeIP);
@@ -20,7 +21,11 @@ const getNodeIP = async (storedNodeIP) => {
     return storedNodeIP;
   }
 
-  const answers = await Dialog.askForNodeIPDialog();
+  const ipGuess = await getMyIP();
+  const answers = await Dialog.askForNodeIPDialog(ipGuess);
+  if (answers.useGuess) {
+    return ipGuess;
+  }
   return answers.nodeIP;
 };
 

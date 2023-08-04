@@ -7,24 +7,27 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-import {checkFileExists} from './file';
 import {STATE_PATH} from '../../config/config';
 import State from '../interfaces/state';
-import {writeFile} from 'fs/promises';
+import {readFile, writeFile} from 'fs/promises';
+import {ensureDirectoryForFileExists} from './file';
 
 
 export async function readState(): Promise<State> {
-  if (await checkFileExists(STATE_PATH)) {
-    return await import(STATE_PATH);
+  try {
+    const file = readFile(STATE_PATH, {encoding: 'utf8'});
+    return JSON.parse(await file);
+  } catch (e) {
+    return {
+      network: null,
+      privateKey: null,
+      address: null,
+      ip: null
+    };
   }
-  return {
-    network: null,
-    privateKey: null,
-    address: null,
-    ip: null
-  };
 }
 
 export async function writeState(state: State) {
+  await ensureDirectoryForFileExists(STATE_PATH);
   await writeFile(STATE_PATH, JSON.stringify(state, null, 2));
 }

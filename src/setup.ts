@@ -11,7 +11,7 @@ import Crypto from './utils/crypto';
 import path from 'path';
 import jsyaml from 'js-yaml';
 import {readFile, writeFile} from 'fs/promises';
-import fileDownload from './utils/file_download';
+import {fileDownload} from './utils/http_utils';
 import {
   CHAIN_DESCRIPTION_FILE_NAME,
   DOCKER_FILE_NAME,
@@ -22,21 +22,22 @@ import {
   TEMPLATE_DIRECTORY
 } from '../config/config';
 import State from './interfaces/state';
+import {ensureDirectoryExists} from './utils/file';
 
 
 const APOLLO = 'apollo';
 
 export default async function setup(state: State) {
+  await ensureDirectoryExists(OUTPUT_DIRECTORY);
+
   const address = Crypto.addressForPrivateKey(state.privateKey);
   const networkName = await fetchChainJson(state.network.chainspec);
 
   const {dockerTemplate, parityTemplate} = await readTemplates(networkName);
-  await this.ensureOutputDirectoryExists(OUTPUT_DIRECTORY);
-
-  await createDockerComposeFile(dockerTemplate, address, networkName, state.network.domain);
 
   const extraData = await getExtraData(dockerTemplate);
   await createParityConfigFile(parityTemplate, address, state.ip, extraData);
+  await createDockerComposeFile(dockerTemplate, address, networkName, state.network.domain);
 
   const password = Crypto.getRandomPassword();
   await createPasswordFile(password);
