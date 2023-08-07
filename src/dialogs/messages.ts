@@ -22,10 +22,13 @@ const messages = {
   nodeIPInputError:  (wrongValue) => `${wrongValue} is not a valid IP address`,
   nodeIPInfo: (ip) => `Node IP defined as ${ip}`,
   networkSelected: (network) => `Network: ${network}`,
-  dockerComposeInfo: (outputDir, command) => `\n🎉 Your node configuration is ready 🎉\nIn order to start it, enter the ${outputDir} directory from the command line and run ${command}`,
   dockerComposeCommand: 'docker-compose up -d',
+  dockerSetupComplete: '🎉 Your node configuration is ready 🎉',
+  dockerStarting: 'Starting docker containers... 🐳',
+  dockerStarted: '🎉 Your node is working! 🎉',
+  dockerError: 'Something went wrong. Please check the logs below.',
   warningMessage: '⚠️ WARNING! ⚠️',
-  dockerRestartRequired: 'Changes in network have been detected. Please restart the docker containers with',
+  dockerRestartRequired: 'Changes in network have been detected. Please restart the docker containers with'
 };
 
 export default messages;

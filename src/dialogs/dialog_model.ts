@@ -107,7 +107,10 @@ class Dialog {
         }
       ]);
 
-    setupCompleteDialog = (outputDir) => this.output(chalk.blue(messages.dockerComposeInfo(chalk.yellow(outputDir), chalk.yellow(messages.dockerComposeCommand))));
+    setupCompleteDialog = () => this.output(chalk.blue(messages.dockerSetupComplete));
+    dockerStartingDialog = () => this.output(chalk.blue(messages.dockerStarting));
+    dockerStartedDialog = () => this.output(chalk.green(messages.dockerStarted));
+    dockerErrorDialog = () => this.output(chalk.red(messages.dockerError));
 
     dockerRestartRequiredDialog() {
       const center = (text, consoleWidth) => text.padStart((consoleWidth / 2) + (text.length / 2));

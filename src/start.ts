@@ -15,7 +15,7 @@ import getPrivateKeyPhase from './phases/03_get_private_key_phase';
 import getNodeIPPhase from './phases/04_get_node_ip_phase';
 import {readState, writeState} from './utils/state';
 import setup from './setup';
-import {OUTPUT_DIRECTORY} from '../config/config';
+import runDockerPhase from './phases/05_run_docker';
 
 const start = async () => {
   Dialog.logoDialog();
@@ -33,8 +33,9 @@ const start = async () => {
   await writeState(state);
 
   await setup(state);
+  Dialog.setupCompleteDialog();
 
-  Dialog.setupCompleteDialog(OUTPUT_DIRECTORY);
+  await runDockerPhase();
 };
 
 start()
