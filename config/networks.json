@@ -1,4 +1,12 @@
 {
+  "main": {
+    "name": "main",
+    "domain": "ambrosus.io",
+    "rpc": "https://network.ambrosus.io",
+    "chainspec": "https://chainspec.ambrosus.io",
+    "headContractAddress": "0x0000000000000000000000000000000000000F10",
+    "dockerTag": "v1.1.19"
+  },
   "test": {
     "name": "test",
     "domain": "ambrosus-test.io",
@@ -12,14 +20,6 @@
     "domain": "ambrosus-dev.io",
     "rpc": "https://network.ambrosus-dev.io",
     "chainspec": "https://chainspec.ambrosus-dev.io",
-    "headContractAddress": "0x0000000000000000000000000000000000000F10",
-    "dockerTag": "v1.1.19"
-  },
-  "main": {
-    "name": "main",
-    "domain": "ambrosus.io",
-    "rpc": "https://network.ambrosus.io",
-    "chainspec": "https://chainspec.ambrosus.io",
     "headContractAddress": "0x0000000000000000000000000000000000000F10",
     "dockerTag": "v1.1.19"
   }
