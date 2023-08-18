@@ -7,20 +7,21 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-import Dialog from './dialogs/dialog_model';
-import networks from '../config/networks.json';
-import checkDockerAvailablePhase from './phases/01_check_docker_available_phase';
-import selectNetworkPhase from './phases/02_select_network_phase';
-import getPrivateKeyPhase from './phases/03_get_private_key_phase';
-import getNodeIPPhase from './phases/04_get_node_ip_phase';
-import {readState, writeState} from './utils/state';
-import setup from './setup';
-import runDockerPhase from './phases/05_run_docker';
+import Dialog from "./dialogs/dialog_model";
+import networks from "../config/networks.json";
+import checkDockerAvailablePhase from "./phases/01_check_docker_available_phase";
+import selectNetworkPhase from "./phases/02_select_network_phase";
+import getPrivateKeyPhase from "./phases/03_get_private_key_phase";
+import getNodeIPPhase from "./phases/04_get_node_ip_phase";
+import { readState, writeState } from "./utils/state";
+import setup from "./setup";
+import runDockerPhase from "./phases/05_run_docker";
+import checkStatusInServerNodes from "./phases/06_check_status_in_server_nodes";
 
 const start = async () => {
   Dialog.logoDialog();
 
-  if (!await checkDockerAvailablePhase()) {
+  if (!(await checkDockerAvailablePhase())) {
     return;
   }
 
@@ -36,10 +37,11 @@ const start = async () => {
   Dialog.setupCompleteDialog();
 
   await runDockerPhase();
+
+  await checkStatusInServerNodes(state.privateKey, state.network);
 };
 
-start()
-  .catch((err) => {
-    console.error(err);
-    process.exit(1);
-  });
+start().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
