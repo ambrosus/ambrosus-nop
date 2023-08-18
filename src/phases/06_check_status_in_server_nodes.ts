@@ -16,7 +16,7 @@ import { ethers } from "ethers";
 import { Network } from "../interfaces/network";
 import Crypto from "../utils/crypto";
 
-export default async function checkContracts(
+export default async function checkStatusInServerNodes(
   privateKey: string,
   network: Network
 ) {
