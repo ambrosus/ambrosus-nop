@@ -21,41 +21,34 @@ export default async function checkStatusInServerNodes(
   network: Network
 ) {
   const currentTimeInSeconds = Date.now() / 1000;
-  try {
-    const provider = new ethers.providers.JsonRpcProvider(network.rpc);
+  const provider = new ethers.providers.JsonRpcProvider(network.rpc);
 
-    const signer = new ethers.VoidSigner(
-      ethers.constants.AddressZero,
-      provider
-    );
-    const { chainId } = await provider.getNetwork();
+  const signer = new ethers.VoidSigner(ethers.constants.AddressZero, provider);
+  const { chainId } = await provider.getNetwork();
 
-    const address = Crypto.addressForPrivateKey(privateKey);
+  const address = Crypto.addressForPrivateKey(privateKey);
 
-    const contracts = new Contracts(signer, chainId);
-    const validator = await Methods.getApolloInfo(contracts, address);
-
-    if (!validator) {
-      console.log(!validator);
-      Dialog.notRegisteredDialog(network.domain);
-    }
-
-    if (validator.isOnboarded) {
-      Dialog.alreadyOnboardedDialog(); // TODO: explorerUrl anywhere
-    } else if (!validator.isOnboarded) {
-      const contract = contracts.getContractByName(
-        ContractNames.ServerNodesManager
-      );
-      const onboardingDelay = (await contract.onboardingDelay()).toNumber();
-      const timeToWait =
-        onboardingDelay -
-        (currentTimeInSeconds - validator.apollo.timestampStake.toNumber());
-      Dialog.waitOnboardingDialog(timeToWait / 3600);
-    }
-
-    return true;
-  } catch (error) {
-    console.log(error);
-    return false;
+  const contracts = new Contracts(signer, chainId);
+  const validator = await Methods.getApolloInfo(contracts, address);
+  if (!validator) {
+    Dialog.notRegisteredDialog(network.domain);
+    return;
   }
+
+  if (validator.isOnboarded) {
+    Dialog.alreadyOnboardedDialog(network.domain, address);
+    return;
+  } else if (!validator.isOnboarded) {
+    const contract = contracts.getContractByName(
+      ContractNames.ServerNodesManager
+    );
+    const onboardingDelay = (await contract.onboardingDelay()).toNumber();
+    const timeToWait =
+      onboardingDelay -
+      (currentTimeInSeconds - validator.apollo.timestampStake.toNumber());
+    Dialog.waitOnboardingDialog(timeToWait / 3600);
+    return;
+  }
+
+  return true;
 }

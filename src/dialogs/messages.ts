@@ -30,17 +30,18 @@ const messages = {
   dockerComposeCommand: "docker-compose up -d",
   dockerSetupComplete: "🎉 Your node configuration is ready 🎉",
   dockerStarting: "Starting docker containers... 🐳",
-  dockerStarted: "🎉 Your node is working! 🎉",
+  dockerStarted: "🎉 Your node is launched! 🎉",
   dockerError: "Something went wrong. Please check the logs below.",
   warningMessage: "⚠️ WARNING! ⚠️",
   dockerRestartRequired:
     "Changes in network have been detected. Please restart the docker containers with",
-  alreadyOnboarded: "Node registered and onboarded to the network🎉", // TODO explorerUrl
+  alreadyOnboarded: (explorerUrl, nodeAddress) =>
+    `Node registered and onboarded to the network🎉. You can check it here: https://${explorerUrl}/explorer/apollo/${nodeAddress}`,
   notOnboarded: "Your node is not onboarded to the network",
   waitOnboarding: (timeToUnboard) =>
     `Please wait until your node is onboarded to the network, Left: ${timeToUnboard} hours`,
   notRegisteredNode: (explorerUrl) =>
-    `Your node is not registered in the network. Register here: ${explorerUrl}`,
+    `Your node is not registered in the network. Register here: https://${explorerUrl}`,
 };
 
 export default messages;

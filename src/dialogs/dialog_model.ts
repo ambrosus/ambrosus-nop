@@ -139,8 +139,10 @@ class Dialog {
     this.output(chalk.yellow("=".repeat(consoleWidth)));
   }
 
-  alreadyOnboardedDialog = () =>
-    this.output(chalk.green(messages.alreadyOnboarded));
+  alreadyOnboardedDialog = (explorerUrl, nodeAddress) =>
+    this.output(
+      chalk.green(messages.alreadyOnboarded(explorerUrl, nodeAddress))
+    );
   notOnboardedDialog = () => this.output(chalk.red(messages.notOnboarded));
   waitOnboardingDialog = (timetoUnboard) =>
     this.output(

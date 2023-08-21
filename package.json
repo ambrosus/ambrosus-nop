@@ -15,7 +15,7 @@
     "test": "./tests.sh"
   },
   "dependencies": {
-    "@airdao/airdao-node-contracts": "1.0.24",
+    "@airdao/airdao-node-contracts": "1.0.26",
     "axios": "^1.4.0",
     "base64url": "^3.0.1",
     "chalk": "^4.1.1",
