@@ -1,6 +1,7 @@
 #!/bin/bash
 
-apt-get update
+apt update
+apt upgrade
 apt-get install -y curl
 apt-get install -y python-dev
 curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
@@ -16,7 +17,8 @@ echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
   $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-apt-get update
+apt update
+apt upgrade
 apt-get install -y docker-ce docker-ce-cli containerd.io
 curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-"$(uname -s)"-"$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
