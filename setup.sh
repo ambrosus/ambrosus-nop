@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Change /etc/needrestart/needrestart.conf
+# Change /etc/needrestart/needrestart.conf to skip confirmations for restarting required services
 sed -i 's/^#\$nrconf{restart} = '\''i'\'';/$nrconf{restart} = '\''a'\'';/' /etc/needrestart/needrestart.conf
 
 #Intall node.js
@@ -13,24 +13,32 @@ echo \
 apt-get update -y
 apt-get install -y nodejs
 
-apt-get install -y python-dev
-apt-get install -y build-essential
-apt-get install -y npm
-apt-get install -y git
-apt-get install -y apt-transport-https software-properties-common
+# Install required packages
+apt-get install -y \
+    python-dev \
+    build-essential \
+    npm \
+    git \
+    apt-transport-https \
+    software-properties-common \
+    jq
 
+# Install Docker and Docker Compose
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-
 echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
   $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 apt-get update -y
-apt-get install -y docker-ce docker-ce-cli containerd.io
+apt-get install -y \
+    docker-ce \
+    docker-ce-cli \
+    containerd.io
+
 curl -L https://github.com/docker/compose/releases/download/v2.21.0/docker-compose-"$(uname -s)"-"$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 
-apt-get install -y jq
+# Install yarn globally
 npm install -g yarn
 
 # todo remove branch simplify-nop
