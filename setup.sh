@@ -3,7 +3,7 @@
 apt-get update -y
 apt-get install -y curl
 apt-get install -y python-dev
-curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 apt-get install -y build-essential
 apt-get install -y nodejs
 apt-get install -y npm
