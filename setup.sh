@@ -1,15 +1,21 @@
 #!/bin/bash
 
+#Intall node.js
 apt-get update -y
-apt-get install -y curl
-apt-get install -y python-dev
-curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-apt-get install -y build-essential
+apt-get install -y ca-certificates curl gnupg
+mkdir -p /etc/apt/keyrings
+curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+echo \
+  "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_18.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
+apt-get update -y
 apt-get install -y nodejs
+
+apt-get install -y python-dev
+apt-get install -y build-essential
 apt-get install -y npm
 apt-get install -y git
-apt-get install -y apt-transport-https ca-certificates curl software-properties-common
-mkdir -p /etc/apt/keyrings
+apt-get install -y apt-transport-https software-properties-common
+
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o -y /etc/apt/keyrings/docker.gpg
 
 echo \
