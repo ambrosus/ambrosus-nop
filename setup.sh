@@ -42,7 +42,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 npm install -g yarn
 
 # todo remove branch simplify-nop
-git clone -b update https://github.com/ambrosus/ambrosus-nop.git
+git clone -b simplify-nop https://github.com/ambrosus/ambrosus-nop.git
 cd ambrosus-nop || return
 
 ./update.sh
