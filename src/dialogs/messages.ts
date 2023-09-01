@@ -8,27 +8,40 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 */
 
 const messages = {
-  networkQuestion: 'Which network do you want to be onboarded to?',
+  networkQuestion: "Which network do you want to be onboarded to?",
   noPrivateKeyQuestion: `No private key setup yet. What do you want to do?`,
-  privateKeyManualInputAnswer: 'Input existing key manually',
-  privateKeyAutoGenerationAnswer: 'Generate new key automatically',
+  privateKeyManualInputAnswer: "Input existing key manually",
+  privateKeyAutoGenerationAnswer: "Generate new key automatically",
   privateKeyInputInstruction: `Please provide your private key (in hex form):`,
-  privateKeyInputError: (wrongValue) => `${wrongValue} is not a valid private key`,
-  dockerInstalledInfo: '✅ Docker is installed',
-  dockerMissingInfo: '⛔ Docker is required, and was not found. Please verify your installation',
-  privateKeyInfo: (address) => `✅ Private key verified. Your address is ${address}`,
-  nodeIPGuessQuestion: (ip) => `Please provide the IP address, which you will be using for your node. \nIs ${ip} correct?`,
-  nodeIPInputInstruction: 'Provide the IP address, which you will be using for your node',
-  nodeIPInputError:  (wrongValue) => `${wrongValue} is not a valid IP address`,
+  privateKeyInputError: (wrongValue) =>
+    `${wrongValue} is not a valid private key`,
+  dockerInstalledInfo: "✅ Docker is installed",
+  dockerMissingInfo:
+    "⛔ Docker is required, and was not found. Please verify your installation",
+  privateKeyInfo: (address) =>
+    `✅ Private key verified. Your address is ${address}`,
+  nodeIPGuessQuestion: (ip) =>
+    `Please provide the IP address, which you will be using for your node. \nIs ${ip} correct?`,
+  nodeIPInputInstruction:
+    "Provide the IP address, which you will be using for your node",
+  nodeIPInputError: (wrongValue) => `${wrongValue} is not a valid IP address`,
   nodeIPInfo: (ip) => `Node IP defined as ${ip}`,
   networkSelected: (network) => `Network: ${network}`,
-  dockerComposeCommand: 'docker-compose up -d',
-  dockerSetupComplete: '🎉 Your node configuration is ready 🎉',
-  dockerStarting: 'Starting docker containers... 🐳',
-  dockerStarted: '🎉 Your node is working! 🎉',
-  dockerError: 'Something went wrong. Please check the logs below.',
-  warningMessage: '⚠️ WARNING! ⚠️',
-  dockerRestartRequired: 'Changes in network have been detected. Please restart the docker containers with'
+  dockerComposeCommand: "docker-compose up -d",
+  dockerSetupComplete: "🎉 Your node configuration is ready 🎉",
+  dockerStarting: "Starting docker containers... 🐳",
+  dockerStarted: "🎉 Your node is launched! 🎉",
+  dockerError: "Something went wrong. Please check the logs below.",
+  warningMessage: "⚠️ WARNING! ⚠️",
+  dockerRestartRequired:
+    "Changes in network have been detected. Please restart the docker containers with",
+  alreadyOnboarded: (explorerUrl, nodeAddress) =>
+    `Node registered and onboarded to the network🎉. You can check it here: https://${explorerUrl}/explorer/apollo/${nodeAddress}`,
+  notOnboarded: "Your node is not onboarded to the network",
+  waitOnboarding: (timeToUnboard) =>
+    `Please wait until your node is onboarded to the network, Left: ${timeToUnboard} hours`,
+  notRegisteredNode: (explorerUrl) =>
+    `Your node is not registered in the network. Register here: https://${explorerUrl}`,
 };
 
 export default messages;
