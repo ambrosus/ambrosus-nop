@@ -144,9 +144,15 @@ class Dialog {
       chalk.green(messages.alreadyOnboarded(explorerUrl, nodeAddress))
     );
   notOnboardedDialog = () => this.output(chalk.red(messages.notOnboarded));
-  waitOnboardingDialog = (minutes, seconds) =>
+  waitOnboardingDialog = (days, hours, minutes) =>
     this.output(
-      chalk.yellow(messages.waitOnboarding(chalk.yellow(minutes, seconds)))
+      chalk.yellow(
+        messages.waitOnboarding(
+          chalk.green(days),
+          chalk.yellow(hours),
+          chalk.redBright(minutes)
+        )
+      )
     );
   notRegisteredDialog = (explorerUrl) =>
     this.output(chalk.red(messages.notRegisteredNode(explorerUrl)));
