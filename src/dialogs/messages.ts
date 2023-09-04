@@ -38,10 +38,10 @@ const messages = {
   alreadyOnboarded: (explorerUrl, nodeAddress) =>
     `Node registered and onboarded to the network🎉. You can check it here: https://${explorerUrl}/explorer/apollo/${nodeAddress}`,
   notOnboarded: "Your node is not onboarded to the network",
-  waitOnboarding: (timeToUnboard) =>
-    `Please wait until your node is onboarded to the network, Left: ${timeToUnboard} hours`,
+  waitOnboarding: (minutes, seconds) =>
+    `Please wait until your node is onboarded to the network, Left: ${minutes} minutes ${seconds} seconds`,
   notRegisteredNode: (explorerUrl) =>
-    `Your node is not registered in the network. Register here: https://${explorerUrl}`,
+    `Your node is not registered in the network. Register here: https://${explorerUrl}/node-setup/`,
 };
 
 export default messages;

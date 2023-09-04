@@ -46,7 +46,10 @@ export default async function checkStatusInServerNodes(
     const timeToWait =
       onboardingDelay -
       (currentTimeInSeconds - validator.apollo.timestampStake.toNumber());
-    Dialog.waitOnboardingDialog(timeToWait / 3600);
+
+    const minutes = Math.floor(timeToWait / 60);
+    const seconds = timeToWait % 60;
+    Dialog.waitOnboardingDialog(minutes, seconds);
     return;
   }
 
