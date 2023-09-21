@@ -2,7 +2,7 @@
 version: '2.4'
 services:
   parity:
-    image: ghcr.io/ambrosus/openethereum:v3.3.3-amb1.2.2.5
+    image: ghcr.io/ambrosus/openethereum:v3.3.3-amb1.2.2.6
     container_name: parity
     command: --config /app/parity_config.toml
     working_dir: /app
