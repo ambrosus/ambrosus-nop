@@ -21,8 +21,6 @@ import {
   ATLAS_3_STAKE,
   APOLLO,
   APOLLO_CODE,
-  HERMES_CODE,
-  HERMES,
   ATLAS_CODE,
   ATLAS_1,
   ATLAS_2,
@@ -57,7 +55,6 @@ describe('Smart Contract Model', () => {
     SmartContractsModel.kycWhitelistWrapper = kycWhitelistWrapperStub;
 
     rolesWrapperStub = {
-      onboardAsHermes: sinon.stub(),
       onboardAsApollo: sinon.stub(),
       onboardAsAtlas: sinon.stub(),
       onboardedRole: sinon.stub().resolves(null)
@@ -97,11 +94,6 @@ describe('Smart Contract Model', () => {
       it('Apollo', async () => {
         kycWhitelistWrapperStub.getRoleAssigned.resolves(APOLLO_CODE);
         expect((await smartContractsModel.getAddressWhitelistingData(exampleAddress)).roleAssigned).to.equal(APOLLO);
-      });
-
-      it('Hermes', async () => {
-        kycWhitelistWrapperStub.getRoleAssigned.resolves(HERMES_CODE);
-        expect((await smartContractsModel.getAddressWhitelistingData(exampleAddress)).roleAssigned).to.equal(HERMES);
       });
 
       it('Atlas Zeta', async () => {
@@ -182,11 +174,6 @@ describe('Smart Contract Model', () => {
   describe('performOnboarding', () => {
     const url = 'http://amb.to';
     const deposit = 10;
-
-    it('when role is HERMES calls onboardAsHermes', async () => {
-      await smartContractsModel.performOnboarding(exampleAddress, HERMES, deposit, url);
-      expect(rolesWrapperStub.onboardAsHermes).to.be.calledWith(exampleAddress, url);
-    });
 
     it('when role is APOLLO calls onboardAsApollo', async () => {
       await smartContractsModel.performOnboarding(exampleAddress, APOLLO, deposit, url);

@@ -23,7 +23,7 @@ describe('Prepare action', () => {
   it('show action for all node types by default', async () => {
     expect(prepareAction('action')).to.deep.equal({
       performAction: 'action',
-      nodeTypes: ['1', '2', '3']
+      nodeTypes: ['1', '3']
     });
   });
 });

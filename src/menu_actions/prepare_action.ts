@@ -7,9 +7,9 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 */
 
-import {APOLLO_CODE, ATLAS_CODE, HERMES_CODE} from '../consts';
+import {APOLLO_CODE, ATLAS_CODE} from '../consts';
 
-const prepareAction = (action, nodeTypes = [ATLAS_CODE, HERMES_CODE, APOLLO_CODE]) => ({
+const prepareAction = (action, nodeTypes = [ATLAS_CODE, APOLLO_CODE]) => ({
   performAction: action,
   nodeTypes
 });

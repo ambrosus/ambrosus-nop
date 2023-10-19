@@ -9,6 +9,7 @@ This Source Code Form is “Incompatible With Secondary Licenses”, as defined 
 
 import ipRegex from 'ip-regex';
 import psl from 'psl';
+import {URL} from 'url';
 
 class Validations {
   isValidPrivateKey(candidate) {
@@ -30,7 +31,7 @@ class Validations {
           return false;
         }
       }
-      return inputUrl === `${protocol}//${hostname}`;
+      return true;
       // eslint-disable-next-line no-empty
     } catch {}
     return false;

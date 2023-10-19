@@ -17,7 +17,7 @@ import retireAction from '../menu_actions/retire_action';
 import quitAction from '../menu_actions/quit_action';
 
 export const defaultActions = {
-  [messages.actions.changeUrl]: prepareAction(changeUrlAction(), [constants.ATLAS, constants.HERMES]),
+  [messages.actions.changeUrl]: prepareAction(changeUrlAction(), [constants.ATLAS]),
   [messages.actions.payouts]: prepareAction(payoutAction(), [constants.ATLAS]),
   [messages.actions.retire]: prepareAction(retireAction()),
   [messages.actions.quit]: prepareAction(quitAction())

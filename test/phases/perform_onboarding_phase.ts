@@ -21,6 +21,8 @@ chai.use(chaiAsPromised);
 chai.use(sinonChai);
 const {expect} = chai;
 
+const anyRole = 'any';
+
 describe('Perform onboarding Phase', () => {
   const exampleAddress = '0xc0ffee';
   const exampleUrl = 'http://url';
@@ -77,9 +79,9 @@ describe('Perform onboarding Phase', () => {
   });
 
   it('onboarding failed: already onboarded', async () => {
-    smartContractsModelStub.getOnboardedRole.resolves('Hermes');
+    smartContractsModelStub.getOnboardedRole.resolves(anyRole);
     await call(exampleWhitelistingStatus);
-    expect(Dialog.alreadyOnboardedDialog).to.be.calledOnceWith('Hermes');
+    expect(Dialog.alreadyOnboardedDialog).to.be.calledOnceWith(anyRole);
     expect(smartContractsModelStub.performOnboarding).to.be.not.called;
   });
 

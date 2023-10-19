@@ -17,8 +17,8 @@ and offers several options:
 - **Retire** - retire Node
 - **Finish NOP** - exit configuration console
 
-Current status of the Node can be viewed at /nodeinfo URL (if you hold an Atlas
-or Hermes), for example https://my-cool-amb-node.com/nodeinfo
+Current status of the Node can be viewed at /nodeinfo URL (if you hold an Atlas), 
+for example https://my-cool-amb-node.com/nodeinfo
 
 To update Ambrosus node software, run the script:
 
@@ -53,7 +53,7 @@ can use the following:
 
 ### Nodeinfo
 
-**/nodeinfo** URL (for Atlas and Hermes nodes) is the primary source of
+**/nodeinfo** URL (for Atlas nodes) is the primary source of
 information.  If it fails to open or returns some error - the Node is not
 operating properly. Example /nodeinfo output:
 
@@ -175,11 +175,9 @@ always online.
 
 ## Terminology
 
-- **Ambrosus Node** - Ambrosus Atlas, Hermes or Apollo.
+- **Ambrosus Node** - Ambrosus Atlas or Apollo.
 - **Atlas** - node that stores bundles and earns ambers.
-- **Hermes** - node that generates bundles and spends ambers.
 - **Apollo** - validator node, it creates blocks.
-- **Bundle** - pack of Assets and Events, produced by Hermes
 - **Asset** - object, for example product
 - **Events** - events that happen to Assets
 - **Challenge** - Atlas "request" to store a bundle, if smart-contract confirms

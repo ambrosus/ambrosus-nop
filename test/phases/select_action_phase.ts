@@ -13,7 +13,7 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import {selectActionPhase} from '../../src/phases/select_action_phase';
 import prepareAction from '../../src/menu_actions/prepare_action';
-import {ATLAS_CODE, HERMES_CODE, HERMES, ATLAS_1} from '../../src/consts';
+import {ATLAS_CODE, ATLAS_1} from '../../src/consts';
 import Dialog from '../../src/models/dialog_model';
 
 chai.use(chaiAsPromised);
@@ -37,19 +37,10 @@ describe('Select Action Phase', () => {
     Dialog.insufficientFundsDialog = insufficientFundsDialogStub;
 
     actions = {
-      'First action': prepareAction(sinon.stub().resolves(false), [HERMES_CODE, ATLAS_CODE]),
+      'First action': prepareAction(sinon.stub().resolves(false), [ATLAS_CODE]),
       'Second action': prepareAction(sinon.stub().resolves(false), [ATLAS_CODE]),
       Quit: prepareAction(sinon.stub().resolves(true))
     };
-  });
-
-  it(`assembles hermes' action list and shows select action dialog`, async () => {
-    selectActionDialogStub.resolves({action: 'First action'});
-    selectActionDialogStub.resolves({action: 'Quit'});
-
-    await (await startPhase(HERMES))();
-
-    expect(selectActionDialogStub).to.have.been.calledWithExactly(['First action', 'Quit']);
   });
 
   it(`assembles atlas' action list and shows select action dialog`, async () => {

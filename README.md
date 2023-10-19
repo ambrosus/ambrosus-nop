@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.com/ambrosus/ambrosus-nop.svg?token=3AeQ6aqcxJ7ZUnsz6KJt&branch=master)](https://travis-ci.com/ambrosus/ambrosus-nop)
 
 # The Ambrosus Node Onboarding Package
-The Ambrosus Node Onboarding Package (NOP) is a command-line tool which makes it easier for Ambrosus Masternodes operators to register, onboard and operate new nodes on AMB-NET (Apollo, Atlas and Hermes nodes).
+The Ambrosus Node Onboarding Package (NOP) is a command-line tool which makes it easier for Ambrosus Masternodes operators to register, onboard and operate new nodes on AMB-NET (Apollo and Atlas nodes).
 
 **ATTENTION:** Although anyone will be able to setup a virtual environment and run NOP, the last step (running the masternode application) will require your node to have been whitelisted. Request will be send automatically at the end of setup script.
 
@@ -41,7 +41,7 @@ Create an account and log in. Press 'Droplets' and then 'Create Droplet'. Use th
 
 Now lets setup a firewall for the instance to make sure the instance is accessible only through specific ports. Your instance should be launched and you should see it by pressing 'Droplets'. Click on the instance you launched and then press 'Networking' -> 'Manage Firewalls'.
 Add rules for the following ports according to the node you are running:
- - Hermes & Atlas:
+ - Atlas:
     - Port range: 80
         Protocol: **TCP**
     - Port range: 443

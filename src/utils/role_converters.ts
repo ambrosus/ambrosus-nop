@@ -15,14 +15,11 @@ import {
   ATLAS_2,
   ATLAS_2_STAKE, ATLAS_3, ATLAS_3_STAKE,
   ATLAS_CODE,
-  HERMES,
-  HERMES_CODE, NO_ROLE_CODE
+  NO_ROLE_CODE
 } from '../consts';
 
 const roleToRoleCode = (role) => {
   switch (role) {
-    case HERMES:
-      return HERMES_CODE;
     case APOLLO:
       return APOLLO_CODE;
     case ATLAS_1:
@@ -38,8 +35,6 @@ const roleCodeToRole = (roleCode, deposit) => {
   switch (roleCode) {
     case ATLAS_CODE:
       return atlasStakeAmountToRole(deposit);
-    case HERMES_CODE:
-      return HERMES;
     case APOLLO_CODE:
       return APOLLO;
     default:

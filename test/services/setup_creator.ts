@@ -99,18 +99,22 @@ describe('Setup Creator', () => {
     const sampleForm = (arg1, arg2, arg3, arg4, arg5, arg6) => `${arg1} || ${arg2} || ${arg3} || ${arg4} || ${arg5} || ${arg6}`;
 
     const nodeTypeName = 'atlas';
+    const nodeDir = `${testInputDir}${nodeTypeName}`;
+    const templateDir = `${nodeDir}/${exampleNetworkName}`;
 
-    const templateFilePath = `${testInputDir}${nodeTypeName}/docker-compose.yml`;
+    const templateFilePath = `${templateDir}/docker-compose.yml`;
     const destinationFilePath = `${testOutputDir}docker-compose.yml`;
 
     beforeEach(async () => {
-      await makeDirectory(`${testInputDir}${nodeTypeName}`);
+      await makeDirectory(nodeDir);
+      await makeDirectory(templateDir);
       await writeFile(templateFilePath, sampleForm(tagPlaceholder, addressPlaceholder, privateKeyPlaceholder, headAddressPlaceholder, networkNamePlaceholder, domainPlaceholder));
     });
 
     afterEach(async () => {
       await removeFile(templateFilePath);
-      await removeDirectory(`${testInputDir}${nodeTypeName}`);
+      await removeDirectory(templateDir);
+      await removeDirectory(nodeDir);
       await removeFile(destinationFilePath);
     });
 
@@ -129,28 +133,32 @@ describe('Setup Creator', () => {
     const formWithIPReplaced = `parity_config_contents... <TYPE_YOUR_ADDRESS_HERE> ... ${exampleIP}`;
 
     const nodeTypeName = 'apollo';
-    const templateDir = `${testInputDir}${nodeTypeName}`;
+    const exampleNetworkName = 'ambnet-dev';
+    const nodeDir = `${testInputDir}${nodeTypeName}`;
+    const templateDir = `${nodeDir}/${exampleNetworkName}`;
     const srcParityConfigPath = `${templateDir}/parity_config.toml`;
     const destParityConfigPath = `${testOutputDir}parity_config.toml`;
 
     beforeEach(async () => {
-      await makeDirectory(`${testInputDir}${nodeTypeName}`);
+      await makeDirectory(nodeDir);
+      await makeDirectory(templateDir);
       await writeFile(srcParityConfigPath, inputForm);
     });
 
     afterEach(async () => {
       await removeFile(destParityConfigPath);
       await removeFile(srcParityConfigPath);
-      await removeDirectory(`${testInputDir}${nodeTypeName}`);
+      await removeDirectory(templateDir);
+      await removeDirectory(nodeDir);
     });
 
     it('copies files correctly and replaces the TYPE_YOUR_ADDRESS_HERE placeholder if address was provided', async () => {
-      await SetupCreator.copyParityConfiguration(nodeTypeName, {address: exampleAddress});
+      await SetupCreator.copyParityConfiguration(nodeTypeName, exampleNetworkName, {address: exampleAddress});
       expect(await readFile(destParityConfigPath)).to.equal(formWithAddressReplaced);
     });
 
     it('copies files correctly and replaces the TYPE_YOUR_IP_HERE placeholder if IP was provided', async () => {
-      await SetupCreator.copyParityConfiguration(nodeTypeName, {ip: exampleIP});
+      await SetupCreator.copyParityConfiguration(nodeTypeName, exampleNetworkName, {ip: exampleIP});
       expect(await readFile(destParityConfigPath)).to.equal(formWithIPReplaced);
     });
   });
